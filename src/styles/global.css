@@ -1,0 +1,587 @@
+/* ───────────────────────── Schriften (lokal) ───────────────────────── */
+@font-face {
+  font-family: 'Archivo';
+  src: url('/fonts/archivo-var.woff2') format('woff2-variations'), url('/fonts/archivo-var.woff2') format('woff2');
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/montserrat-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Plex Mono';
+  src: url('/fonts/plex-mono-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Plex Mono';
+  src: url('/fonts/plex-mono-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+/* Ersatzschrift mit angeglichenen Metriken gegen Layoutsprünge */
+@font-face {
+  font-family: 'Archivo Fallback';
+  src: local('Arial');
+  size-adjust: 104%;
+  ascent-override: 88%;
+  descent-override: 22%;
+}
+
+/* ───────────────────────── Design-Tokens ───────────────────────── */
+:root {
+  --ink: #0a1626;
+  --ink-2: #0f2036;
+  --ink-3: #172d48;
+  --paper: #f3f1ec;
+  --paper-2: #e9e6df;
+  --paper-3: #d9d5cc;
+  --blue: #1a63b0;
+  --blue-deep: #134c88;
+  --sky: #6faad6;
+  --sky-soft: #a9cdea;
+  --text: var(--ink);
+  --muted: #4b5567;
+  --muted-light: #a3afc0;
+  --line: rgba(10, 22, 38, 0.14);
+  --line-strong: rgba(10, 22, 38, 0.32);
+  --line-light: rgba(243, 241, 236, 0.14);
+  --line-light-strong: rgba(243, 241, 236, 0.3);
+  --error: #b42318;
+  --ok: #1d7a46;
+
+  --font: 'Archivo', 'Archivo Fallback', system-ui, sans-serif;
+  --font-mono: 'Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --font-logo: 'Montserrat', 'Archivo', system-ui, sans-serif;
+
+  --gutter: clamp(1rem, 4vw, 3.5rem);
+  --max: 1440px;
+  --header-h: 4.5rem;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --fs-display: clamp(2.65rem, 8.4vw, 8.75rem);
+  --fs-h1: clamp(2.4rem, 6.4vw, 6.25rem);
+  --fs-h2: clamp(2rem, 4.6vw, 4.5rem);
+  --fs-h3: clamp(1.35rem, 2vw, 1.75rem);
+  --fs-lead: clamp(1.15rem, 1.6vw, 1.45rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.9375rem;
+  --fs-mono: 0.75rem;
+
+  color-scheme: light;
+}
+
+/* ───────────────────────── Basis ───────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  font-stretch: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+img,
+svg,
+video,
+picture {
+  display: block;
+  max-width: 100%;
+}
+img {
+  height: auto;
+}
+a {
+  color: inherit;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+}
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+::selection {
+  background: var(--blue);
+  color: var(--paper);
+}
+
+/* Fokus: deutlich, im Planstil */
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+}
+.on-ink :focus-visible,
+.on-ink:focus-visible {
+  outline-color: var(--sky);
+}
+
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: -4rem;
+  z-index: 200;
+  background: var(--blue);
+  color: var(--paper);
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.2s var(--ease);
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ───────────────────────── Layout ───────────────────────── */
+.wrap {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.section {
+  padding-block: clamp(5rem, 12vw, 11rem);
+  position: relative;
+}
+.section--tight {
+  padding-block: clamp(3.5rem, 8vw, 7rem);
+}
+.on-ink {
+  background: var(--ink);
+  color: var(--paper);
+  --text: var(--paper);
+  --muted: var(--muted-light);
+  --line: var(--line-light);
+  --line-strong: var(--line-light-strong);
+}
+.on-blue {
+  background: var(--blue);
+  color: var(--paper);
+  --text: var(--paper);
+  --muted: rgba(243, 241, 236, 0.82);
+  --line: rgba(243, 241, 236, 0.22);
+}
+
+/* Achsraster im Hintergrund */
+.raster {
+  --raster: clamp(5rem, 9vw, 8rem);
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: var(--raster) var(--raster);
+  background-position: -1px -1px;
+}
+
+/* ───────────────────────── Typografie ───────────────────────── */
+.display,
+.h1,
+.h2,
+.h3 {
+  font-family: var(--font);
+  font-weight: 760;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.display {
+  font-size: var(--fs-display);
+  line-height: 0.92;
+  font-stretch: 122%;
+  font-weight: 780;
+  letter-spacing: -0.035em;
+}
+.h1 {
+  font-size: var(--fs-h1);
+  line-height: 0.95;
+  font-stretch: 120%;
+}
+.h2 {
+  font-size: var(--fs-h2);
+  line-height: 1;
+  font-stretch: 116%;
+}
+.h3 {
+  font-size: var(--fs-h3);
+  line-height: 1.15;
+  font-stretch: 108%;
+  font-weight: 680;
+  letter-spacing: -0.01em;
+}
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+  color: var(--text);
+  max-width: 38ch;
+  text-wrap: pretty;
+}
+.prose {
+  max-width: 64ch;
+  text-wrap: pretty;
+}
+.prose p + p {
+  margin-top: 1em;
+}
+.muted {
+  color: var(--muted);
+}
+.mono,
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75em;
+  color: var(--muted);
+}
+.label::before {
+  content: '';
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.7;
+}
+.accent {
+  color: var(--blue);
+}
+.on-ink .accent {
+  color: var(--sky);
+}
+.outline-text {
+  color: transparent;
+  -webkit-text-stroke: 1px currentColor;
+}
+
+/* Links im Fließtext */
+.prose a,
+.link {
+  color: var(--blue);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-thickness 0.2s;
+}
+.on-ink .prose a,
+.on-ink .link {
+  color: var(--sky);
+}
+.prose a:hover,
+.link:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* ───────────────────────── Buttons ───────────────────────── */
+.btn {
+  --btn-bg: var(--blue);
+  --btn-fg: var(--paper);
+  --btn-fill: var(--ink);
+  --btn-fill-fg: var(--paper);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  min-height: 3.5rem;
+  padding: 0 1.6rem 0 1.75rem;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: 0;
+  font-weight: 620;
+  font-size: 1rem;
+  font-stretch: 108%;
+  letter-spacing: 0.005em;
+  text-decoration: none;
+  isolation: isolate;
+  overflow: hidden;
+  /* Dachknick: abgeschrägte Ecke oben rechts */
+  clip-path: polygon(0 0, calc(100% - 0.9rem) 0, 100% 0.9rem, 100% 100%, 0 100%);
+  transition: color 0.45s var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--btn-fill);
+  transform: translateY(101%);
+  transition: transform 0.55s var(--ease);
+}
+.btn:hover::before,
+.btn:focus-visible::before {
+  transform: translateY(0);
+}
+.btn:hover,
+.btn:focus-visible {
+  color: var(--btn-fill-fg);
+}
+.btn svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: none;
+  transition: transform 0.45s var(--ease);
+}
+.btn:hover svg {
+  transform: translateX(4px);
+}
+.btn--ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--text);
+  --btn-fill: var(--text);
+  --btn-fill-fg: var(--paper);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  clip-path: none;
+}
+.on-ink .btn--ghost {
+  --btn-fill-fg: var(--ink);
+}
+.on-ink .btn:not(.btn--ghost) {
+  --btn-fill: var(--paper);
+  --btn-fill-fg: var(--ink);
+}
+.on-blue .btn:not(.btn--ghost) {
+  --btn-bg: var(--paper);
+  --btn-fg: var(--ink);
+  --btn-fill: var(--ink);
+  --btn-fill-fg: var(--paper);
+}
+.btn--lg {
+  min-height: 4.25rem;
+  padding-inline: 2.25rem 2rem;
+  font-size: 1.125rem;
+}
+
+/* Pfeil-Link */
+.arrow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--text);
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+  padding-bottom: 0.2rem;
+  transition: background-size 0.4s var(--ease);
+}
+.arrow-link svg {
+  width: 1rem;
+  height: 1rem;
+  transition: transform 0.4s var(--ease);
+}
+.arrow-link:hover {
+  background-size: 0% 1px;
+  background-position: 100% 100%;
+}
+.arrow-link:hover svg {
+  transform: translateX(4px);
+}
+
+/* ───────────────────────── Plan-Elemente ───────────────────────── */
+.plan-tag {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.plan-tag b {
+  font-weight: 500;
+  color: var(--text);
+}
+.crosshair {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+.crosshair::before,
+.crosshair::after {
+  content: '';
+  position: absolute;
+  background: var(--line-strong);
+}
+.crosshair::before {
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+}
+.crosshair::after {
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+}
+.placeholder-text {
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  background: rgba(26, 99, 176, 0.1);
+  color: var(--blue-deep);
+  padding: 0.1em 0.4em;
+  border: 1px dashed rgba(26, 99, 176, 0.5);
+  border-radius: 2px;
+}
+.on-ink .placeholder-text {
+  background: rgba(111, 170, 214, 0.12);
+  color: var(--sky-soft);
+  border-color: rgba(111, 170, 214, 0.45);
+}
+
+/* ───────────────────────── Bewegung ───────────────────────── */
+/* Ausgangszustände nur, wenn JS-Animationen aktiv sind (Klasse wird im <head> gesetzt). */
+html.motion [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+}
+html.motion [data-reveal='fade'] {
+  transform: none;
+}
+html.motion .sw > span {
+  transform: translate3d(0, 110%, 0);
+}
+html.motion svg[data-draw] {
+  opacity: 0;
+}
+html.motion [data-scrub-words] .wd {
+  opacity: 0.16;
+}
+html.motion [data-reveal-clip] {
+  clip-path: inset(0 0 100% 0);
+}
+/* Wort-Masken für Überschriften-Reveals */
+.sl {
+  display: block;
+}
+.sw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  /* Platz für Unter- und Oberlängen, ohne den Zeilenabstand zu ändern */
+  padding: 0.1em 0.02em 0.12em;
+  margin: -0.1em -0.02em -0.12em;
+}
+.sw > span {
+  display: inline-block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Seitenwechsel (native View Transitions, ohne JavaScript) */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root) {
+  animation: vt-out 0.28s var(--ease-in-out) both;
+}
+::view-transition-new(root) {
+  animation: vt-in 0.5s var(--ease) both;
+}
+@keyframes vt-out {
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+/* Platz für die mobile Kontaktleiste */
+@media (max-width: 899px) {
+  body {
+    padding-bottom: calc(4.25rem + env(safe-area-inset-bottom));
+  }
+}

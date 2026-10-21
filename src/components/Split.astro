@@ -1,0 +1,39 @@
+---
+// Überschrift mit Wort-Masken für den Reveal-Effekt.
+// Zeilen mit "|" trennen, Wörter in *Sternchen* werden blau hervorgehoben.
+interface Props {
+  text: string;
+  as?: 'h1' | 'h2' | 'h3' | 'p' | 'span' | 'div';
+  class?: string;
+  id?: string;
+  /** Start der Animation: beim Scrollen (Standard) oder sofort beim Laden */
+  trigger?: 'scroll' | 'load';
+}
+const { text, as: Tag = 'h2', class: klasse, id, trigger = 'scroll' } = Astro.props;
+let offen = false;
+const zeilen = text.split('|').map((z) =>
+  z
+    .trim()
+    .split(/\s+/)
+    .map((roh) => {
+      const beginnt = roh.startsWith('*');
+      const endet = /\*[.,:;!?]?$/.test(roh);
+      const akzent = offen || beginnt;
+      if (beginnt) offen = true;
+      if (endet) offen = false;
+      return { wort: roh.replace(/\*/g, ''), akzent };
+    }),
+);
+const plain = text.replace(/[|*]/g, ' ').replace(/\s+/g, ' ').trim();
+---
+<Tag class:list={['split', klasse]} id={id} data-split={trigger} aria-label={plain}>
+  {zeilen.map((z) => (
+    <span class="sl" aria-hidden="true">
+      {z.map((w, i) => (
+        <>
+          <span class="sw"><span class:list={{ accent: w.akzent }}>{w.wort}</span></span>{i < z.length - 1 ? ' ' : ''}
+        </>
+      ))}
+    </span>
+  ))}
+</Tag>

@@ -1,0 +1,97 @@
+---
+// Kleine Linien-Icons (eigene Zeichnungen, keine Emojis).
+interface Props {
+  name:
+    | 'arrow'
+    | 'arrow-down'
+    | 'arrow-left'
+    | 'phone'
+    | 'mail'
+    | 'form'
+    | 'menu'
+    | 'close'
+    | 'plus'
+    | 'check'
+    | 'star'
+    | 'upload'
+    | 'trash'
+    | 'pin'
+    | 'instagram'
+    | 'tiktok'
+    | 'linkedin'
+    | 'external';
+  class?: string;
+  label?: string;
+}
+const { name, class: klasse, label } = Astro.props;
+const filled = name === 'star' || name === 'tiktok' || name === 'linkedin';
+---
+<svg
+  class:list={['icon', klasse]}
+  viewBox="0 0 24 24"
+  fill={filled ? 'currentColor' : 'none'}
+  stroke={filled ? 'none' : 'currentColor'}
+  stroke-width="1.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden={label ? undefined : 'true'}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  focusable="false"
+>
+  {name === 'arrow' && <path d="M4 12h15M13 6l6 6-6 6" />}
+  {name === 'arrow-down' && <path d="M12 4v15M6 13l6 6 6-6" />}
+  {name === 'arrow-left' && <path d="M20 12H5M11 6l-6 6 6 6" />}
+  {name === 'external' && <path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6" />}
+  {name === 'phone' && (
+    <path d="M5 3.5h3.2l1.6 4.4-2.1 1.4a11 11 0 0 0 7 7l1.4-2.1 4.4 1.6V19a1.5 1.5 0 0 1-1.6 1.5C10.6 20 4 13.4 3.5 5.1A1.5 1.5 0 0 1 5 3.5Z" />
+  )}
+  {name === 'mail' && (
+    <>
+      <rect x="3" y="5" width="18" height="14" rx="1" />
+      <path d="m3.5 6 8.5 7 8.5-7" />
+    </>
+  )}
+  {name === 'form' && (
+    <>
+      <path d="M6 3h9l4 4v14H6z" />
+      <path d="M15 3v4h4M9 12h7M9 16h5" />
+    </>
+  )}
+  {name === 'menu' && <path d="M3 8h18M3 16h12" />}
+  {name === 'close' && <path d="M5 5l14 14M19 5 5 19" />}
+  {name === 'plus' && <path d="M12 4v16M4 12h16" />}
+  {name === 'check' && <path d="m4.5 12.5 5 5 10-11" />}
+  {name === 'star' && (
+    <path d="M12 2.8l2.7 5.8 6.3.7-4.7 4.3 1.3 6.2L12 16.7l-5.6 3.1 1.3-6.2L3 9.3l6.3-.7z" />
+  )}
+  {name === 'upload' && <path d="M12 16V4M7 9l5-5 5 5M4 15v5h16v-5" />}
+  {name === 'trash' && <path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" />}
+  {name === 'pin' && (
+    <>
+      <path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z" />
+      <circle cx="12" cy="9.5" r="2.5" />
+    </>
+  )}
+  {name === 'instagram' && (
+    <>
+      <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" />
+    </>
+  )}
+  {name === 'tiktok' && (
+    <path d="M16.6 3c.3 2.2 1.6 3.6 3.9 3.8v3.1c-1.4.1-2.6-.3-3.9-1.1v5.6c0 3.6-2.6 6.1-6 6.1-3.2 0-5.6-2.5-5.6-5.6 0-3.5 3-6 6.6-5.5v3.2c-1.6-.4-3.4.6-3.4 2.4 0 1.4 1.1 2.4 2.5 2.4 1.5 0 2.6-1 2.6-2.9V3h3.3Z" />
+  )}
+  {name === 'linkedin' && (
+    <path d="M4.5 3A1.9 1.9 0 1 1 4.5 6.8 1.9 1.9 0 0 1 4.5 3ZM3 8.5h3V21H3V8.5Zm5.3 0h2.9v1.7h.1c.4-.8 1.4-1.9 3.2-1.9 3.4 0 4 2.2 4 5.1V21h-3v-6.6c0-1.6 0-3.6-2.2-3.6s-2.5 1.7-2.5 3.5V21h-3V8.5Z" />
+  )}
+</svg>
+
+<style>
+  .icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex: none;
+  }
+</style>

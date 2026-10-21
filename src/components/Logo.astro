@@ -1,0 +1,55 @@
+---
+import LogoMark from './LogoMark.astro';
+interface Props {
+  class?: string;
+  /** helle Schrift auf dunklem Grund */
+  light?: boolean;
+}
+const { class: klasse, light = false } = Astro.props;
+---
+<span class:list={['logo', { 'logo--light': light }, klasse]}>
+  <LogoMark class="logo__mark" />
+  <span class="logo__text">
+    <span class="logo__name">TPM Bau GmbH</span>
+    <span class="logo__sub">Technical Project Management</span>
+  </span>
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .logo--light {
+    color: var(--paper);
+  }
+  .logo__mark {
+    width: 2.6rem;
+    height: auto;
+    flex: none;
+  }
+  .logo__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.28rem;
+  }
+  .logo__name {
+    font-family: var(--font-logo);
+    font-weight: 500;
+    font-size: 1.22rem;
+    letter-spacing: 0.005em;
+    white-space: nowrap;
+  }
+  .logo__sub {
+    font-family: var(--font-logo);
+    font-weight: 500;
+    font-size: 0.47rem;
+    letter-spacing: 0.205em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0.8;
+  }
+</style>

@@ -1,0 +1,141 @@
+---
+import Split from './Split.astro';
+import type { Crumb } from '../data/seo';
+
+interface Props {
+  blatt: string;
+  kicker: string;
+  title: string;
+  lead?: string;
+  crumbs?: Crumb[];
+  /** kleinere Variante, z. B. für Rechtstexte */
+  compact?: boolean;
+}
+const { blatt, kicker, title, lead, crumbs = [], compact = false } = Astro.props;
+const hasAside = Astro.slots.has('aside');
+---
+<section class:list={['page-hero on-ink raster', { 'page-hero--compact': compact, 'page-hero--aside': hasAside }]}>
+  <div class="axis axis--top" aria-hidden="true">
+    <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span>
+  </div>
+  <div class="wrap page-hero__inner">
+    <div class="page-hero__main">
+      {crumbs.length > 0 && (
+        <nav aria-label="Brotkrumen" class="crumbs" data-reveal="fade">
+          <ol role="list">
+            <li><a href="/">Start</a></li>
+            {crumbs.map((c, i) => (
+              <li>
+                {i === crumbs.length - 1 ? <span aria-current="page">{c.label}</span> : <a href={c.href}>{c.label}</a>}
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
+      <p class="plan-tag kicker" data-reveal="fade"><b>Blatt {blatt}</b> · {kicker}</p>
+      <Split as="h1" class:list={[compact ? 'h1 title title--compact' : 'display title']} text={title} trigger="load" />
+      {lead && <p class="lead page-hero__lead" data-reveal>{lead}</p>}
+      <slot />
+    </div>
+    {hasAside && (
+      <div class="page-hero__aside">
+        <slot name="aside" />
+      </div>
+    )}
+  </div>
+  <span class="crosshair ch1" aria-hidden="true"></span>
+  <span class="crosshair ch2" aria-hidden="true"></span>
+</section>
+
+<style>
+  .page-hero {
+    position: relative;
+    padding-top: calc(var(--header-h) + clamp(3rem, 8vw, 7rem));
+    padding-bottom: clamp(4rem, 9vw, 8rem);
+    overflow: hidden;
+    background-color: var(--ink);
+  }
+  .page-hero--compact {
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+  }
+  .page-hero::after {
+    /* weicher Auslauf des Rasters */
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 90% at 15% 30%, transparent 30%, var(--ink) 85%);
+    pointer-events: none;
+  }
+  .page-hero__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 3rem;
+    align-items: end;
+  }
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0 0 2rem;
+    font-size: 0.85rem;
+    color: var(--muted-light);
+  }
+  .crumbs li + li::before {
+    content: '/';
+    margin-right: 0.5rem;
+    opacity: 0.5;
+  }
+  .crumbs a {
+    text-decoration: none;
+  }
+  .crumbs a:hover {
+    color: var(--paper);
+    text-decoration: underline;
+  }
+  .kicker {
+    margin-bottom: 1.5rem;
+  }
+  .kicker b {
+    color: var(--sky);
+  }
+  .title {
+    max-width: 16ch;
+  }
+  .title--compact {
+    max-width: 22ch;
+  }
+  .page-hero__lead {
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+    max-width: 44ch;
+    color: rgba(243, 241, 236, 0.86);
+  }
+  .axis {
+    position: absolute;
+    z-index: 1;
+    top: calc(var(--header-h) + 0.75rem);
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-around;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--muted-light);
+    opacity: 0.45;
+    pointer-events: none;
+  }
+  .ch1 {
+    right: var(--gutter);
+    top: calc(var(--header-h) + 2rem);
+  }
+  .ch2 {
+    left: var(--gutter);
+    bottom: 2rem;
+  }
+  @media (min-width: 1000px) {
+    .page-hero--aside .page-hero__inner {
+      grid-template-columns: 1.35fr 1fr;
+      gap: 4rem;
+    }
+  }
+</style>

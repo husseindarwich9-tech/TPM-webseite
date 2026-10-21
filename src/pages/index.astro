@@ -1,0 +1,860 @@
+---
+import Base from '../layouts/Base.astro';
+import Split from '../components/Split.astro';
+import Icon from '../components/Icon.astro';
+import LogoMark from '../components/LogoMark.astro';
+import TradeDrawing from '../components/TradeDrawing.astro';
+import ServiceIndex from '../components/ServiceIndex.astro';
+import Quotes from '../components/Quotes.astro';
+import Marquee from '../components/Marquee.astro';
+import { Picture } from 'astro:assets';
+import { firma } from '../data/firma';
+import { bild } from '../data/bilder';
+
+const foto = bild('startfoto');
+const intro =
+  'TPM steht für Technical Project Management. Wir verbinden Handwerk mit Projektsteuerung: Ein Team aus Fachkräften, Bauleitern und Projektmanagern übernimmt alle Gewerke Ihres Vorhabens, von der ersten Abstimmung bis zur sauberen Übergabe.';
+
+const ablauf = [
+  {
+    titel: 'Anfrage',
+    text: 'Sie beschreiben Ihr Vorhaben über den Anfrage-Assistenten, per E-Mail oder am Telefon. Fotos helfen beim Einschätzen.',
+  },
+  {
+    titel: 'Abstimmung',
+    text: 'Wir klären offene Fragen, schauen uns die Situation an und stimmen Umfang, Ablauf und Termine mit Ihnen ab.',
+  },
+  {
+    titel: 'Angebot',
+    text: 'Sie erhalten ein nachvollziehbares Angebot für Ihr konkretes Vorhaben.',
+  },
+  {
+    titel: 'Umsetzung',
+    text: 'Unser Team führt die Arbeiten aus und koordiniert alle beteiligten Gewerke. Sie haben einen festen Ansprechpartner.',
+  },
+  {
+    titel: 'Abnahme',
+    text: 'Gemeinsame Abnahme und eine saubere Übergabe der Baustelle.',
+  },
+];
+---
+<Base
+  title="TPM Bau GmbH – Innenausbau, Sanierung & alle Gewerke aus einer Hand in Berlin"
+  description="TPM Bau GmbH aus Berlin: Innenausbau, Trockenbau, Maler-, Boden- und Fliesenarbeiten, Elektro, Sanitär und mehr – alle Gewerke aus einer Hand für Privatkunden, Gewerbe und Hausverwaltungen."
+>
+  <!-- ═════════ HERO ═════════ -->
+  <section class:list={['hero on-ink', { 'hero--foto': !!foto.src }]} data-hero>
+    <div class="hero__grid raster" aria-hidden="true"></div>
+    <div class="hero__art" data-hero-art aria-hidden="true">
+      <svg class="hero__dims" viewBox="0 0 600 600" fill="none">
+        <path data-hero-line pathLength="1" d="M0 548 H600" />
+        <path data-hero-line pathLength="1" d="M0 538 V558 M372 538 V558 M600 538 V558" />
+        <path data-hero-line pathLength="1" d="M372 0 V548" class="dash" />
+        <path data-hero-line pathLength="1" d="M-40 497 H640" class="dash" />
+        <circle data-hero-line pathLength="1" cx="372" cy="7" r="9" />
+      </svg>
+      <LogoMark class="hero__mark" draw />
+      <span class="hero__dimlabel hero__dimlabel--a mono" data-hero-fade>Achse A</span>
+      <span class="hero__dimlabel hero__dimlabel--b mono" data-hero-fade>Dachknick · 3×</span>
+    </div>
+
+    <div class="wrap hero__inner">
+      <div class="hero__text">
+        <p class="plan-tag hero__kicker" data-hero-fade>
+          <b>Blatt 01</b> · Technical Project Management · Berlin
+        </p>
+        <Split
+          as="h1"
+          class="hero__title"
+          text="Bauen mit|Leidenschaft.|Handeln mit|*Verantwortung.*"
+          trigger="load"
+        />
+        <div class="hero__bottom">
+          <p class="hero__lead" data-hero-fade>
+            Innenausbau, Sanierung und Instandhaltung in Berlin. Alle Gewerke aus einer Hand, für Privatkunden,
+            Gewerbe und Hausverwaltungen.
+          </p>
+          <div class="hero__ctas" data-hero-fade>
+            <a href="/anfrage/" class="btn btn--lg" data-magnetic>Anfrage starten <Icon name="arrow" /></a>
+            <a href="/leistungen/" class="btn btn--ghost btn--lg">Leistungen ansehen</a>
+          </div>
+        </div>
+      </div>
+
+      {foto.src && (
+        <figure class="hero__foto" data-hero-fade>
+          <Picture
+            src={foto.src}
+            alt={foto.alt}
+            formats={['avif', 'webp']}
+            widths={[480, 720, 960, 1200].filter((w) => w <= foto.src!.width)}
+            sizes="(min-width: 1000px) 38vw, 92vw"
+            loading="eager"
+            fetchpriority="high"
+          />
+          <figcaption class="mono">Team TPM · Berlin</figcaption>
+        </figure>
+      )}
+    </div>
+
+    <ul role="list" class="hero__facts wrap" data-hero-fade>
+      <li><span class="mono">Gegründet</span>{firma.gruendung} in Berlin</li>
+      <li><span class="mono">Leistungen</span>12 Gewerke, ein Ansprechpartner</li>
+      <li><span class="mono">Für</span>Privat, Gewerbe, Hausverwaltungen</li>
+      <li><span class="mono">Mitglied</span>Handwerkskammer Berlin · BG BAU</li>
+    </ul>
+  </section>
+
+  <!-- ═════════ AUFTRAGGEBER ═════════ -->
+  <section class="clients on-ink" aria-labelledby="clients-title">
+    <div class="wrap clients__head">
+      <h2 id="clients-title" class="label">Auftraggeber (Auswahl)</h2>
+    </div>
+    <Marquee items={[...firma.auftraggeber]} />
+  </section>
+
+  <!-- ═════════ INTRO ═════════ -->
+  <section class="section intro" aria-labelledby="intro-title">
+    <div class="wrap intro__grid">
+      <div class="intro__side">
+        <h2 id="intro-title" class="label">Wer wir sind</h2>
+        <ul role="list" class="intro__roles" data-reveal>
+          {firma.team.map((r, i) => (
+            <li><span class="mono">0{i + 1}</span>{r}</li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <p class="intro__text" data-scrub-words>
+          {intro.split(' ').map((w) => <span class="wd">{w} </span>)}
+        </p>
+        <div class="intro__links" data-reveal>
+          <a href="/ueber-uns/" class="arrow-link">Mehr über TPM <Icon name="arrow" /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════ LEISTUNGEN ═════════ -->
+  <section class="section section--flush-top services" aria-labelledby="services-title">
+    <div class="wrap">
+      <div class="services__head">
+        <p class="label">Leistungen</p>
+        <Split as="h2" id="services-title" class="h2" text="Zwölf Gewerke.|*Ein Ansprechpartner.*" />
+        <p class="services__lead muted" data-reveal>
+          Einzeln beauftragt oder als Gesamtpaket: Wir stimmen die Gewerke aufeinander ab, damit Ihr Vorhaben ohne
+          Leerlauf und doppelte Wege vorankommt.
+        </p>
+      </div>
+      <ServiceIndex />
+    </div>
+  </section>
+
+  <!-- ═════════ ZIELGRUPPEN ═════════ -->
+  <section class="section audiences on-ink" aria-labelledby="aud-title">
+    <div class="wrap">
+      <p class="label">Für wen wir arbeiten</p>
+      <Split as="h2" id="aud-title" class="h2 audiences__title" text="Zwei Auftraggeber.|*Ein Anspruch.*" />
+      <div class="audiences__grid">
+        <article class="aud" data-reveal>
+          <div class="aud__axis" aria-hidden="true">A</div>
+          <TradeDrawing slug="innenausbau" class="aud__drawing" />
+          <h3 class="h3">Privatkunden</h3>
+          <p class="muted">
+            Sie sanieren Ihre Wohnung, renovieren vor dem Einzug oder brauchen kurzfristig Hilfe bei einem Schaden.
+            Wir übernehmen die Arbeiten und koordinieren alle Gewerke, damit Sie sich nicht um jeden Handwerker
+            einzeln kümmern müssen.
+          </p>
+          <ul role="list" class="aud__list">
+            <li>Sanierung und Modernisierung</li>
+            <li>Renovierung vor Ein- oder Auszug</li>
+            <li>Badsanierung</li>
+            <li>Hilfe bei akuten Schäden</li>
+          </ul>
+          <a href="/anfrage/?kunde=privat" class="arrow-link">Anfrage als Privatkunde <Icon name="arrow" /></a>
+        </article>
+        <article class="aud" data-reveal>
+          <div class="aud__axis" aria-hidden="true">B</div>
+          <TradeDrawing slug="trockenbau" class="aud__drawing" />
+          <h3 class="h3">Gewerbe &amp; Hausverwaltungen</h3>
+          <p class="muted">
+            Sie betreuen Bestandsobjekte, bauen Gewerbeflächen aus oder brauchen einen verlässlichen Partner für
+            laufende Instandhaltung. Bauleiter und Projektmanager steuern die Arbeiten und halten Sie auf dem
+            Laufenden.
+          </p>
+          <ul role="list" class="aud__list">
+            <li>Ausbau von Büro-, Laden- und Gastronomieflächen</li>
+            <li>Instandsetzung bei Mieterwechsel</li>
+            <li>Laufende Kleinreparaturen</li>
+            <li>Rückbau und Entrümpelung</li>
+          </ul>
+          <a href="/gewerbe/" class="arrow-link">Mehr für Gewerbekunden <Icon name="arrow" /></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════ WERTE (horizontal) ═════════ -->
+  <section class="values on-blue" data-hscroll aria-labelledby="values-title">
+    <div class="values__track" data-hscroll-track>
+      <div class="values__intro">
+        <p class="label">Wofür wir stehen</p>
+        <h2 id="values-title" class="h2">Drei Werte, an denen Sie uns messen können.</h2>
+        <p class="values__hint mono" aria-hidden="true">Weiterscrollen <Icon name="arrow" /></p>
+      </div>
+      {firma.werte.map((w, i) => (
+        <article class="value">
+          <span class="value__nr mono">0{i + 1} / 03</span>
+          <h3 class="value__title">{w.titel}</h3>
+          {'zusatz' in w && <p class="value__add">{w.zusatz}</p>}
+          <p class="value__text">{w.text}</p>
+        </article>
+      ))}
+    </div>
+    <div class="values__progress" aria-hidden="true"><span data-hscroll-progress></span></div>
+  </section>
+
+  <!-- ═════════ ABLAUF ═════════ -->
+  <section class="section process" aria-labelledby="process-title">
+    <div class="wrap process__grid">
+      <div class="process__head">
+        <p class="label">Ablauf</p>
+        <Split as="h2" id="process-title" class="h2" text="Vom Erstkontakt|bis zur *Abnahme.*" />
+        <p class="muted process__lead" data-reveal>
+          So läuft ein Auftrag bei uns ab. Sie wissen bei jedem Schritt, was als Nächstes passiert und wer
+          zuständig ist.
+        </p>
+        <a href="/anfrage/" class="btn process__cta" data-reveal>Schritt 1 starten <Icon name="arrow" /></a>
+      </div>
+      <div class="steps-wrap" data-progress>
+      <span class="steps__rail" aria-hidden="true"><span data-progress-line></span></span>
+      <ol role="list" class="steps">
+        {ablauf.map((s, i) => (
+          <li class="step" data-step>
+            <span class="step__nr mono">0{i + 1}</span>
+            <div>
+              <h3 class="h3">{s.titel}</h3>
+              <p class="muted">{s.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════ KUNDENSTIMMEN ═════════ -->
+  <Quotes />
+
+  <!-- ═════════ PARTNER ═════════ -->
+  <section class="section partners" aria-labelledby="partners-title">
+    <div class="wrap partners__grid">
+      <div>
+        <p class="label">Netzwerk</p>
+        <Split as="h2" id="partners-title" class="h2" text="Starke Partner|im *Rücken.*" />
+        <p class="muted partners__lead" data-reveal>
+          Wir arbeiten mit etablierten Fachhändlern und Herstellern zusammen und sind in den Verbänden des
+          Handwerks organisiert.
+        </p>
+        <a href="/partner/" class="arrow-link" data-reveal>Alle Partner <Icon name="arrow" /></a>
+      </div>
+      <div class="partners__lists">
+        <div data-reveal>
+          <h3 class="mono partners__sub">Zulieferer (Auswahl)</h3>
+          <ul role="list" class="namelist">
+            {firma.zulieferer.map((z) => <li>{z}</li>)}
+          </ul>
+        </div>
+        <div data-reveal>
+          <h3 class="mono partners__sub">Mitglied</h3>
+          <ul role="list" class="namelist namelist--strong">
+            {firma.mitgliedschaften.map((m) => <li>{m}</li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-top: calc(var(--header-h) + 2rem);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .hero__grid {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    -webkit-mask-image: radial-gradient(90% 80% at 70% 35%, #000 20%, transparent 80%);
+    mask-image: radial-gradient(90% 80% at 70% 35%, #000 20%, transparent 80%);
+  }
+  .hero__art {
+    position: absolute;
+    z-index: -1;
+    top: calc(var(--header-h) + 3vh);
+    right: -12vw;
+    width: min(92vw, 560px);
+    aspect-ratio: 600 / 600;
+  }
+  .hero__mark {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    opacity: 0.32;
+  }
+  html.motion .hero__mark polygon {
+    fill-opacity: 0;
+  }
+  .hero__dims {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .hero__dims path,
+  .hero__dims circle {
+    stroke: var(--sky);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+    opacity: 0.55;
+  }
+  .hero__dims .dash {
+    stroke-dasharray: 4 6;
+    opacity: 0.3;
+  }
+  html.motion [data-hero-line] {
+    stroke-dasharray: 1 1;
+    stroke-dashoffset: 1;
+  }
+  html.motion [data-hero-fade] {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .hero__dimlabel {
+    position: absolute;
+    color: var(--sky);
+    font-size: 0.65rem;
+  }
+  .hero__dimlabel--a {
+    left: 62%;
+    top: 93.5%;
+  }
+  .hero__dimlabel--b {
+    left: 64%;
+    top: -0.5%;
+  }
+
+  .hero__inner {
+    position: relative;
+    display: grid;
+    gap: 2.5rem;
+    padding-bottom: 2rem;
+  }
+  .hero__kicker {
+    margin-bottom: 1.5rem;
+  }
+  .hero__kicker b {
+    color: var(--sky);
+  }
+  .hero__title {
+    font-size: clamp(2.5rem, 11.4vw, 9.4rem);
+    line-height: 0.9;
+    font-weight: 780;
+    font-stretch: 100%;
+    letter-spacing: -0.035em;
+  }
+  .hero__bottom {
+    margin-top: clamp(1.75rem, 4vw, 3rem);
+    display: grid;
+    gap: 1.75rem;
+  }
+  .hero__lead {
+    font-size: var(--fs-lead);
+    line-height: 1.45;
+    max-width: 34ch;
+    color: rgba(243, 241, 236, 0.86);
+  }
+  .hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .hero__facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem 1.5rem;
+    margin: 0 auto;
+    padding-block: 1.5rem 2rem;
+    border-top: 1px solid var(--line-light);
+    font-size: 0.9rem;
+    line-height: 1.35;
+  }
+  .hero__facts li {
+    display: grid;
+    gap: 0.3rem;
+  }
+  .hero__facts .mono {
+    color: var(--sky);
+    font-size: 0.66rem;
+  }
+  .hero__foto {
+    margin: 0;
+    position: relative;
+    border: 1px solid var(--line-light-strong);
+    padding: 0.6rem;
+    background: var(--ink-2);
+  }
+  .hero__foto figcaption {
+    margin-top: 0.6rem;
+    color: var(--muted-light);
+    font-size: 0.65rem;
+  }
+
+  @media (min-width: 600px) {
+    .hero__title {
+      font-stretch: 112%;
+      font-size: clamp(3rem, 9.6vw, 9.4rem);
+    }
+  }
+  @media (min-width: 900px) {
+    .hero__art {
+      right: 4vw;
+      top: calc(var(--header-h) + 6vh);
+      width: min(44vw, 680px);
+    }
+    .hero__mark {
+      opacity: 1;
+    }
+    .hero__bottom {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 3rem;
+    }
+    .hero__facts {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  @media (min-width: 1000px) {
+    .hero--foto .hero__inner {
+      grid-template-columns: 1.5fr 1fr;
+      align-items: end;
+      gap: 4rem;
+    }
+    .hero--foto .hero__art {
+      right: auto;
+      left: 30vw;
+      opacity: 0.35;
+    }
+    .hero--foto .hero__title {
+      font-size: clamp(3rem, 7vw, 7.5rem);
+    }
+    .hero--foto .hero__bottom {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ── Auftraggeber ── */
+  .clients {
+    padding-block: clamp(3rem, 6vw, 5rem);
+    border-top: 1px solid var(--line-light);
+  }
+  .clients__head {
+    margin-bottom: 1.75rem;
+  }
+
+  /* ── Intro ── */
+  .intro__grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .intro__roles {
+    margin-top: 2rem;
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .intro__roles li {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--line);
+    font-weight: 600;
+    font-stretch: 110%;
+  }
+  .intro__roles .mono {
+    color: var(--blue);
+  }
+  .intro__text {
+    font-size: clamp(1.55rem, 3.3vw, 3rem);
+    line-height: 1.18;
+    font-weight: 560;
+    font-stretch: 106%;
+    letter-spacing: -0.02em;
+    text-wrap: pretty;
+  }
+  .intro__links {
+    margin-top: 2.5rem;
+  }
+  @media (min-width: 1000px) {
+    .intro__grid {
+      grid-template-columns: 1fr 2.6fr;
+      gap: 5rem;
+    }
+  }
+
+  /* ── Leistungen ── */
+  .section--flush-top {
+    padding-top: 0;
+  }
+  .services__head {
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+  }
+  .services__lead {
+    max-width: 46ch;
+  }
+  @media (min-width: 1000px) {
+    .services__head {
+      grid-template-columns: 1.6fr 1fr;
+      align-items: end;
+    }
+    .services__head .label {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* ── Zielgruppen ── */
+  .audiences__title {
+    margin-top: 1.25rem;
+  }
+  .audiences__grid {
+    margin-top: clamp(3rem, 6vw, 5rem);
+    display: grid;
+    border-top: 1px solid var(--line-light);
+  }
+  .aud {
+    position: relative;
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+    padding: 2.5rem 0 3rem;
+    border-bottom: 1px solid var(--line-light);
+  }
+  .aud__axis {
+    position: absolute;
+    top: 2.5rem;
+    right: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line-light-strong);
+    border-radius: 50%;
+    font-family: var(--font-mono);
+    color: var(--sky);
+  }
+  .aud__drawing {
+    width: 7rem;
+    color: var(--paper);
+    --trade-bg: var(--ink);
+    --trade-sw: 1.6;
+    margin-bottom: 0.5rem;
+  }
+  .aud .muted {
+    max-width: 52ch;
+  }
+  .aud__list {
+    margin: 0.5rem 0 1rem;
+    display: grid;
+    gap: 0;
+  }
+  .aud__list li {
+    padding: 0.7rem 0 0.7rem 1.6rem;
+    border-top: 1px solid var(--line-light);
+    position: relative;
+  }
+  .aud__list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.25rem;
+    width: 0.8rem;
+    height: 1px;
+    background: var(--sky);
+  }
+  .aud .arrow-link {
+    justify-self: start;
+  }
+  @media (min-width: 900px) {
+    .audiences__grid {
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--line-light);
+    }
+    .aud {
+      padding: 3.5rem 4rem 3.5rem 0;
+      border-bottom: 0;
+    }
+    .aud + .aud {
+      padding-left: 4rem;
+      padding-right: 0;
+      border-left: 1px solid var(--line-light);
+    }
+    .aud__axis {
+      right: 3rem;
+      top: 3.5rem;
+    }
+    .aud + .aud .aud__axis {
+      right: 0;
+    }
+  }
+
+  /* ── Werte ── */
+  .values {
+    position: relative;
+    overflow: hidden;
+  }
+  .values__track {
+    display: grid;
+    gap: 0;
+  }
+  .values__intro,
+  .value {
+    padding: clamp(4rem, 9vw, 6rem) var(--gutter);
+  }
+  .values__intro .h2 {
+    margin-top: 1.25rem;
+    max-width: 14ch;
+  }
+  .values__intro .label {
+    color: rgba(243, 241, 236, 0.85);
+  }
+  .values__hint {
+    display: none;
+  }
+  .value {
+    border-top: 1px solid rgba(243, 241, 236, 0.22);
+    display: grid;
+    align-content: center;
+    gap: 1rem;
+  }
+  .value__nr {
+    color: var(--sky-soft);
+  }
+  .value__title {
+    font-size: clamp(2.7rem, 12vw, 10rem);
+    line-height: 0.95;
+    font-weight: 800;
+    font-stretch: 112%;
+    letter-spacing: -0.04em;
+  }
+  .value__add {
+    font-size: clamp(1.15rem, 2vw, 1.6rem);
+    font-weight: 560;
+    font-stretch: 110%;
+    color: var(--sky-soft);
+  }
+  .value__text {
+    max-width: 44ch;
+    font-size: 1.1rem;
+    color: rgba(243, 241, 236, 0.9);
+  }
+  .values__progress {
+    display: none;
+  }
+  @media (min-width: 900px) {
+    .values {
+      height: 100vh;
+    }
+    .values__track {
+      display: flex;
+      height: 100%;
+      width: max-content;
+      align-items: stretch;
+    }
+    .values__intro {
+      width: 42vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-left: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
+    }
+    .values__hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 3rem;
+      color: rgba(243, 241, 236, 0.8);
+    }
+    .value {
+      width: 74vw;
+      border-top: 0;
+      border-left: 1px solid rgba(243, 241, 236, 0.22);
+      padding-inline: 5vw;
+    }
+    .value__title {
+      font-size: clamp(4rem, 10vw, 11rem);
+    }
+    .values__progress {
+      display: block;
+      position: absolute;
+      left: var(--gutter);
+      right: var(--gutter);
+      bottom: 2.5rem;
+      height: 1px;
+      background: rgba(243, 241, 236, 0.25);
+    }
+    .values__progress span {
+      display: block;
+      height: 100%;
+      background: var(--paper);
+      transform: scaleX(0);
+      transform-origin: left;
+    }
+  }
+
+  /* ── Ablauf ── */
+  .process__grid {
+    display: grid;
+    gap: 3rem;
+  }
+  .process__head .h2 {
+    margin-top: 1.25rem;
+  }
+  .process__lead {
+    margin-top: 1.5rem;
+    max-width: 40ch;
+  }
+  .process__cta {
+    margin-top: 2rem;
+  }
+  .steps-wrap {
+    position: relative;
+  }
+  .steps {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    display: grid;
+  }
+  .steps__rail {
+    position: absolute;
+    left: 1.25rem;
+    top: 1.5rem;
+    bottom: 1.5rem;
+    width: 1px;
+    background: var(--line);
+  }
+  .steps__rail span {
+    position: absolute;
+    inset: 0;
+    background: var(--blue);
+    transform-origin: top;
+  }
+  .step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 1.25rem;
+    padding: 1.5rem 0 2rem;
+  }
+  .step__nr {
+    position: relative;
+    z-index: 1;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+    color: var(--muted);
+    transition:
+      background-color 0.4s var(--ease),
+      color 0.4s var(--ease),
+      border-color 0.4s var(--ease);
+  }
+  html:not(.motion) .step__nr,
+  .step.is-active .step__nr {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: var(--paper);
+  }
+  .step .h3 {
+    margin: 0.3rem 0 0.6rem;
+  }
+  .step .muted {
+    max-width: 46ch;
+  }
+  @media (min-width: 1000px) {
+    .process__grid {
+      grid-template-columns: 1fr 1.15fr;
+      gap: 6rem;
+      align-items: start;
+    }
+    .process__head {
+      position: sticky;
+      top: calc(var(--header-h) + 3rem);
+    }
+  }
+
+  /* ── Partner ── */
+  .partners {
+    border-top: 1px solid var(--line);
+  }
+  .partners__grid {
+    display: grid;
+    gap: 3rem;
+  }
+  .partners__grid .h2 {
+    margin-top: 1.25rem;
+  }
+  .partners__lead {
+    margin: 1.5rem 0 2rem;
+    max-width: 42ch;
+  }
+  .partners__lists {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .partners__sub {
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+  .namelist {
+    margin: 0;
+    border-top: 1px solid var(--line);
+  }
+  .namelist li {
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+    font-weight: 600;
+    font-stretch: 112%;
+    letter-spacing: -0.01em;
+  }
+  .namelist--strong li {
+    color: var(--blue);
+  }
+  @media (min-width: 1000px) {
+    .partners__grid {
+      grid-template-columns: 1fr 1.3fr;
+      gap: 6rem;
+    }
+    .partners__lists {
+      grid-template-columns: 1.2fr 1fr;
+      gap: 3rem;
+    }
+  }
+</style>

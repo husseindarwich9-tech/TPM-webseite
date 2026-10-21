@@ -1,0 +1,268 @@
+---
+// Leistungsverzeichnis: nummerierte Zeilen, auf dem Desktop folgt eine Werkzeichnung der Maus.
+import TradeDrawing from './TradeDrawing.astro';
+import Icon from './Icon.astro';
+import { leistungen, phasen, type Leistung } from '../data/leistungen';
+
+interface Props {
+  grouped?: boolean;
+}
+const { grouped = false } = Astro.props;
+const gruppen: { titel?: string; text?: string; nr?: string; items: Leistung[] }[] = grouped
+  ? phasen.map((p, i) => ({
+      titel: p.titel,
+      text: p.text,
+      nr: String(i + 1).padStart(2, '0'),
+      items: leistungen.filter((l) => l.phase === p.id),
+    }))
+  : [{ items: leistungen }];
+---
+<div class:list={['index', { 'index--grouped': grouped }]} data-index>
+  {gruppen.map((g) => (
+    <div class="index__group">
+      {g.titel && (
+        <div class="index__phase" data-reveal>
+          <p class="mono"><span>Phase {g.nr}</span></p>
+          <h2 class="h3">{g.titel}</h2>
+          <p class="muted">{g.text}</p>
+        </div>
+      )}
+      <ul role="list" class="index__list">
+        {g.items.map((l) => (
+          <li data-reveal>
+            <a href={`/leistungen/${l.slug}/`} class="row" data-index-row={l.slug}>
+              <span class="row__nr mono">{l.nr}</span>
+              <span class="row__icon" aria-hidden="true">
+                <TradeDrawing slug={l.slug} animate={false} />
+              </span>
+              <span class="row__title">{l.titel}</span>
+              <span class="row__kurz">{l.kurz}</span>
+              <span class="row__arrow" aria-hidden="true">
+                <Icon name="arrow" />
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+
+  <div class="preview" data-preview aria-hidden="true">
+    {leistungen.map((l) => (
+      <div class="preview__item" data-preview-item={l.slug}>
+        <TradeDrawing slug={l.slug} animate={false} />
+        <span class="preview__label mono">
+          {l.nr} · {l.titel}
+        </span>
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .index {
+    position: relative;
+  }
+  .index__group + .index__group {
+    margin-top: clamp(3rem, 6vw, 5rem);
+  }
+  .index__phase {
+    display: grid;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+  }
+  .index__phase .mono {
+    color: var(--blue);
+  }
+  .index__phase .muted {
+    max-width: 52ch;
+    font-size: var(--fs-small);
+  }
+  .index__list {
+    margin: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.25rem 3rem 1fr auto;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--line-strong);
+    text-decoration: none;
+    color: var(--text);
+    isolation: isolate;
+    transition: color 0.45s var(--ease);
+  }
+  .row::before {
+    content: '';
+    position: absolute;
+    inset: 0 calc(var(--gutter) * -1);
+    z-index: -1;
+    background: var(--ink);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.55s var(--ease);
+  }
+  .row__nr {
+    color: var(--muted);
+    transition: color 0.45s var(--ease);
+  }
+  .row__icon {
+    width: 3rem;
+    height: 3rem;
+    padding: 0.35rem;
+    border: 1px solid var(--line);
+    color: var(--blue);
+    --trade-sw: 3.2;
+  }
+  .row__icon :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+  .row__title {
+    font-size: clamp(1.3rem, 3.4vw, 3.1rem);
+    font-weight: 720;
+    font-stretch: 114%;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    transition: transform 0.6s var(--ease);
+  }
+  .row__kurz {
+    display: none;
+    color: var(--muted);
+    font-size: var(--fs-small);
+    line-height: 1.4;
+    transition: color 0.45s var(--ease);
+  }
+  .row__arrow {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    transition:
+      background-color 0.45s var(--ease),
+      border-color 0.45s var(--ease),
+      transform 0.6s var(--ease);
+  }
+  .row__arrow :global(.icon) {
+    width: 1rem;
+    height: 1rem;
+  }
+  .row:focus-visible {
+    outline-offset: -2px;
+  }
+
+  @media (hover: hover) {
+    .row:hover {
+      color: var(--paper);
+    }
+    .row:hover::before {
+      transform: scaleY(1);
+      transform-origin: top;
+    }
+    .row:hover .row__nr {
+      color: var(--sky);
+    }
+    .row:hover .row__kurz {
+      color: var(--muted-light);
+    }
+    .row:hover .row__title {
+      transform: translateX(1rem);
+    }
+    .row:hover .row__arrow {
+      background: var(--blue);
+      border-color: var(--blue);
+      transform: rotate(-45deg);
+    }
+  }
+
+  @media (min-width: 900px) {
+    .row {
+      grid-template-columns: 4rem minmax(0, 1.4fr) minmax(0, 1fr) auto;
+      gap: 2rem;
+      padding: 1.6rem 0;
+    }
+    .row__icon {
+      display: none;
+    }
+    .row__kurz {
+      display: block;
+      max-width: 36ch;
+    }
+    .index--grouped {
+      display: grid;
+    }
+    .index--grouped .index__group {
+      display: grid;
+      grid-template-columns: 1fr 2.4fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    .index--grouped .index__phase {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+      padding-top: 1.25rem;
+    }
+    .index--grouped .row {
+      grid-template-columns: 3.5rem minmax(0, 1.2fr) minmax(0, 1fr) auto;
+    }
+    .index--grouped .row__title {
+      font-size: clamp(1.4rem, 2.4vw, 2.4rem);
+    }
+  }
+
+  /* Vorschau, folgt der Maus */
+  .preview {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 5;
+    width: 15rem;
+    margin: -7.5rem 0 0 2.5rem;
+    aspect-ratio: 1;
+    background: var(--blue);
+    color: var(--paper);
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    transform: scale(0.9);
+    clip-path: polygon(0 0, calc(100% - 1.5rem) 0, 100% 1.5rem, 100% 100%, 0 100%);
+    background-image:
+      linear-gradient(to right, rgba(243, 241, 236, 0.14) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(243, 241, 236, 0.14) 1px, transparent 1px);
+    background-size: 1.875rem 1.875rem;
+    --trade-bg: var(--blue);
+    --trade-aux: var(--sky-soft);
+    --trade-accent: var(--paper);
+    --trade-sw: 1.4;
+  }
+  .preview__item {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+  }
+  .preview__item.is-active {
+    opacity: 1;
+  }
+  .preview__item :global(svg) {
+    width: 62%;
+  }
+  .preview__label {
+    position: absolute;
+    left: 1rem;
+    bottom: 0.9rem;
+    font-size: 0.62rem;
+    color: var(--sky-soft);
+  }
+  @media (hover: none), (max-width: 899px) {
+    .preview {
+      display: none;
+    }
+  }
+</style>

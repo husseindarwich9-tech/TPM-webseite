@@ -1,0 +1,299 @@
+---
+import Logo from './Logo.astro';
+import LogoMark from './LogoMark.astro';
+import Icon from './Icon.astro';
+import Split from './Split.astro';
+import { firma } from '../data/firma';
+import { leistungen } from '../data/leistungen';
+
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+const jahr = new Date().getFullYear();
+---
+<footer class="footer on-ink">
+  {!compact && (
+    <div class="cta wrap">
+      <p class="label">Kontakt</p>
+      <Split as="h2" class="display cta__title" text="Sprechen wir über|*Ihr Vorhaben.*" />
+      <div class="cta__row" data-reveal>
+        <a href={firma.telefonHref} class="cta__big">
+          <span class="mono">Anrufen</span>
+          <span class="cta__value">{firma.telefon}</span>
+        </a>
+        <a href={firma.emailHref} class="cta__big">
+          <span class="mono">Schreiben</span>
+          <span class="cta__value">{firma.email}</span>
+        </a>
+        <a href="/anfrage/" class="btn btn--lg cta__btn" data-magnetic>
+          Anfrage starten <Icon name="arrow" />
+        </a>
+      </div>
+    </div>
+  )}
+
+  <div class="grid wrap">
+    <div class="col col--brand">
+      <a href="/" aria-label="TPM Bau GmbH – Startseite" class="brand"><Logo light /></a>
+      <p class="claim">{firma.leitsatz[0]} –<br />{firma.leitsatz[1]}</p>
+      <address class="addr">
+        {firma.name}<br />
+        {firma.adresse.strasse}<br />
+        {firma.adresse.plz} {firma.adresse.ort}
+      </address>
+      <a class="osm link" href={firma.osmUrl} rel="noopener" target="_blank">
+        Auf OpenStreetMap ansehen<span class="visually-hidden"> (öffnet in neuem Tab)</span>
+      </a>
+    </div>
+
+    <nav class="col" aria-label="Leistungen">
+      <p class="col__title mono">Leistungen</p>
+      <ul role="list" class="links links--two">
+        {leistungen.map((l) => (
+          <li><a href={`/leistungen/${l.slug}/`}>{l.titel}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <nav class="col" aria-label="Unternehmen">
+      <p class="col__title mono">Unternehmen</p>
+      <ul role="list" class="links">
+        <li><a href="/gewerbe/">Gewerbe &amp; Hausverwaltungen</a></li>
+        <li><a href="/ueber-uns/">Über uns</a></li>
+        <li><a href="/partner/">Partner</a></li>
+        <li><a href="/karriere/">Karriere &amp; Ausbildung</a></li>
+        <li><a href="/faq/">Häufige Fragen</a></li>
+        <li><a href="/kontakt/">Kontakt</a></li>
+        <li><a href="/anfrage/">Anfrage-Assistent</a></li>
+      </ul>
+    </nav>
+
+    <div class="col">
+      <p class="col__title mono">Direkt</p>
+      <ul role="list" class="links">
+        <li><a href={firma.telefonHref}>{firma.telefon}</a></li>
+        <li><a href={firma.emailHref}>{firma.email}</a></li>
+      </ul>
+      <p class="col__title mono col__title--gap">Social Media</p>
+      <ul role="list" class="social">
+        {firma.social.map((s) => (
+          <li>
+            {s.url ? (
+              <a href={s.url} rel="noopener" target="_blank" aria-label={`${s.name} (öffnet in neuem Tab)`}>
+                <Icon name={s.name.toLowerCase() as 'instagram' | 'tiktok' | 'linkedin'} />
+              </a>
+            ) : (
+              <span title={`${s.name}: Profil-Link folgt`} aria-label={`${s.name}: Profil-Link folgt`} role="img">
+                <Icon name={s.name.toLowerCase() as 'instagram' | 'tiktok' | 'linkedin'} />
+              </span>
+            )}
+          </li>
+        ))}
+      </ul>
+      <p class="col__title mono col__title--gap">Mitglied</p>
+      <ul role="list" class="links links--plain">
+        {firma.mitgliedschaften.map((m) => <li>{m}</li>)}
+      </ul>
+    </div>
+  </div>
+
+  <div class="bottom wrap">
+    <p>© {jahr} {firma.name}</p>
+    <ul role="list">
+      <li><a href="/impressum/">Impressum</a></li>
+      <li><a href="/datenschutz/">Datenschutz</a></li>
+      <li><a href="/agb/">AGB</a></li>
+    </ul>
+  </div>
+
+  <LogoMark class="watermark" />
+</footer>
+
+<style>
+  .footer {
+    position: relative;
+    overflow: hidden;
+    padding-top: clamp(5rem, 11vw, 10rem);
+    border-top: 1px solid var(--line-light);
+  }
+  .cta {
+    position: relative;
+    z-index: 1;
+    padding-bottom: clamp(4rem, 9vw, 8rem);
+  }
+  .cta__title {
+    margin-top: 1.5rem;
+    font-size: clamp(2.6rem, 9vw, 9rem);
+  }
+  .cta__row {
+    margin-top: clamp(2.5rem, 5vw, 4.5rem);
+    display: grid;
+    gap: 1.5rem;
+    align-items: end;
+  }
+  .cta__big {
+    display: grid;
+    gap: 0.4rem;
+    text-decoration: none;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line-light-strong);
+    transition: border-color 0.3s;
+  }
+  .cta__big .mono {
+    color: var(--sky);
+  }
+  .cta__value {
+    font-size: clamp(1.35rem, 2.6vw, 2.2rem);
+    font-weight: 620;
+    font-stretch: 110%;
+    letter-spacing: -0.01em;
+  }
+  .cta__big:hover {
+    border-color: var(--sky);
+  }
+  .cta__btn {
+    justify-self: start;
+  }
+
+  .grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 2.5rem;
+    padding-block: 3.5rem;
+    border-top: 1px solid var(--line-light);
+  }
+  .brand {
+    text-decoration: none;
+    display: inline-flex;
+  }
+  .claim {
+    margin-top: 1.5rem;
+    font-size: 1.05rem;
+    font-weight: 560;
+    font-stretch: 110%;
+    line-height: 1.35;
+  }
+  .addr {
+    margin-top: 1.25rem;
+    font-style: normal;
+    color: var(--muted-light);
+    line-height: 1.6;
+  }
+  .osm {
+    display: inline-block;
+    margin-top: 0.75rem;
+    font-size: 0.92rem;
+  }
+  .col__title {
+    color: var(--sky);
+    margin-bottom: 1rem;
+  }
+  .col__title--gap {
+    margin-top: 2rem;
+  }
+  .links {
+    margin: 0;
+    display: grid;
+    gap: 0.45rem;
+  }
+  .links--two {
+    grid-template-columns: 1fr;
+  }
+  .links a {
+    text-decoration: none;
+    color: var(--paper);
+    opacity: 0.82;
+    transition:
+      opacity 0.2s,
+      color 0.2s;
+    display: inline-block;
+    padding-block: 0.1rem;
+  }
+  .links a:hover {
+    opacity: 1;
+    color: var(--sky);
+  }
+  .links--plain li {
+    color: var(--muted-light);
+  }
+  .social {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0;
+  }
+  .social a,
+  .social span {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--line-light-strong);
+    color: var(--paper);
+    transition:
+      background-color 0.3s,
+      border-color 0.3s;
+  }
+  .social span {
+    opacity: 0.55;
+  }
+  .social a:hover {
+    background: var(--blue);
+    border-color: var(--blue);
+  }
+  .bottom {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block: 1.5rem 2rem;
+    border-top: 1px solid var(--line-light);
+    font-size: 0.88rem;
+    color: var(--muted-light);
+  }
+  .bottom ul {
+    display: flex;
+    gap: 1.5rem;
+    margin: 0;
+  }
+  .bottom a {
+    text-decoration: none;
+    display: inline-block;
+    padding-block: 0.4rem;
+  }
+  .bottom a:hover {
+    color: var(--paper);
+  }
+  .watermark {
+    position: absolute;
+    right: -6%;
+    bottom: -8%;
+    width: min(70vw, 900px);
+    opacity: 0.045;
+    pointer-events: none;
+    filter: grayscale(1) brightness(3);
+  }
+
+  @media (min-width: 700px) {
+    .links--two {
+      grid-template-columns: 1fr 1fr;
+      column-gap: 1.5rem;
+    }
+    .cta__row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 1100px) {
+    .grid {
+      grid-template-columns: 1.3fr 1.6fr 1fr 1fr;
+      gap: 3rem;
+    }
+    .cta__row {
+      grid-template-columns: 1fr 1fr auto;
+      gap: 3rem;
+    }
+  }
+</style>

@@ -1,0 +1,85 @@
+---
+// Laufband mit Namen (reiner Text, keine fremden Logos).
+interface Props {
+  items: string[];
+  reverse?: boolean;
+  speed?: number;
+  variant?: 'large' | 'small';
+}
+const { items, reverse = false, speed = 45, variant = 'large' } = Astro.props;
+---
+<div class:list={['marquee', `marquee--${variant}`]} data-marquee={reverse ? 'reverse' : ''} data-speed={speed}>
+  <ul role="list" class="visually-hidden">
+    {items.map((n) => <li>{n}</li>)}
+  </ul>
+  <div class="marquee__track" data-marquee-track aria-hidden="true">
+    {[0, 1].map(() => (
+      <div class="marquee__set">
+        {items.map((n, i) => (
+          <>
+            <span class:list={['marquee__item', { 'marquee__item--outline': i % 2 === 1 }]}>{n}</span>
+            <svg class="marquee__sep" viewBox="0 0 600 495"><polygon points="372,7 354,120 0,490" /><polygon points="372,7 600,490 354,120" /></svg>
+          </>
+        ))}
+      </div>
+    ))}
+  </div>
+</div>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+  .marquee__track {
+    display: flex;
+    width: max-content;
+  }
+  .marquee__set {
+    display: flex;
+    align-items: center;
+    flex: none;
+  }
+  .marquee__item {
+    padding-inline: clamp(1.25rem, 2.5vw, 2.5rem);
+    font-size: clamp(2rem, 5.5vw, 5rem);
+    font-weight: 760;
+    font-stretch: 116%;
+    letter-spacing: -0.03em;
+    white-space: nowrap;
+    line-height: 1.1;
+  }
+  .marquee__item--outline {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--sky);
+  }
+  .marquee--small .marquee__item {
+    font-size: clamp(1.3rem, 2.6vw, 2.2rem);
+  }
+  .marquee__sep {
+    width: clamp(1.4rem, 2.6vw, 2.4rem);
+    flex: none;
+  }
+  .marquee__sep polygon:first-child {
+    fill: var(--sky);
+  }
+  .marquee__sep polygon:last-child {
+    fill: var(--blue);
+  }
+  html:not(.motion) .marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  html:not(.motion) .marquee__track {
+    flex-wrap: wrap;
+    width: auto;
+  }
+  html:not(.motion) .marquee__set {
+    flex-wrap: wrap;
+    padding-inline: var(--gutter);
+  }
+  html:not(.motion) .marquee__set + .marquee__set {
+    display: none;
+  }
+</style>

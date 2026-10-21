@@ -1,0 +1,162 @@
+---
+// Werkzeichnung mit Achsraster, Maßketten und Plankopf – das wiederkehrende Bildmotiv der Seite.
+import TradeDrawing from './TradeDrawing.astro';
+import LogoMark from './LogoMark.astro';
+
+interface Props {
+  slug: string;
+  titel: string;
+  nr: string;
+  class?: string;
+  dark?: boolean;
+}
+const { slug, titel, nr, class: klasse, dark = false } = Astro.props;
+---
+<figure class:list={['plan', { 'plan--dark': dark }, klasse]} data-reveal>
+  <div class="plan__sheet">
+    <div class="plan__axis plan__axis--x" aria-hidden="true"><span>1</span><span>2</span><span>3</span></div>
+    <div class="plan__axis plan__axis--y" aria-hidden="true"><span>A</span><span>B</span><span>C</span></div>
+    <svg class="plan__dims" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" data-draw>
+      <path d="M12 7 H88 M12 5 V9 M50 5 V9 M88 5 V9" />
+      <path d="M93 14 V86 M91 14 H95 M91 86 H95" />
+    </svg>
+    <TradeDrawing slug={slug} class="plan__drawing" />
+    <span class="crosshair c1" aria-hidden="true"></span>
+    <span class="crosshair c2" aria-hidden="true"></span>
+    <span class="crosshair c3" aria-hidden="true"></span>
+    <span class="crosshair c4" aria-hidden="true"></span>
+  </div>
+  <figcaption class="plan__head">
+    <span class="cell cell--logo"><LogoMark /></span>
+    <span class="cell"><small>Gewerk</small>{titel}</span>
+    <span class="cell"><small>Blatt</small>{nr}</span>
+    <span class="cell"><small>Maßstab</small>o. M.</span>
+  </figcaption>
+</figure>
+
+<style>
+  .plan {
+    margin: 0;
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
+    --trade-bg: var(--paper);
+    --trade-sw: 1.1;
+  }
+  .plan--dark {
+    background: var(--ink-2);
+    color: var(--paper);
+    border-color: var(--line-light-strong);
+    --trade-bg: var(--ink-2);
+    --line: var(--line-light);
+    --line-strong: var(--line-light-strong);
+  }
+  .plan__sheet {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    display: grid;
+    place-items: center;
+    background-image:
+      linear-gradient(to right, var(--line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    background-size: 12.5% 12.5%;
+    background-position: center;
+  }
+  .plan__drawing {
+    width: 64%;
+    height: auto;
+  }
+  .plan__dims {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .plan__dims path {
+    stroke: var(--sky);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+    fill: none;
+  }
+  .plan__axis {
+    position: absolute;
+    display: flex;
+    justify-content: space-around;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+  }
+  .plan--dark .plan__axis {
+    color: var(--muted-light);
+  }
+  .plan__axis span {
+    display: grid;
+    place-items: center;
+    width: 1.3rem;
+    height: 1.3rem;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    opacity: 0.7;
+  }
+  .plan__axis--x {
+    left: 12%;
+    right: 12%;
+    bottom: 0.6rem;
+  }
+  .plan__axis--y {
+    flex-direction: column;
+    top: 12%;
+    bottom: 12%;
+    left: 0.6rem;
+  }
+  .c1 {
+    top: 0.6rem;
+    right: 0.6rem;
+  }
+  .c2 {
+    top: 0.6rem;
+    left: 2.6rem;
+  }
+  .c3 {
+    bottom: 2.6rem;
+    right: 0.6rem;
+  }
+  .c4 {
+    bottom: 0.6rem;
+    right: 2.6rem;
+  }
+  .plan__head {
+    display: grid;
+    grid-template-columns: auto 1.8fr 0.6fr 0.8fr;
+    border-top: 1px solid var(--line-strong);
+    font-size: 0.85rem;
+    font-weight: 560;
+  }
+  .cell {
+    display: grid;
+    gap: 0.1rem;
+    padding: 0.6rem 0.75rem;
+    min-width: 0;
+  }
+  .cell + .cell {
+    border-left: 1px solid var(--line-strong);
+  }
+  .cell small {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .plan--dark .cell small {
+    color: var(--muted-light);
+  }
+  .cell--logo {
+    place-items: center;
+    padding-inline: 0.9rem;
+  }
+  .cell--logo :global(svg) {
+    width: 1.8rem;
+  }
+</style>

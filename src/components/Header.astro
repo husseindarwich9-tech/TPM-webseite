@@ -1,0 +1,490 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { firma, navigation } from '../data/firma';
+import { leistungen, phasen } from '../data/leistungen';
+
+const pfad = Astro.url.pathname;
+const aktiv = (href: string) => pfad === href || (href !== '/' && pfad.startsWith(href));
+---
+<header class="site-header on-ink" data-header>
+  <div class="bar wrap">
+    <a href="/" class="brand" aria-label="TPM Bau GmbH – zur Startseite">
+      <Logo light />
+    </a>
+
+    <nav class="nav" aria-label="Hauptnavigation">
+      <ul role="list" class="nav__list">
+        {navigation.map((item) =>
+          item.href === '/leistungen/' ? (
+            <li class="nav__item nav__item--mega" data-mega>
+              <a href={item.href} class="nav__link" aria-current={aktiv(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+              <button
+                class="nav__toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="mega-leistungen"
+                data-mega-toggle
+              >
+                <span class="visually-hidden">Leistungen aufklappen</span>
+                <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 6 8.5l4-4" /></svg>
+              </button>
+              <div class="mega" id="mega-leistungen" data-mega-panel>
+                <div class="mega__inner wrap">
+                  {phasen.map((phase, i) => (
+                    <div class="mega__col">
+                      <p class="mega__phase mono">
+                        <span>{String(i + 1).padStart(2, '0')}</span> {phase.titel}
+                      </p>
+                      <ul role="list">
+                        {leistungen
+                          .filter((l) => l.phase === phase.id)
+                          .map((l) => (
+                            <li>
+                              <a href={`/leistungen/${l.slug}/`} class="mega__link">
+                                {l.titel}
+                              </a>
+                            </li>
+                          ))}
+                      </ul>
+                    </div>
+                  ))}
+                  <a href="/leistungen/" class="mega__all">
+                    <span class="mono">Übersicht</span>
+                    <span class="mega__all-title">Alle 12 Leistungen</span>
+                    <Icon name="arrow" />
+                  </a>
+                </div>
+              </div>
+            </li>
+          ) : (
+            <li class="nav__item">
+              <a href={item.href} class="nav__link" aria-current={aktiv(item.href) ? 'page' : undefined}>
+                {'kurz' in item ? (
+                  <>
+                    <span class="nav__long">{item.label}</span>
+                    <span class="nav__short">{item.kurz}</span>
+                  </>
+                ) : (
+                  item.label
+                )}
+              </a>
+            </li>
+          ),
+        )}
+      </ul>
+    </nav>
+
+    <div class="actions">
+      <a href={firma.telefonHref} class="phone">
+        <Icon name="phone" />
+        <span class="phone__nr">{firma.telefon}</span>
+      </a>
+      <a href="/anfrage/" class="btn btn--sm">Anfrage starten</a>
+      <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu" data-menu-toggle>
+        <span class="menu-btn__label" data-menu-label>Menü</span>
+        <span class="menu-btn__icon" aria-hidden="true"><i></i><i></i></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" data-menu hidden>
+    <div class="mobile-menu__inner wrap">
+      <nav aria-label="Mobile Navigation">
+        <ul role="list" class="mm-list">
+          <li><a href="/" class="mm-link" data-mm-item>Start</a></li>
+          {navigation.map((item) => (
+            <li>
+              <a href={item.href} class="mm-link" data-mm-item aria-current={aktiv(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+          <li><a href="/partner/" class="mm-link mm-link--sm" data-mm-item>Partner</a></li>
+          <li><a href="/faq/" class="mm-link mm-link--sm" data-mm-item>Häufige Fragen</a></li>
+        </ul>
+      </nav>
+      <div class="mm-contact" data-mm-item>
+        <a href={firma.telefonHref} class="mm-contact__line"><Icon name="phone" /> {firma.telefon}</a>
+        <a href={firma.emailHref} class="mm-contact__line"><Icon name="mail" /> {firma.email}</a>
+        <a href="/anfrage/" class="btn btn--lg">Anfrage starten <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 100;
+    background: transparent;
+    transition:
+      transform 0.5s var(--ease),
+      background-color 0.4s var(--ease),
+      box-shadow 0.4s var(--ease);
+  }
+  .site-header.is-scrolled {
+    background: rgba(10, 22, 38, 0.86);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+    box-shadow: 0 1px 0 var(--line-light);
+  }
+  .site-header.is-hidden:not(.menu-open):not(.mega-open) {
+    transform: translateY(-100%);
+  }
+  .bar {
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+  .brand {
+    text-decoration: none;
+    margin-right: auto;
+    display: inline-flex;
+    position: relative;
+    z-index: 2;
+  }
+  .brand :global(.logo__mark) {
+    width: 2.4rem;
+  }
+
+  /* Navigation */
+  .nav {
+    display: none;
+  }
+  .nav__list {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 1.8vw, 2rem);
+    margin: 0;
+  }
+  .nav__item {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .nav__link {
+    font-size: 0.95rem;
+    font-weight: 520;
+    text-decoration: none;
+    padding: 0.5rem 0;
+    position: relative;
+    white-space: nowrap;
+  }
+  .nav__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.2rem;
+    height: 1px;
+    background: var(--sky);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.45s var(--ease);
+  }
+  .nav__link:hover::after,
+  .nav__link[aria-current='page']::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  .nav__short {
+    display: none;
+  }
+  .nav__toggle {
+    background: none;
+    border: 0;
+    padding: 0.5rem 0.25rem;
+    display: grid;
+    place-items: center;
+  }
+  .nav__toggle svg {
+    width: 0.75rem;
+    height: 0.75rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    transition: transform 0.3s var(--ease);
+  }
+  .mega-open .nav__toggle svg {
+    transform: rotate(180deg);
+  }
+
+  /* Mega-Menü */
+  .mega {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: var(--header-h);
+    background: var(--ink-2);
+    border-top: 1px solid var(--line-light);
+    box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.6);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.35s var(--ease),
+      transform 0.45s var(--ease),
+      visibility 0s linear 0.45s;
+  }
+  .mega-open .mega {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.35s var(--ease),
+      transform 0.45s var(--ease),
+      visibility 0s;
+  }
+  .mega__inner {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr) 1.2fr;
+    gap: 2rem;
+    padding-block: 2.5rem 3rem;
+  }
+  .mega__phase {
+    color: var(--sky);
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line-light);
+  }
+  .mega__phase span {
+    color: var(--muted-light);
+    margin-right: 0.35rem;
+  }
+  .mega__col ul {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.35rem;
+  }
+  .mega__link {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 0.98rem;
+    padding: 0.25rem 0;
+    color: var(--paper);
+    opacity: 0.85;
+    transition:
+      opacity 0.2s,
+      transform 0.35s var(--ease);
+  }
+  .mega__link:hover {
+    opacity: 1;
+    transform: translateX(4px);
+    color: var(--sky);
+  }
+  .mega__all {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--blue);
+    color: var(--paper);
+    text-decoration: none;
+    clip-path: polygon(0 0, calc(100% - 1.2rem) 0, 100% 1.2rem, 100% 100%, 0 100%);
+    transition: background-color 0.3s;
+  }
+  .mega__all:hover {
+    background: var(--blue-deep);
+  }
+  .mega__all-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    font-stretch: 115%;
+    line-height: 1.1;
+  }
+
+  /* Aktionen rechts */
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    z-index: 2;
+  }
+  .phone {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 520;
+    white-space: nowrap;
+  }
+  .phone :global(.icon) {
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--sky);
+  }
+  .actions .btn {
+    display: none;
+  }
+  .btn--sm {
+    min-height: 2.75rem;
+    padding: 0 1.2rem;
+    font-size: 0.92rem;
+  }
+  .menu-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: none;
+    border: 0;
+    padding: 0.75rem 0 0.75rem 0.75rem;
+    min-height: 44px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .menu-btn__icon {
+    width: 26px;
+    height: 12px;
+    position: relative;
+  }
+  .menu-btn__icon i {
+    position: absolute;
+    left: 0;
+    height: 1.5px;
+    background: currentColor;
+    transition:
+      transform 0.45s var(--ease),
+      width 0.45s var(--ease),
+      top 0.45s var(--ease);
+  }
+  .menu-btn__icon i:nth-child(1) {
+    top: 0;
+    width: 26px;
+  }
+  .menu-btn__icon i:nth-child(2) {
+    top: 10px;
+    width: 17px;
+  }
+  .menu-open .menu-btn__icon i:nth-child(1) {
+    top: 5px;
+    transform: rotate(35deg);
+  }
+  .menu-open .menu-btn__icon i:nth-child(2) {
+    top: 5px;
+    width: 26px;
+    transform: rotate(-35deg);
+  }
+
+  /* Mobiles Menü */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background: var(--ink);
+    padding-top: var(--header-h);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .mobile-menu::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, var(--line-light) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line-light) 1px, transparent 1px);
+    background-size: 25vw 25vw;
+    opacity: 0.5;
+  }
+  .mobile-menu__inner {
+    position: relative;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2.5rem;
+    padding-block: 2rem calc(6rem + env(safe-area-inset-bottom));
+  }
+  .mm-list {
+    margin: 0;
+    display: grid;
+    gap: 0.15rem;
+  }
+  .mm-link {
+    display: block;
+    text-decoration: none;
+    font-size: clamp(1.9rem, 8.5vw, 3rem);
+    font-weight: 720;
+    font-stretch: 118%;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    padding: 0.2rem 0;
+  }
+  .mm-link[aria-current='page'] {
+    color: var(--sky);
+  }
+  .mm-link--sm {
+    font-size: 1.25rem;
+    font-weight: 500;
+    font-stretch: 105%;
+    color: var(--muted-light);
+    padding-top: 0.5rem;
+  }
+  .mm-contact {
+    display: grid;
+    gap: 0.9rem;
+  }
+  .mm-contact__line {
+    display: inline-flex;
+    gap: 0.75rem;
+    align-items: center;
+    text-decoration: none;
+    font-size: 1.1rem;
+  }
+  .mm-contact__line :global(.icon) {
+    color: var(--sky);
+  }
+  .mm-contact .btn {
+    margin-top: 0.75rem;
+    justify-self: start;
+  }
+
+  @media (min-width: 900px) {
+    .nav {
+      display: block;
+    }
+    .menu-btn,
+    .mobile-menu {
+      display: none !important;
+    }
+    .actions .btn {
+      display: inline-flex;
+    }
+    .phone {
+      display: inline-flex;
+    }
+    .phone__nr {
+      display: none;
+    }
+    .nav__long {
+      display: none;
+    }
+    .nav__short {
+      display: inline;
+    }
+  }
+  @media (min-width: 1240px) {
+    .phone__nr {
+      display: inline;
+    }
+  }
+  @media (min-width: 1400px) {
+    .nav__long {
+      display: inline;
+    }
+    .nav__short {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,24 @@
+---
+// Bildzeichen der TPM Bau GmbH: drei ineinanderliegende, geknickte Dächer.
+interface Props {
+  class?: string;
+  /** Linien-Variante für die Konstruktions-Animation */
+  draw?: boolean;
+  title?: string;
+}
+const { class: klasse, draw = false, title } = Astro.props;
+const hell = ['372,7 354,120 0,490', '329,227 316,315 0,490', '302,404 293,469 0,490'];
+const dunkel = ['372,7 600,490 354,120', '329,227 600,490 316,315', '302,404 600,490 293,469'];
+---
+<svg
+  class:list={['logomark', klasse]}
+  viewBox="0 0 600 495"
+  xmlns="http://www.w3.org/2000/svg"
+  role={title ? 'img' : undefined}
+  aria-hidden={title ? undefined : 'true'}
+  aria-label={title}
+  data-logomark={draw ? '' : undefined}
+>
+  {hell.map((p, i) => <polygon points={p} fill="#6FAAD6" data-roof={i} data-side="l" />)}
+  {dunkel.map((p, i) => <polygon points={p} fill="#1A63B0" data-roof={i} data-side="r" />)}
+</svg>
