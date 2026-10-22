@@ -10,8 +10,10 @@ interface Props {
   crumbs?: Crumb[];
   /** kleinere Variante, z. B. für Rechtstexte */
   compact?: boolean;
+  /** Titelgröße: display (Standard) oder h1 (für lange Titel) */
+  size?: 'display' | 'h1';
 }
-const { blatt, kicker, title, lead, crumbs = [], compact = false } = Astro.props;
+const { blatt, kicker, title, lead, crumbs = [], compact = false, size = 'display' } = Astro.props;
 const hasAside = Astro.slots.has('aside');
 ---
 <section class:list={['page-hero on-ink raster', { 'page-hero--compact': compact, 'page-hero--aside': hasAside }]}>
@@ -33,7 +35,7 @@ const hasAside = Astro.slots.has('aside');
         </nav>
       )}
       <p class="plan-tag kicker" data-reveal="fade"><b>Blatt {blatt}</b> · {kicker}</p>
-      <Split as="h1" class:list={[compact ? 'h1 title title--compact' : 'display title']} text={title} trigger="load" />
+      <Split as="h1" class:list={[compact ? 'h1 title title--compact' : size === 'h1' ? 'h1 title title--h1' : 'display title']} text={title} trigger="load" />
       {lead && <p class="lead page-hero__lead" data-reveal>{lead}</p>}
       <slot />
     </div>
@@ -104,6 +106,11 @@ const hasAside = Astro.slots.has('aside');
   }
   .title--compact {
     max-width: 22ch;
+  }
+  .title--h1 {
+    max-width: 18ch;
+    hyphens: manual;
+    font-size: clamp(2.2rem, 5.6vw, 5.5rem);
   }
   .page-hero__lead {
     margin-top: clamp(1.5rem, 3vw, 2.5rem);

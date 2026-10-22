@@ -1,0 +1,187 @@
+---
+// Kundenstimmen – echte Bewertungen von der bisherigen Webseite (5 Sterne).
+import Icon from './Icon.astro';
+import { kundenstimmen } from '../data/firma';
+---
+<section class="quotes on-ink section" aria-labelledby="quotes-title" data-quotes>
+  <div class="wrap">
+    <div class="quotes__head">
+      <h2 id="quotes-title" class="label">Kundenstimmen</h2>
+      <p class="quotes__count mono" aria-hidden="true">
+        <span data-quote-count>01</span> / {String(kundenstimmen.length).padStart(2, '0')}
+      </p>
+    </div>
+
+    <div class="quotes__stage" aria-roledescription="Karussell" aria-label="Kundenstimmen">
+      {kundenstimmen.map((k, i) => (
+        <figure
+          class:list={['quote', { 'is-active': i === 0 }]}
+          data-quote
+          aria-roledescription="Folie"
+          aria-label={`${i + 1} von ${kundenstimmen.length}`}
+        >
+          <div class="quote__stars" role="img" aria-label="5 von 5 Sternen">
+            {[0, 1, 2, 3, 4].map(() => <Icon name="star" />)}
+          </div>
+          <blockquote class="quote__text">
+            <p>„{k.text}“</p>
+          </blockquote>
+          <figcaption class="quote__name">
+            <span class="quote__line" aria-hidden="true"></span>
+            {k.name}
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+
+    <div class="quotes__nav">
+      <div class="quotes__dots">
+        {kundenstimmen.map((k, i) => (
+          <button type="button" data-quote-dot aria-current={i === 0 ? 'true' : 'false'}>
+            <span class="visually-hidden">Kundenstimme {i + 1} anzeigen</span>
+          </button>
+        ))}
+      </div>
+      <div class="quotes__arrows">
+        <button type="button" class="qbtn" data-quote-prev aria-label="Vorherige Kundenstimme">
+          <Icon name="arrow-left" />
+        </button>
+        <button type="button" class="qbtn" data-quote-next aria-label="Nächste Kundenstimme">
+          <Icon name="arrow" />
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .quotes {
+    border-top: 1px solid var(--line-light);
+    overflow: hidden;
+  }
+  .quotes__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+  .quotes__count {
+    color: var(--muted-light);
+  }
+  .quotes__count span {
+    color: var(--sky);
+  }
+  .quotes__stage {
+    display: grid;
+  }
+  .quote {
+    grid-area: 1 / 1;
+    margin: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(24px);
+    transition:
+      opacity 0.6s var(--ease),
+      transform 0.8s var(--ease),
+      visibility 0s linear 0.6s;
+  }
+  .quote.is-active {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity 0.8s var(--ease) 0.15s,
+      transform 1s var(--ease) 0.15s,
+      visibility 0s;
+  }
+  .quote__stars {
+    display: flex;
+    gap: 0.25rem;
+    color: var(--sky);
+    margin-bottom: 1.75rem;
+  }
+  .quote__stars :global(.icon) {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+  .quote__text {
+    margin: 0;
+    font-size: clamp(1.5rem, 3.6vw, 3.4rem);
+    line-height: 1.16;
+    font-weight: 600;
+    font-stretch: 106%;
+    letter-spacing: -0.02em;
+    max-width: 30ch;
+    text-wrap: pretty;
+  }
+  .quote__name {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted-light);
+  }
+  .quote__line {
+    width: 3rem;
+    height: 1px;
+    background: var(--sky);
+  }
+  .quotes__nav {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line-light);
+  }
+  .quotes__dots {
+    display: flex;
+    gap: 0.25rem;
+  }
+  .quotes__dots button {
+    width: 2.75rem;
+    height: 2.75rem;
+    background: none;
+    border: 0;
+    position: relative;
+  }
+  .quotes__dots button::after {
+    content: '';
+    position: absolute;
+    left: 0.4rem;
+    right: 0.4rem;
+    top: 50%;
+    height: 2px;
+    background: var(--line-light-strong);
+    transition: background-color 0.3s;
+  }
+  .quotes__dots button[aria-current='true']::after {
+    background: var(--sky);
+  }
+  .quotes__arrows {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .qbtn {
+    width: 3.25rem;
+    height: 3.25rem;
+    display: grid;
+    place-items: center;
+    background: none;
+    border: 1px solid var(--line-light-strong);
+    border-radius: 50%;
+    color: var(--paper);
+    transition:
+      background-color 0.3s,
+      border-color 0.3s;
+  }
+  .qbtn:hover {
+    background: var(--blue);
+    border-color: var(--blue);
+  }
+</style>

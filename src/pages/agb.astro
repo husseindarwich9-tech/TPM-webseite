@@ -1,0 +1,29 @@
+---
+import LegalPage from '../components/LegalPage.astro';
+import { firma } from '../data/firma';
+const ph = (t: string) => `[PLATZHALTER: ${t}]`;
+const abschnitte = [
+  ['Geltungsbereich', 'für welche Verträge (Privatkunden/Verbraucher und Unternehmer) die Bedingungen gelten'],
+  ['Angebot und Vertragsschluss', 'Bindungsfrist von Angeboten, Form der Auftragserteilung'],
+  ['Leistungsumfang', 'maßgebliche Unterlagen, Nachträge und Zusatzleistungen'],
+  ['Preise und Zahlung', 'Abschlagszahlungen, Zahlungsfristen, Schlussrechnung'],
+  ['Ausführung und Termine', 'Mitwirkungspflichten des Auftraggebers, Behinderungen, Fristen'],
+  ['Abnahme', 'Ablauf und Form der Abnahme'],
+  ['Gewährleistung', 'gesetzliche Regelungen bzw. VOB/B, falls vereinbart'],
+  ['Haftung', 'Haftungsbegrenzungen im gesetzlich zulässigen Rahmen'],
+  ['Widerrufsrecht für Verbraucher', 'Widerrufsbelehrung und Muster-Widerrufsformular, sofern anwendbar'],
+  ['Schlussbestimmungen', 'anwendbares Recht, Gerichtsstand, salvatorische Klausel'],
+];
+---
+<LegalPage title="AGB" description="Allgemeine Geschäftsbedingungen der TPM Bau GmbH, Berlin." path="/agb/" blatt="R3">
+  <h2>Allgemeine Geschäftsbedingungen der {firma.name}</h2>
+  <p>
+    <span class="placeholder-text">{ph('Die AGB der TPM Bau GmbH liegen noch nicht vor. Bitte den vollständigen, rechtlich geprüften Text einsetzen. Die folgende Gliederung dient nur als Orientierung.')}</span>
+  </p>
+  {abschnitte.map(([titel, inhalt], i) => (
+    <>
+      <h3>§ {i + 1} {titel}</h3>
+      <p><span class="placeholder-text">{ph(inhalt)}</span></p>
+    </>
+  ))}
+</LegalPage>

@@ -1,0 +1,241 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Split from '../components/Split.astro';
+import Icon from '../components/Icon.astro';
+import Bild from '../components/Bild.astro';
+import Marquee from '../components/Marquee.astro';
+import TradeDrawing from '../components/TradeDrawing.astro';
+import { firma } from '../data/firma';
+import { breadcrumbSchema } from '../data/seo';
+
+const crumbs = [{ href: '/gewerbe/', label: 'Gewerbe & Hausverwaltungen' }];
+
+const punkte = [
+  {
+    titel: 'Ein Ansprechpartner für alle Gewerke',
+    text: 'Sie beauftragen nicht zwölf Betriebe, sondern einen. Wir koordinieren Trockenbau, Elektro, Sanitär, Oberflächen und Entsorgung untereinander.',
+  },
+  {
+    titel: 'Bauleitung und Projektmanagement im Team',
+    text: 'Bauleiter und Projektmanager steuern die Arbeiten vor Ort und halten Termine, Abstimmungen und Übergaben zusammen.',
+  },
+  {
+    titel: 'Klare Kommunikation',
+    text: 'Sie wissen, was passiert, wann es passiert und wer zuständig ist. Absprachen sind verbindlich und nachvollziehbar.',
+  },
+  {
+    titel: 'Von der Kleinreparatur bis zum Ausbau',
+    text: 'Wir übernehmen einzelne Reparaturen in verwalteten Objekten ebenso wie den kompletten Ausbau einer Gewerbefläche.',
+  },
+];
+
+const aufgaben = [
+  { slug: 'innenausbau', titel: 'Mieterausbau & Flächenherrichtung', text: 'Büro-, Laden- und Gastronomieflächen ausbauen oder für neue Mieter herrichten.' },
+  { slug: 'malerarbeiten', titel: 'Instandsetzung bei Mieterwechsel', text: 'Wohnungen und Gewerbeeinheiten renovieren, Schäden beheben, Flächen übergabefähig machen.' },
+  { slug: 'kleinreparaturen', titel: 'Laufende Kleinreparaturen', text: 'Türen, Fugen, Armaturen, Wandschäden: die vielen kleinen Aufträge im Bestand.' },
+  { slug: 'heizung-lueftung-sanitaer', titel: 'Sanitär & Haustechnik', text: 'Sanitärräume, Leitungen, Heizkörper und akute Probleme, die schnell gelöst werden müssen.' },
+  { slug: 'abriss-und-entsorgung', titel: 'Rückbau & Entkernung', text: 'Flächen zurückbauen und Material ordnungsgemäß entsorgen, bevor der Neuausbau beginnt.' },
+  { slug: 'entruempelung', titel: 'Räumung & Entrümpelung', text: 'Wohnungen, Keller und Gewerbeflächen räumen und besenrein übergeben.' },
+];
+---
+<Base
+  title="Für Gewerbekunden & Hausverwaltungen in Berlin"
+  description="TPM Bau GmbH für Gewerbe und Hausverwaltungen in Berlin: Mieterausbau, Instandsetzung bei Mieterwechsel, laufende Kleinreparaturen und alle Gewerke aus einer Hand."
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <PageHero
+    blatt="03"
+    kicker="Gewerbe & Hausverwaltungen"
+    title="Ihr Partner|für den *Bestand.*"
+    lead="Für Hausverwaltungen, Eigentümer und Gewerbekunden übernehmen wir Ausbau, Instandsetzung und Instandhaltung. Alle Gewerke koordiniert, mit festen Ansprechpartnern."
+    crumbs={crumbs}
+  >
+    <div class="hero-ctas" data-reveal>
+      <a href="/anfrage/?kunde=gewerbe" class="btn" data-magnetic>Projekt anfragen <Icon name="arrow" /></a>
+      <a href={firma.telefonHref} class="btn btn--ghost"><Icon name="phone" /> {firma.telefon}</a>
+    </div>
+  </PageHero>
+
+  <section class="clients on-ink" aria-labelledby="clients-title">
+    <div class="wrap"><h2 id="clients-title" class="label">Für diese Auftraggeber waren wir unter anderem tätig</h2></div>
+    <Marquee items={[...firma.auftraggeber]} variant="small" speed={50} />
+  </section>
+
+  <section class="section">
+    <div class="wrap why">
+      <div class="why__head">
+        <p class="label">Was Sie erwarten können</p>
+        <Split as="h2" class="h2" text="Weniger Abstimmung.|*Mehr Verlässlichkeit.*" />
+      </div>
+      <ol role="list" class="why__list">
+        {punkte.map((p, i) => (
+          <li data-reveal>
+            <span class="mono">0{i + 1}</span>
+            <h3 class="h3">{p.titel}</h3>
+            <p class="muted">{p.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section on-ink tasks">
+    <div class="wrap">
+      <p class="label">Typische Aufgaben</p>
+      <Split as="h2" class="h2 tasks__title" text="Wobei wir|Sie *entlasten.*" />
+      <ul role="list" class="tasks__grid">
+        {aufgaben.map((a) => (
+          <li class="task" data-reveal>
+            <TradeDrawing slug={a.slug} class="task__drawing" />
+            <h3 class="h3">{a.titel}</h3>
+            <p class="muted">{a.text}</p>
+            <a href={`/leistungen/${a.slug}/`} class="arrow-link task__link">Zur Leistung <Icon name="arrow" /></a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap photo-row">
+      <Bild slot="gewerbe" ratio="4 / 3" />
+      <div class="photo-row__text">
+        <p class="label">Zusammenarbeit</p>
+        <Split as="h2" class="h2" text="Sprechen wir|über Ihr *Objekt.*" />
+        <p class="muted" data-reveal>
+          Ob einzelner Auftrag oder wiederkehrende Instandhaltung: Beschreiben Sie uns Ihr Objekt und Ihren Bedarf.
+          Wir melden uns und stimmen das weitere Vorgehen mit Ihnen ab.
+        </p>
+        <p class="muted" data-reveal>
+          <span class="placeholder-text">[PLATZHALTER: Angaben zu Rahmenverträgen, Reaktionszeiten oder Abrechnung, falls gewünscht]</span>
+        </p>
+        <a href="/anfrage/?kunde=gewerbe" class="btn" data-reveal>Anfrage als Gewerbekunde <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero-ctas {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .clients {
+    padding-block: 2.5rem 3rem;
+    border-top: 1px solid var(--line-light);
+  }
+  .clients .label {
+    margin-bottom: 1.25rem;
+  }
+  .why {
+    display: grid;
+    gap: 3rem;
+  }
+  .why__head .h2 {
+    margin-top: 1.25rem;
+  }
+  .why__list {
+    margin: 0;
+    display: grid;
+    border-top: 1px solid var(--line-strong);
+  }
+  .why__list li {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 0.5rem 1rem;
+    padding: 1.75rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .why__list .mono {
+    color: var(--blue);
+    padding-top: 0.4rem;
+  }
+  .why__list .muted {
+    grid-column: 2;
+    max-width: 52ch;
+  }
+  @media (min-width: 1000px) {
+    .why {
+      grid-template-columns: 1fr 1.2fr;
+      gap: 6rem;
+      align-items: start;
+    }
+    .why__head {
+      position: sticky;
+      top: calc(var(--header-h) + 3rem);
+    }
+  }
+  .tasks__title {
+    margin-top: 1.25rem;
+  }
+  .tasks__grid {
+    margin: 3rem 0 0;
+    display: grid;
+    border-top: 1px solid var(--line-light);
+  }
+  .task {
+    display: grid;
+    gap: 0.9rem;
+    align-content: start;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--line-light);
+  }
+  .task__drawing {
+    width: 4.5rem;
+    color: var(--paper);
+    --trade-bg: var(--ink);
+    --trade-sw: 2;
+  }
+  .task__link {
+    justify-self: start;
+  }
+  @media (min-width: 700px) {
+    .tasks__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .task {
+      padding: 2.5rem 2.5rem 2.5rem 0;
+    }
+    .task:nth-child(2n) {
+      padding-left: 2.5rem;
+      border-left: 1px solid var(--line-light);
+    }
+  }
+  @media (min-width: 1100px) {
+    .tasks__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .task,
+    .task:nth-child(2n) {
+      padding: 2.5rem 2rem;
+      border-left: 0;
+    }
+    .task:not(:nth-child(3n + 1)) {
+      border-left: 1px solid var(--line-light);
+    }
+    .task:nth-child(3n + 1) {
+      padding-left: 0;
+    }
+  }
+  .photo-row {
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+  }
+  .photo-row__text {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .photo-row__text .btn {
+    justify-self: start;
+  }
+  @media (min-width: 1000px) {
+    .photo-row {
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+    }
+  }
+</style>

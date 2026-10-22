@@ -1,0 +1,119 @@
+---
+import Base from '../layouts/Base.astro';
+import AnfrageAssistent from '../components/AnfrageAssistent.astro';
+import Icon from '../components/Icon.astro';
+import { firma } from '../data/firma';
+import { breadcrumbSchema } from '../data/seo';
+
+const crumbs = [{ href: '/anfrage/', label: 'Anfrage' }];
+---
+<Base
+  title="Anfrage stellen – in 6 kurzen Schritten"
+  description="Beschreiben Sie Ihr Vorhaben in sechs kurzen Schritten – mit Fotos und Wunschtermin. Die TPM Bau GmbH meldet sich bei Ihnen. Für Privatkunden, Gewerbe und Hausverwaltungen in Berlin."
+  schema={[breadcrumbSchema(crumbs)]}
+  compactFooter
+>
+  <section class="anfrage-head on-ink raster">
+    <div class="wrap anfrage-head__inner">
+      <nav aria-label="Brotkrumen" class="crumbs">
+        <ol role="list"><li><a href="/">Start</a></li><li><span aria-current="page">Anfrage</span></li></ol>
+      </nav>
+      <p class="plan-tag"><b>Blatt 09</b> · Anfrage-Assistent</p>
+      <h1 class="h1">Ihre Anfrage<br /><span class="accent">in 6 Schritten.</span></h1>
+      <p class="lead">Dauert etwa zwei Minuten. Lieber direkt sprechen? <a href={firma.telefonHref} class="link">{firma.telefon}</a></p>
+    </div>
+  </section>
+
+  <section class="anfrage-body">
+    <div class="wrap anfrage-body__grid">
+      <div class="anfrage-body__form">
+        <AnfrageAssistent />
+      </div>
+      <aside class="anfrage-aside" aria-label="Direkter Kontakt">
+        <p class="mono">Direkter Kontakt</p>
+        <a href={firma.telefonHref} class="aside-line"><Icon name="phone" /> {firma.telefon}</a>
+        <a href={firma.emailHref} class="aside-line"><Icon name="mail" /> {firma.email}</a>
+        <p class="aside-note">
+          Ihre Angaben verwenden wir ausschließlich zur Bearbeitung Ihrer Anfrage. Mehr dazu in der
+          <a href="/datenschutz/" class="link">Datenschutzerklärung</a>.
+        </p>
+      </aside>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .anfrage-head {
+    padding-top: calc(var(--header-h) + clamp(2.5rem, 6vw, 5rem));
+    padding-bottom: clamp(2.5rem, 5vw, 4rem);
+  }
+  .anfrage-head__inner {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .crumbs ol {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0 0 0.75rem;
+    font-size: 0.85rem;
+    color: var(--muted-light);
+  }
+  .crumbs li + li::before {
+    content: '/';
+    margin-right: 0.5rem;
+    opacity: 0.5;
+  }
+  .crumbs a {
+    text-decoration: none;
+  }
+  .plan-tag b {
+    color: var(--sky);
+  }
+  .anfrage-head .lead {
+    max-width: none;
+    color: rgba(243, 241, 236, 0.85);
+    font-size: 1.1rem;
+  }
+  .anfrage-body {
+    padding-block: clamp(2.5rem, 6vw, 5rem) clamp(4rem, 8vw, 7rem);
+  }
+  .anfrage-body__grid {
+    display: grid;
+    gap: 3rem;
+  }
+  .anfrage-aside {
+    display: grid;
+    gap: 0.9rem;
+    align-content: start;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line-strong);
+  }
+  .anfrage-aside .mono {
+    color: var(--blue);
+  }
+  .aside-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .aside-line:hover {
+    color: var(--blue);
+  }
+  .aside-note {
+    margin-top: 0.75rem;
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+  @media (min-width: 1100px) {
+    .anfrage-body__grid {
+      grid-template-columns: minmax(0, 1fr) 17rem;
+      gap: 5rem;
+    }
+    .anfrage-aside {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+</style>

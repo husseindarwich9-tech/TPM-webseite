@@ -1,0 +1,292 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Split from '../components/Split.astro';
+import Icon from '../components/Icon.astro';
+import Bild from '../components/Bild.astro';
+import LogoMark from '../components/LogoMark.astro';
+import { firma } from '../data/firma';
+import { bild } from '../data/bilder';
+import { breadcrumbSchema } from '../data/seo';
+
+const crumbs = [{ href: '/ueber-uns/', label: 'Über uns' }];
+const teamSlot = bild('startfoto').src ? 'startfoto' : 'team';
+
+const rollen = [
+  { titel: 'Fachkräfte', text: 'Sie führen die Arbeiten der einzelnen Gewerke aus, vom Trockenbau bis zur Sanitärinstallation.' },
+  { titel: 'Bauleiter', text: 'Sie organisieren die Baustelle, stimmen die Gewerke vor Ort ab und achten auf Qualität und Termine.' },
+  { titel: 'Projektmanager', text: 'Sie planen den Ablauf, sind Ihr Ansprechpartner und halten alle Beteiligten auf dem gleichen Stand.' },
+];
+---
+<Base
+  title="Über uns – TPM Bau GmbH, Technical Project Management aus Berlin"
+  description="Die TPM Bau GmbH wurde 2021 in Berlin gegründet. Ein Team aus Fachkräften, Bauleitern und Projektmanagern – alle Gewerke aus einer Hand. Geschäftsführer: Onur Bayram."
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <PageHero
+    blatt="04"
+    kicker="Über uns"
+    title="Was hinter|*TPM* steht."
+    lead="TPM steht für Technical Project Management. Wir verbinden handwerkliche Ausführung mit sauberer Projektsteuerung, damit Bauvorhaben planbar bleiben."
+    crumbs={crumbs}
+  />
+
+  <section class="section story">
+    <div class="wrap story__grid">
+      <div class="story__text">
+        <p class="label">Unternehmen</p>
+        <Split as="h2" class="h2" text="Gegründet 2021|in *Berlin.*" />
+        <div class="prose" data-reveal>
+          <p>
+            Die TPM Bau GmbH ist ein Berliner Bauunternehmen mit Sitz am Gustav-Müller-Platz in Schöneberg. Wir
+            arbeiten für Privatkunden ebenso wie für Gewerbekunden und Hausverwaltungen.
+          </p>
+          <p>
+            Unser Ansatz steckt im Namen: Technical Project Management. Ein Bauvorhaben besteht aus vielen Gewerken,
+            die zur richtigen Zeit in der richtigen Reihenfolge ineinandergreifen müssen. Genau das koordinieren wir,
+            und wir führen die Arbeiten mit unserem eigenen Team aus.
+          </p>
+          <p><span class="placeholder-text">[PLATZHALTER: Gründungsgeschichte bzw. persönliche Worte des Geschäftsführers]</span></p>
+        </div>
+      </div>
+      <dl class="facts" data-reveal>
+        <div><dt class="mono">Firma</dt><dd>{firma.name}</dd></div>
+        <div><dt class="mono">Gegründet</dt><dd>{firma.gruendung}, Berlin</dd></div>
+        <div><dt class="mono">Sitz</dt><dd>{firma.adresse.strasse}, {firma.adresse.plz} {firma.adresse.ort}</dd></div>
+        <div><dt class="mono">Geschäftsführer</dt><dd>{firma.geschaeftsfuehrer}</dd></div>
+        <div><dt class="mono">Mitglied</dt><dd>{firma.mitgliedschaften.join(' · ')}</dd></div>
+        <div class="facts__logo"><dt class="visually-hidden">Logo</dt><dd><LogoMark /></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="motto on-blue">
+    <div class="wrap">
+      <p class="label">Unser Leitsatz</p>
+      <Split as="p" class="motto__text" text={`${firma.leitsatz[0]} –|${firma.leitsatz[1]}.`} />
+    </div>
+  </section>
+
+  <section class="section team">
+    <div class="wrap team__grid">
+      <Bild slot={teamSlot} ratio="4 / 5" sizes="(min-width: 1000px) 40vw, 100vw" />
+      <div>
+        <p class="label">Team</p>
+        <Split as="h2" class="h2" text="Alle Gewerke.|*Ein Team.*" />
+        <p class="muted team__lead" data-reveal>
+          Bei uns arbeiten Fachkräfte, Bauleiter und Projektmanager zusammen. So liegen Ausführung und Steuerung in
+          einer Hand.
+        </p>
+        <ol role="list" class="roles">
+          {rollen.map((r, i) => (
+            <li data-reveal>
+              <span class="mono">0{i + 1}</span>
+              <div>
+                <h3 class="h3">{r.titel}</h3>
+                <p class="muted">{r.text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="section on-ink">
+    <div class="wrap">
+      <p class="label">Werte</p>
+      <Split as="h2" class="h2 values-title" text="Woran Sie uns|*messen* können." />
+      <ol role="list" class="vals">
+        {firma.werte.map((w, i) => (
+          <li data-reveal>
+            <span class="mono">0{i + 1}</span>
+            <h3 class="vals__title">{w.titel}</h3>
+            {'zusatz' in w && <p class="vals__add">{w.zusatz}</p>}
+            <p class="muted">{w.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap gf">
+      <Bild slot="geschaeftsfuehrer" ratio="1 / 1" class="gf__bild" sizes="(min-width: 900px) 20rem, 60vw" />
+      <div>
+        <p class="label">Geschäftsführung</p>
+        <h2 class="h2 gf__name">{firma.geschaeftsfuehrer}</h2>
+        <p class="muted">Geschäftsführer der {firma.name}</p>
+        <div class="gf__links">
+          <a href={firma.telefonHref} class="arrow-link"><Icon name="phone" /> {firma.telefon}</a>
+          <a href={firma.emailHref} class="arrow-link"><Icon name="mail" /> {firma.email}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .story__grid {
+    display: grid;
+    gap: 3rem;
+  }
+  .story__text .h2 {
+    margin: 1.25rem 0 2rem;
+  }
+  .facts {
+    margin: 0;
+    border: 1px solid var(--line-strong);
+    display: grid;
+    align-self: start;
+  }
+  .facts > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.25rem 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .facts dt {
+    color: var(--muted);
+    padding-top: 0.2rem;
+  }
+  .facts dd {
+    font-weight: 560;
+    min-width: 0;
+  }
+  @media (min-width: 480px) {
+    .facts > div {
+      grid-template-columns: 9rem minmax(0, 1fr);
+    }
+  }
+  .facts .facts__logo {
+    grid-template-columns: 1fr;
+    border-bottom: 0;
+    padding-block: 1.5rem;
+    background: var(--paper-2);
+  }
+  .facts__logo :global(svg) {
+    width: 3.5rem;
+  }
+  @media (min-width: 1000px) {
+    .story__grid {
+      grid-template-columns: 1.3fr 1fr;
+      gap: 6rem;
+    }
+  }
+  .motto {
+    padding-block: clamp(4.5rem, 10vw, 8rem);
+  }
+  .motto .label {
+    color: rgba(243, 241, 236, 0.85);
+  }
+  .motto__text {
+    margin-top: 1.5rem;
+    font-size: clamp(2rem, 6vw, 6rem);
+    line-height: 1;
+    font-weight: 780;
+    font-stretch: 112%;
+    letter-spacing: -0.035em;
+  }
+  .team__grid {
+    display: grid;
+    gap: 3rem;
+  }
+  .team__grid .h2 {
+    margin-top: 1.25rem;
+  }
+  .team__lead {
+    margin: 1.5rem 0 2rem;
+    max-width: 46ch;
+  }
+  .roles {
+    margin: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .roles li {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 1rem;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .roles .mono {
+    color: var(--blue);
+    padding-top: 0.35rem;
+  }
+  .roles .h3 {
+    margin-bottom: 0.4rem;
+  }
+  @media (min-width: 1000px) {
+    .team__grid {
+      grid-template-columns: 1fr 1.1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+  }
+  .values-title {
+    margin-top: 1.25rem;
+  }
+  .vals {
+    margin: 3rem 0 0;
+    display: grid;
+    border-top: 1px solid var(--line-light-strong);
+  }
+  .vals li {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--line-light);
+  }
+  .vals .mono {
+    color: var(--sky);
+  }
+  .vals__title {
+    font-size: clamp(2rem, 3.6vw, 3.2rem);
+    font-weight: 780;
+    font-stretch: 112%;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .vals__add {
+    color: var(--sky);
+    font-weight: 560;
+  }
+  @media (min-width: 900px) {
+    .vals {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .vals li {
+      padding: 2.5rem 2rem 2.5rem 0;
+      border-bottom: 0;
+    }
+    .vals li + li {
+      padding-left: 2rem;
+      border-left: 1px solid var(--line-light);
+    }
+  }
+  .gf {
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  .gf__bild {
+    max-width: 20rem;
+  }
+  .gf__name {
+    margin: 1.25rem 0 0.5rem;
+  }
+  .gf__links {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  @media (min-width: 900px) {
+    .gf {
+      grid-template-columns: 20rem 1fr;
+      gap: 4rem;
+    }
+  }
+</style>

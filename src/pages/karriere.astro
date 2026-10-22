@@ -1,0 +1,195 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Split from '../components/Split.astro';
+import Icon from '../components/Icon.astro';
+import Bild from '../components/Bild.astro';
+import { firma } from '../data/firma';
+import { leistungen } from '../data/leistungen';
+import { breadcrumbSchema } from '../data/seo';
+
+const crumbs = [{ href: '/karriere/', label: 'Karriere & Ausbildung' }];
+const mailBewerbung = `${firma.emailHref}?subject=${encodeURIComponent('Bewerbung bei der TPM Bau GmbH')}`;
+---
+<Base
+  title="Karriere & Ausbildung in Berlin"
+  description="Arbeiten und Ausbildung bei der TPM Bau GmbH in Berlin: Fachkräfte, Bauleiter und Projektmanager in allen Gewerken des Innenausbaus. Jetzt bewerben."
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <PageHero
+    blatt="06"
+    kicker="Karriere & Ausbildung"
+    title="Bauen Sie|mit *uns.*"
+    lead="Wir sind ein Team aus Fachkräften, Bauleitern und Projektmanagern. Wenn Sie mit Leidenschaft bauen und Verantwortung übernehmen möchten, sprechen Sie uns an."
+    crumbs={crumbs}
+  >
+    <div class="hero-ctas" data-reveal>
+      <a href={mailBewerbung} class="btn" data-magnetic>Jetzt bewerben <Icon name="arrow" /></a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap jobs">
+      <div>
+        <p class="label">Offene Stellen</p>
+        <Split as="h2" class="h2" text="Aktuelle|*Stellen.*" />
+      </div>
+      <div class="jobs__list" data-reveal>
+        <div class="job job--placeholder">
+          <span class="placeholder-text">[PLATZHALTER: Offene Stellen mit Titel, Umfang und Anforderungen]</span>
+          <p class="muted">
+            Solange hier keine Stelle steht, freuen wir uns über Ihre Initiativbewerbung, für alle unsere Gewerke und
+            für Bauleitung und Projektmanagement.
+          </p>
+          <a href={mailBewerbung} class="arrow-link">Initiativ bewerben <Icon name="arrow" /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section on-ink">
+    <div class="wrap ausb">
+      <div>
+        <p class="label">Ausbildung</p>
+        <Split as="h2" class="h2" text="Ihr Einstieg|ins *Handwerk.*" />
+        <p class="muted ausb__lead" data-reveal>
+          Als Mitglied der Handwerkskammer Berlin arbeiten wir in vielen Gewerken des Innenausbaus. Fragen Sie uns nach
+          Ausbildungsmöglichkeiten.
+        </p>
+        <p data-reveal><span class="placeholder-text">[PLATZHALTER: angebotene Ausbildungsberufe, Ausbildungsbeginn, Ansprechpartner]</span></p>
+      </div>
+      <div data-reveal>
+        <p class="mono ausb__sub">Unsere Gewerke</p>
+        <ul role="list" class="tags">
+          {leistungen.map((l) => <li>{l.titel}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap why">
+      <Bild slot="karriere" ratio="4 / 3" />
+      <div class="why__text">
+        <p class="label">Was Sie erwartet</p>
+        <Split as="h2" class="h2" text="Ein Team,|das *zusammen­arbeitet.*" />
+        <ul role="list" class="points" data-reveal>
+          <li>Arbeit in einem Team, in dem alle Gewerke zusammenkommen</li>
+          <li>Projekte für Privatkunden, Gewerbe und Hausverwaltungen in Berlin</li>
+          <li>Klare Abläufe und Ansprechpartner in Bauleitung und Projektmanagement</li>
+        </ul>
+        <p data-reveal><span class="placeholder-text">[PLATZHALTER: Leistungen für Mitarbeitende, z. B. Vergütung, Arbeitszeiten, Weiterbildung]</span></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight on-blue apply">
+    <div class="wrap apply__inner">
+      <div>
+        <p class="apply__title">So bewerben Sie sich</p>
+        <p class="apply__text">
+          Schicken Sie uns eine kurze E-Mail mit Lebenslauf und gegebenenfalls Zeugnissen an
+          <a href={mailBewerbung}>{firma.email}</a>, oder rufen Sie uns an: <a href={firma.telefonHref}>{firma.telefon}</a>.
+        </p>
+      </div>
+      <a href={mailBewerbung} class="btn btn--lg">Bewerbung senden <Icon name="mail" /></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero-ctas {
+    margin-top: 2.5rem;
+  }
+  .jobs,
+  .ausb,
+  .why {
+    display: grid;
+    gap: 3rem;
+  }
+  .jobs .h2,
+  .ausb .h2 {
+    margin-top: 1.25rem;
+  }
+  .job {
+    padding: 2rem;
+    border: 1px dashed rgba(26, 99, 176, 0.5);
+    display: grid;
+    gap: 1.25rem;
+    justify-items: start;
+  }
+  .ausb__lead {
+    margin: 1.5rem 0;
+    max-width: 46ch;
+  }
+  .ausb__sub {
+    color: var(--sky);
+    margin-bottom: 1rem;
+  }
+  .tags {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .tags li {
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--line-light-strong);
+    font-size: 0.95rem;
+  }
+  .why__text {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .points {
+    margin: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .points li {
+    padding: 1rem 0 1rem 1.75rem;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+  .points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.7rem;
+    width: 1rem;
+    height: 1px;
+    background: var(--blue);
+  }
+  @media (min-width: 1000px) {
+    .jobs,
+    .ausb,
+    .why {
+      grid-template-columns: 1fr 1.3fr;
+      gap: 6rem;
+      align-items: center;
+    }
+  }
+  .apply__inner {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+  }
+  .apply__title {
+    font-size: clamp(1.6rem, 3vw, 2.6rem);
+    font-weight: 760;
+    font-stretch: 112%;
+    letter-spacing: -0.02em;
+  }
+  .apply__text {
+    margin-top: 0.75rem;
+    max-width: 56ch;
+  }
+  .apply__text a {
+    color: inherit;
+    text-underline-offset: 0.2em;
+  }
+  @media (min-width: 900px) {
+    .apply__inner {
+      grid-template-columns: 1fr auto;
+    }
+  }
+</style>

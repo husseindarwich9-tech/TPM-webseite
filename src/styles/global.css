@@ -71,7 +71,7 @@
 
   --fs-display: clamp(2.65rem, 8.4vw, 8.75rem);
   --fs-h1: clamp(2.4rem, 6.4vw, 6.25rem);
-  --fs-h2: clamp(2rem, 4.6vw, 4.5rem);
+  --fs-h2: clamp(1.8rem, 4.6vw, 4.5rem);
   --fs-h3: clamp(1.35rem, 2vw, 1.75rem);
   --fs-lead: clamp(1.15rem, 1.6vw, 1.45rem);
   --fs-body: 1.0625rem;
@@ -156,6 +156,28 @@ ol[role='list'] {
   list-style: none;
   padding: 0;
 }
+/* Lange deutsche Komposita dürfen auf schmalen Bildschirmen umbrechen */
+h1,
+h2,
+h3,
+p,
+li,
+dd,
+dt,
+.h3 {
+  overflow-wrap: break-word;
+}
+h3,
+.h3,
+p,
+li,
+dd {
+  hyphens: auto;
+}
+.wrap > *,
+[class*='__grid'] > * {
+  min-width: 0;
+}
 ::selection {
   background: var(--blue);
   color: var(--paper);
@@ -207,7 +229,7 @@ ol[role='list'] {
   padding-inline: var(--gutter);
 }
 .section {
-  padding-block: clamp(5rem, 12vw, 11rem);
+  padding-block: clamp(4.5rem, 10vw, 9rem);
   position: relative;
 }
 .section--tight {

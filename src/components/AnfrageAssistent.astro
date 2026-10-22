@@ -1,0 +1,971 @@
+---
+// Mehrstufiger Anfrage-Assistent.
+// Privat/Gewerbe → Leistungen → Details → Fotos → Wunschtermin → Kontakt.
+// Versand als JSON an PUBLIC_ANFRAGE_WEBHOOK_URL (.env), Spamschutz per Honeypot + Zeitprüfung.
+import Icon from './Icon.astro';
+import TradeDrawing from './TradeDrawing.astro';
+import { leistungen } from '../data/leistungen';
+import { firma } from '../data/firma';
+
+const schritte = ['Kunde', 'Leistungen', 'Details', 'Fotos', 'Termin', 'Kontakt'];
+---
+<div class="wizard" data-wizard>
+  <div class="wz-progress" aria-hidden="true">
+    <div class="wz-progress__bar"><span data-wz-bar></span></div>
+    <ol class="wz-progress__steps">
+      {schritte.map((s, i) => (
+        <li data-wz-dot={i + 1} class:list={{ 'is-current': i === 0 }}>
+          <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+          <span class="wz-progress__label">{s}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+  <p class="visually-hidden" aria-live="polite" data-wz-status>Schritt 1 von 6: Kunde</p>
+
+  <form class="wz-form" novalidate data-wz-form>
+    <!-- Honeypot: für Menschen unsichtbar, Bots füllen es aus -->
+    <div class="wz-hp" aria-hidden="true">
+      <label for="wz-website">Website</label>
+      <input type="text" id="wz-website" name="website" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <!-- 1 · Kunde -->
+    <fieldset class="wz-step is-active" data-step="1">
+      <legend class="wz-legend" tabindex="-1">
+        <span class="mono">Schritt 01 / 06</span>
+        Für wen ist die Anfrage?
+      </legend>
+      <div class="wz-error-summary" role="alert" data-wz-summary hidden></div>
+      <div class="wz-cards" data-field="kundentyp">
+        <label class="wz-card">
+          <input type="radio" name="kundentyp" value="privat" required />
+          <span class="wz-card__body">
+            <TradeDrawing slug="innenausbau" animate={false} class="wz-card__icon" />
+            <span class="wz-card__title">Privat</span>
+            <span class="wz-card__text">Eigentümer, Mieter oder Vermieter einer Wohnung bzw. eines Hauses</span>
+          </span>
+          <span class="wz-card__check" aria-hidden="true"><Icon name="check" /></span>
+        </label>
+        <label class="wz-card">
+          <input type="radio" name="kundentyp" value="gewerbe" />
+          <span class="wz-card__body">
+            <TradeDrawing slug="trockenbau" animate={false} class="wz-card__icon" />
+            <span class="wz-card__title">Gewerbe / Hausverwaltung</span>
+            <span class="wz-card__text">Unternehmen, Hausverwaltungen, Eigentümergemeinschaften, Investoren</span>
+          </span>
+          <span class="wz-card__check" aria-hidden="true"><Icon name="check" /></span>
+        </label>
+      </div>
+      <p class="wz-msg" id="err-kundentyp" data-error-for="kundentyp"></p>
+    </fieldset>
+
+    <!-- 2 · Leistungen -->
+    <fieldset class="wz-step" data-step="2" hidden>
+      <legend class="wz-legend" tabindex="-1">
+        <span class="mono">Schritt 02 / 06</span>
+        Welche Arbeiten stehen an?
+      </legend>
+      <p class="wz-hint">Mehrfachauswahl möglich.</p>
+      <div class="wz-error-summary" role="alert" data-wz-summary hidden></div>
+      <div class="wz-chips" data-field="leistungen">
+        {leistungen.map((l) => (
+          <label class="wz-chip">
+            <input type="checkbox" name="leistungen" value={l.slug} data-label={l.titel} />
+            <span>
+              <TradeDrawing slug={l.slug} animate={false} class="wz-chip__icon" />
+              {l.titel}
+            </span>
+          </label>
+        ))}
+        <label class="wz-chip wz-chip--wide">
+          <input type="checkbox" name="leistungen" value="unklar" data-label="Noch unklar / Beratung gewünscht" />
+          <span>Noch unklar / Beratung gewünscht</span>
+        </label>
+      </div>
+      <p class="wz-msg" id="err-leistungen" data-error-for="leistungen"></p>
+    </fieldset>
+
+    <!-- 3 · Details -->
+    <fieldset class="wz-step" data-step="3" hidden>
+      <legend class="wz-legend" tabindex="-1">
+        <span class="mono">Schritt 03 / 06</span>
+        Erzählen Sie uns von Ihrem Vorhaben.
+      </legend>
+      <div class="wz-error-summary" role="alert" data-wz-summary hidden></div>
+      <div class="wz-grid">
+        <div class="wz-field wz-field--full">
+          <label for="wz-beschreibung">Beschreibung <span class="req" aria-hidden="true">*</span></label>
+          <textarea
+            id="wz-beschreibung"
+            name="beschreibung"
+            rows="6"
+            required
+            minlength="15"
+            maxlength="3000"
+            aria-describedby="hint-beschreibung err-beschreibung"
+            placeholder="Was soll gemacht werden? Wie ist der aktuelle Zustand?"
+          ></textarea>
+          <p class="wz-hint" id="hint-beschreibung">Ein paar Sätze genügen. <span data-wz-count>0</span> / 3000 Zeichen</p>
+          <p class="wz-msg" id="err-beschreibung" data-error-for="beschreibung"></p>
+        </div>
+        <div class="wz-field">
+          <label for="wz-objekt">Art des Objekts</label>
+          <select id="wz-objekt" name="objektart">
+            <option value="">Bitte wählen</option>
+            <option>Wohnung</option>
+            <option>Haus</option>
+            <option>Büro</option>
+            <option>Laden / Gastronomie</option>
+            <option>Treppenhaus / Gemeinschaftsfläche</option>
+            <option>Sonstiges</option>
+          </select>
+        </div>
+        <div class="wz-field">
+          <label for="wz-flaeche">Fläche (ca. m²)</label>
+          <input id="wz-flaeche" name="flaeche" type="number" inputmode="numeric" min="1" max="100000" step="1" aria-describedby="err-flaeche" />
+          <p class="wz-msg" id="err-flaeche" data-error-for="flaeche"></p>
+        </div>
+        <div class="wz-field">
+          <label for="wz-plz">PLZ des Objekts <span class="req" aria-hidden="true">*</span></label>
+          <input id="wz-plz" name="plz" type="text" inputmode="numeric" autocomplete="postal-code" required pattern="[0-9]{5}" maxlength="5" aria-describedby="err-plz" />
+          <p class="wz-msg" id="err-plz" data-error-for="plz"></p>
+        </div>
+        <div class="wz-field">
+          <label for="wz-ort">Ort / Stadtteil</label>
+          <input id="wz-ort" name="ort" type="text" autocomplete="address-level2" maxlength="80" placeholder="z. B. Berlin-Neukölln" />
+        </div>
+        <div class="wz-field wz-field--full" data-field="dringlichkeit">
+          <span class="wz-label" id="lbl-dringlichkeit">Wie dringend ist es? <span class="req" aria-hidden="true">*</span></span>
+          <div class="wz-segment" role="radiogroup" aria-labelledby="lbl-dringlichkeit" aria-describedby="err-dringlichkeit">
+            <label><input type="radio" name="dringlichkeit" value="akut" required /><span>Akut / Notfall</span></label>
+            <label><input type="radio" name="dringlichkeit" value="zeitnah" /><span>In den nächsten Wochen</span></label>
+            <label><input type="radio" name="dringlichkeit" value="flexibel" /><span>Zeitlich flexibel</span></label>
+          </div>
+          <p class="wz-hint wz-akut" data-wz-akut hidden>
+            Bei einem akuten Schaden rufen Sie uns am besten direkt an:
+            <a href={firma.telefonHref} class="link">{firma.telefon}</a>
+          </p>
+          <p class="wz-msg" id="err-dringlichkeit" data-error-for="dringlichkeit"></p>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- 4 · Fotos -->
+    <fieldset class="wz-step" data-step="4" hidden>
+      <legend class="wz-legend" tabindex="-1">
+        <span class="mono">Schritt 04 / 06</span>
+        Haben Sie Fotos? <span class="wz-optional">optional</span>
+      </legend>
+      <p class="wz-hint">Fotos helfen uns, den Umfang besser einzuschätzen. Bis zu 6 Bilder (JPG, PNG, WebP oder HEIC), je höchstens 15 MB. Die Bilder werden vor dem Senden verkleinert.</p>
+      <div class="wz-error-summary" role="alert" data-wz-summary hidden></div>
+      <div class="wz-drop" data-wz-drop>
+        <input type="file" id="wz-fotos" name="fotos" accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif" multiple class="visually-hidden" aria-describedby="err-fotos" />
+        <label for="wz-fotos" class="wz-drop__label">
+          <Icon name="upload" class="wz-drop__icon" />
+          <span class="wz-drop__title">Fotos auswählen</span>
+          <span class="wz-drop__text">oder hierher ziehen</span>
+        </label>
+      </div>
+      <p class="wz-msg" id="err-fotos" data-error-for="fotos" role="alert"></p>
+      <ul class="wz-thumbs" data-wz-thumbs role="list" aria-label="Ausgewählte Fotos"></ul>
+    </fieldset>
+
+    <!-- 5 · Termin -->
+    <fieldset class="wz-step" data-step="5" hidden>
+      <legend class="wz-legend" tabindex="-1">
+        <span class="mono">Schritt 05 / 06</span>
+        Wann passt es Ihnen?
+      </legend>
+      <p class="wz-hint">Ihr Wunschtermin für eine Besichtigung bzw. den Beginn der Arbeiten. Wir stimmen den genauen Termin mit Ihnen ab.</p>
+      <div class="wz-error-summary" role="alert" data-wz-summary hidden></div>
+      <div class="wz-grid">
+        <div class="wz-field">
+          <label for="wz-datum">Wunschtermin</label>
+          <input id="wz-datum" name="wunschtermin" type="date" aria-describedby="err-wunschtermin" />
+          <p class="wz-msg" id="err-wunschtermin" data-error-for="wunschtermin"></p>
+        </div>
+        <div class="wz-field" data-field="zeitfenster">
+          <span class="wz-label" id="lbl-zeit">Tageszeit</span>
+          <div class="wz-segment" role="radiogroup" aria-labelledby="lbl-zeit">
+            <label><input type="radio" name="zeitfenster" value="vormittags" /><span>Vormittags</span></label>
+            <label><input type="radio" name="zeitfenster" value="nachmittags" /><span>Nachmittags</span></label>
+            <label><input type="radio" name="zeitfenster" value="egal" checked /><span>Egal</span></label>
+          </div>
+        </div>
+        <div class="wz-field wz-field--full">
+          <label class="wz-check">
+            <input type="checkbox" name="terminFlexibel" value="ja" />
+            <span class="wz-check__box" aria-hidden="true"><Icon name="check" /></span>
+            <span>Ich bin zeitlich flexibel, bitte schlagen Sie einen Termin vor.</span>
+          </label>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- 6 · Kontakt -->
+    <fieldset class="wz-step" data-step="6" hidden>
+      <legend class="wz-legend" tabindex="-1">
+        <span class="mono">Schritt 06 / 06</span>
+        Wie erreichen wir Sie?
+      </legend>
+      <div class="wz-error-summary" role="alert" data-wz-summary hidden></div>
+      <div class="wz-grid">
+        <div class="wz-field">
+          <label for="wz-name">Name <span class="req" aria-hidden="true">*</span></label>
+          <input id="wz-name" name="name" type="text" autocomplete="name" required maxlength="120" aria-describedby="err-name" />
+          <p class="wz-msg" id="err-name" data-error-for="name"></p>
+        </div>
+        <div class="wz-field" data-wz-firma hidden>
+          <label for="wz-firma">Firma / Hausverwaltung <span class="req" aria-hidden="true">*</span></label>
+          <input id="wz-firma" name="firma" type="text" autocomplete="organization" maxlength="160" aria-describedby="err-firma" />
+          <p class="wz-msg" id="err-firma" data-error-for="firma"></p>
+        </div>
+        <div class="wz-field">
+          <label for="wz-email">E-Mail <span class="req" aria-hidden="true">*</span></label>
+          <input id="wz-email" name="email" type="email" autocomplete="email" required maxlength="160" aria-describedby="err-email" />
+          <p class="wz-msg" id="err-email" data-error-for="email"></p>
+        </div>
+        <div class="wz-field">
+          <label for="wz-telefon">Telefon <span class="req" aria-hidden="true" data-wz-tel-req hidden>*</span></label>
+          <input id="wz-telefon" name="telefon" type="tel" autocomplete="tel" maxlength="40" aria-describedby="err-telefon" />
+          <p class="wz-msg" id="err-telefon" data-error-for="telefon"></p>
+        </div>
+        <div class="wz-field wz-field--full" data-field="kontaktweg">
+          <span class="wz-label" id="lbl-weg">Bevorzugter Kontaktweg</span>
+          <div class="wz-segment" role="radiogroup" aria-labelledby="lbl-weg">
+            <label><input type="radio" name="kontaktweg" value="email" checked /><span>E-Mail</span></label>
+            <label><input type="radio" name="kontaktweg" value="telefon" /><span>Telefon</span></label>
+          </div>
+        </div>
+        <div class="wz-field wz-field--full" data-field="datenschutz">
+          <label class="wz-check">
+            <input type="checkbox" name="datenschutz" value="ja" required aria-describedby="err-datenschutz" />
+            <span class="wz-check__box" aria-hidden="true"><Icon name="check" /></span>
+            <span>
+              Ich bin einverstanden, dass meine Angaben und Fotos zur Bearbeitung meiner Anfrage gespeichert und
+              verwendet werden. Details in der <a href="/datenschutz/" class="link" target="_blank">Datenschutzerklärung</a>.
+              <span class="req" aria-hidden="true">*</span>
+            </span>
+          </label>
+          <p class="wz-msg" id="err-datenschutz" data-error-for="datenschutz"></p>
+        </div>
+      </div>
+
+      <div class="wz-review" data-wz-review></div>
+    </fieldset>
+
+    <div class="wz-send-error" role="alert" data-wz-send-error hidden>
+      <p class="wz-send-error__title">Ihre Anfrage konnte nicht gesendet werden.</p>
+      <p data-wz-send-error-text>Bitte versuchen Sie es erneut.</p>
+      <div class="wz-send-error__actions">
+        <button type="submit" class="btn btn--ghost">Erneut senden</button>
+        <a href="#" class="btn btn--ghost" data-wz-mailto><Icon name="mail" /> Per E-Mail senden</a>
+        <a href={firma.telefonHref} class="btn btn--ghost"><Icon name="phone" /> Anrufen</a>
+      </div>
+    </div>
+
+    <div class="wz-nav">
+      <button type="button" class="wz-back" data-wz-back hidden>
+        <Icon name="arrow-left" /> Zurück
+      </button>
+      <p class="wz-req-note"><span class="req">*</span> Pflichtfeld</p>
+      <button type="button" class="btn" data-wz-next>Weiter <Icon name="arrow" /></button>
+      <button type="submit" class="btn" data-wz-submit hidden>
+        <span data-wz-submit-label>Anfrage senden</span> <Icon name="arrow" />
+      </button>
+    </div>
+  </form>
+
+  <div class="wz-done" data-wz-done hidden tabindex="-1">
+    <span class="wz-done__icon" aria-hidden="true"><Icon name="check" /></span>
+    <h2 class="h2">Vielen Dank!</h2>
+    <p class="lead">Ihre Anfrage ist bei uns angekommen. Wir sehen sie uns an und melden uns bei Ihnen.</p>
+    <p class="muted">
+      Bei einem akuten Problem erreichen Sie uns telefonisch unter
+      <a href={firma.telefonHref} class="link">{firma.telefon}</a>.
+    </p>
+    <a href="/" class="btn btn--ghost">Zur Startseite</a>
+  </div>
+</div>
+
+<script>
+  import '../scripts/anfrage';
+</script>
+
+<style>
+  .wizard {
+    --wz-border: var(--line-strong);
+    position: relative;
+  }
+  .wz-hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* Fortschritt */
+  .wz-progress {
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  }
+  .wz-progress__bar {
+    height: 2px;
+    background: var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+  .wz-progress__bar span {
+    position: absolute;
+    inset: 0;
+    background: var(--blue);
+    transform: scaleX(0.1667);
+    transform-origin: left;
+    transition: transform 0.7s var(--ease);
+  }
+  .wz-progress__steps {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    margin: 0.9rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .wz-progress__steps li {
+    display: grid;
+    gap: 0.15rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+    transition: color 0.3s;
+  }
+  .wz-progress__steps .mono {
+    font-size: 0.68rem;
+  }
+  .wz-progress__steps li.is-done,
+  .wz-progress__steps li.is-current {
+    color: var(--text);
+  }
+  .wz-progress__steps li.is-current .mono {
+    color: var(--blue);
+  }
+  .wz-progress__label {
+    display: none;
+  }
+  @media (min-width: 700px) {
+    .wz-progress__label {
+      display: block;
+    }
+  }
+
+  /* Schritte */
+  .wz-step {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+  .wz-step.is-active {
+    animation: wz-in 0.6s var(--ease) both;
+  }
+  @keyframes wz-in {
+    from {
+      opacity: 0;
+      transform: translateX(24px);
+    }
+  }
+  .wz-step.is-back {
+    animation-name: wz-in-back;
+  }
+  @keyframes wz-in-back {
+    from {
+      opacity: 0;
+      transform: translateX(-24px);
+    }
+  }
+  .wz-legend {
+    display: grid;
+    gap: 0.6rem;
+    padding: 0;
+    margin-bottom: 1.75rem;
+    font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+    font-weight: 740;
+    font-stretch: 112%;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    outline: none;
+  }
+  .wz-legend .mono {
+    color: var(--blue);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+  }
+  .wz-optional {
+    font-size: 0.45em;
+    font-weight: 500;
+    font-stretch: 100%;
+    letter-spacing: 0;
+    color: var(--muted);
+    vertical-align: middle;
+    margin-left: 0.4rem;
+  }
+  .wz-hint {
+    color: var(--muted);
+    font-size: var(--fs-small);
+    margin: -0.75rem 0 1.5rem;
+    max-width: 60ch;
+  }
+  .wz-field .wz-hint {
+    margin: 0.4rem 0 0;
+  }
+  .wz-akut {
+    margin-top: 0.75rem !important;
+    padding: 0.75rem 1rem;
+    background: rgba(26, 99, 176, 0.08);
+    border-left: 2px solid var(--blue);
+    color: var(--text);
+  }
+
+  /* Karten (Schritt 1) */
+  .wz-cards {
+    display: grid;
+    gap: 1rem;
+  }
+  .wz-card {
+    position: relative;
+    display: block;
+    cursor: pointer;
+  }
+  .wz-card input,
+  .wz-chip input,
+  .wz-segment input,
+  .wz-check input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+  .wz-card__body {
+    display: grid;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    min-height: 100%;
+    border: 1px solid var(--wz-border);
+    background: var(--paper);
+    transition:
+      border-color 0.25s,
+      background-color 0.25s,
+      box-shadow 0.25s;
+  }
+  .wz-card :global(.wz-card__icon) {
+    width: 3.5rem;
+    color: var(--blue);
+    --trade-sw: 2.2;
+    margin-bottom: 0.5rem;
+  }
+  .wz-card__title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    font-stretch: 110%;
+  }
+  .wz-card__text {
+    color: var(--muted);
+    font-size: var(--fs-small);
+    line-height: 1.45;
+  }
+  .wz-card__check {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: 1.75rem;
+    height: 1.75rem;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--wz-border);
+    border-radius: 50%;
+    color: transparent;
+    transition: all 0.25s;
+  }
+  .wz-card__check :global(.icon) {
+    width: 1rem;
+    height: 1rem;
+  }
+  .wz-card:hover .wz-card__body {
+    border-color: var(--blue);
+  }
+  .wz-card input:checked ~ .wz-card__body {
+    border-color: var(--blue);
+    box-shadow: inset 0 0 0 1px var(--blue);
+    background: rgba(26, 99, 176, 0.05);
+  }
+  .wz-card input:checked ~ .wz-card__check {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: var(--paper);
+  }
+  .wz-card input:focus-visible ~ .wz-card__body {
+    outline: 2px solid var(--blue);
+    outline-offset: 3px;
+  }
+  @media (min-width: 700px) {
+    .wz-cards {
+      grid-template-columns: 1fr 1fr;
+    }
+    .wz-card__body {
+      padding: 2rem;
+    }
+  }
+
+  /* Chips (Schritt 2) */
+  .wz-chips {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  .wz-chip {
+    position: relative;
+    cursor: pointer;
+  }
+  .wz-chip > span {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3.5rem;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--wz-border);
+    font-weight: 560;
+    transition: all 0.2s;
+  }
+  .wz-chip :global(.wz-chip__icon) {
+    width: 1.9rem;
+    flex: none;
+    color: var(--blue);
+    --trade-sw: 3.4;
+    transition: color 0.2s;
+  }
+  .wz-chip:hover > span {
+    border-color: var(--blue);
+  }
+  .wz-chip input:checked + span {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: var(--paper);
+    --trade-bg: var(--blue);
+    --trade-aux: var(--sky-soft);
+    --trade-accent: var(--paper);
+  }
+  .wz-chip input:checked + span :global(.wz-chip__icon) {
+    color: var(--paper);
+  }
+  .wz-chip input:focus-visible + span {
+    outline: 2px solid var(--blue);
+    outline-offset: 3px;
+  }
+  @media (min-width: 560px) {
+    .wz-chips {
+      grid-template-columns: 1fr 1fr;
+    }
+    .wz-chip--wide {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 1100px) {
+    .wz-chips {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Felder */
+  .wz-grid {
+    display: grid;
+    gap: 1.5rem 1.25rem;
+  }
+  @media (min-width: 700px) {
+    .wz-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .wz-field--full {
+      grid-column: 1 / -1;
+    }
+  }
+  .wz-field {
+    display: grid;
+    gap: 0.45rem;
+    align-content: start;
+  }
+  .wz-field[hidden] {
+    display: none;
+  }
+  .wz-field label,
+  .wz-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .req {
+    color: var(--blue);
+  }
+  .wz-field input[type='text'],
+  .wz-field input[type='email'],
+  .wz-field input[type='tel'],
+  .wz-field input[type='number'],
+  .wz-field input[type='date'],
+  .wz-field select,
+  .wz-field textarea {
+    width: 100%;
+    min-height: 3.25rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--wz-border);
+    border-radius: 0;
+    background: #fff;
+    font-size: 1rem;
+    line-height: 1.4;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .wz-field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 4.5 6 8.5l4-4' fill='none' stroke='%230a1626' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 0.75rem;
+    padding-right: 2.5rem;
+  }
+  .wz-field textarea {
+    resize: vertical;
+    min-height: 9rem;
+  }
+  .wz-field input:focus,
+  .wz-field select:focus,
+  .wz-field textarea:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: inset 0 0 0 1px var(--blue);
+  }
+  .wz-field [aria-invalid='true'] {
+    border-color: var(--error) !important;
+    box-shadow: inset 0 0 0 1px var(--error) !important;
+  }
+  .wz-msg {
+    color: var(--error);
+    font-size: 0.9rem;
+    font-weight: 560;
+    min-height: 0;
+  }
+  .wz-msg:empty {
+    display: none;
+  }
+  .wz-step > .wz-msg {
+    margin-top: 0.75rem;
+  }
+
+  /* Segment-Auswahl */
+  .wz-segment {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .wz-segment label {
+    position: relative;
+    cursor: pointer;
+  }
+  .wz-segment span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 3rem;
+    padding: 0 1.1rem;
+    border: 1px solid var(--wz-border);
+    font-weight: 540;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+  }
+  .wz-segment label:hover span {
+    border-color: var(--blue);
+  }
+  .wz-segment input:checked + span {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .wz-segment input:focus-visible + span {
+    outline: 2px solid var(--blue);
+    outline-offset: 3px;
+  }
+
+  /* Checkbox */
+  .wz-check {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.5rem 1fr;
+    gap: 0.9rem;
+    align-items: start;
+    cursor: pointer;
+    font-weight: 450 !important;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .wz-check__box {
+    width: 1.5rem;
+    height: 1.5rem;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--wz-border);
+    background: #fff;
+    color: transparent;
+    transition: all 0.2s;
+  }
+  .wz-check__box :global(.icon) {
+    width: 1rem;
+    height: 1rem;
+  }
+  .wz-check input:checked + .wz-check__box {
+    background: var(--blue);
+    border-color: var(--blue);
+    color: var(--paper);
+  }
+  .wz-check input:focus-visible + .wz-check__box {
+    outline: 2px solid var(--blue);
+    outline-offset: 3px;
+  }
+  .wz-check input[aria-invalid='true'] + .wz-check__box {
+    border-color: var(--error);
+    box-shadow: 0 0 0 1px var(--error);
+  }
+
+  /* Upload */
+  .wz-drop {
+    position: relative;
+  }
+  .wz-drop__label {
+    display: grid;
+    justify-items: center;
+    gap: 0.4rem;
+    padding: 2.5rem 1.5rem;
+    border: 1px dashed var(--blue);
+    background:
+      linear-gradient(to right, rgba(26, 99, 176, 0.07) 1px, transparent 1px) 0 0 / 1.5rem 1.5rem,
+      linear-gradient(to bottom, rgba(26, 99, 176, 0.07) 1px, transparent 1px) 0 0 / 1.5rem 1.5rem,
+      #fff;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  .wz-drop.is-over .wz-drop__label,
+  .wz-drop__label:hover {
+    background-color: rgba(26, 99, 176, 0.06);
+  }
+  .wz-drop :global(.wz-drop__icon) {
+    width: 2rem;
+    height: 2rem;
+    color: var(--blue);
+  }
+  .wz-drop__title {
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .wz-drop__text {
+    color: var(--muted);
+    font-size: var(--fs-small);
+  }
+  .wz-drop input:focus-visible + .wz-drop__label {
+    outline: 2px solid var(--blue);
+    outline-offset: 3px;
+  }
+  .wz-thumbs {
+    margin: 1.25rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+    gap: 0.75rem;
+  }
+  .wz-thumbs:empty {
+    display: none;
+  }
+  .wz-thumbs :global(li) {
+    position: relative;
+    aspect-ratio: 1;
+    background: var(--paper-2);
+    overflow: hidden;
+  }
+  .wz-thumbs :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .wz-thumbs :global(.wz-thumb__loading) {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .wz-thumbs :global(button) {
+    position: absolute;
+    top: 0.35rem;
+    right: 0.35rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    display: grid;
+    place-items: center;
+    background: rgba(10, 22, 38, 0.85);
+    color: var(--paper);
+    border: 0;
+  }
+  .wz-thumbs :global(button svg) {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  /* Zusammenfassung */
+  .wz-review {
+    margin-top: 2.5rem;
+    border: 1px solid var(--line-strong);
+  }
+  .wz-review:empty {
+    display: none;
+  }
+  .wz-review :global(h3) {
+    padding: 0.9rem 1.25rem;
+    border-bottom: 1px solid var(--line-strong);
+    background: var(--paper-2);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .wz-review :global(dl) {
+    margin: 0;
+  }
+  .wz-review :global(dl > div) {
+    display: grid;
+    grid-template-columns: minmax(7rem, 10rem) 1fr auto;
+    gap: 1rem;
+    align-items: baseline;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+  .wz-review :global(dl > div:last-child) {
+    border-bottom: 0;
+  }
+  .wz-review :global(dt) {
+    color: var(--muted);
+  }
+  .wz-review :global(dd) {
+    word-break: break-word;
+  }
+  .wz-review :global(button) {
+    background: none;
+    border: 0;
+    color: var(--blue);
+    font-size: 0.85rem;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    padding: 0.25rem;
+  }
+
+  /* Fehler */
+  .wz-error-summary {
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    border-left: 3px solid var(--error);
+    background: rgba(180, 35, 24, 0.06);
+    color: var(--error);
+    font-weight: 560;
+  }
+  .wz-error-summary :global(ul) {
+    margin: 0.4rem 0 0;
+    padding-left: 1.1rem;
+    font-weight: 450;
+  }
+  .wz-error-summary :global(a) {
+    color: inherit;
+  }
+  .wz-send-error {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border: 1px solid var(--error);
+    background: rgba(180, 35, 24, 0.05);
+  }
+  .wz-send-error__title {
+    font-weight: 700;
+    color: var(--error);
+    font-size: 1.1rem;
+  }
+  .wz-send-error__actions {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .wz-send-error .btn {
+    min-height: 3rem;
+    font-size: 0.95rem;
+  }
+
+  /* Navigation */
+  .wz-nav {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+  .wz-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 3.5rem;
+    padding: 0 1rem 0 0;
+    background: none;
+    border: 0;
+    font-weight: 600;
+  }
+  .wz-back[hidden] {
+    display: none;
+  }
+  .wz-back:hover {
+    color: var(--blue);
+  }
+  .wz-req-note {
+    margin-right: auto;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .wz-nav .btn[hidden] {
+    display: none;
+  }
+  .wz-nav .btn[disabled] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+
+  /* Erfolg */
+  .wz-done {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+    outline: none;
+    animation: wz-in 0.7s var(--ease) both;
+  }
+  .wz-done[hidden] {
+    display: none;
+  }
+  .wz-done__icon {
+    width: 4rem;
+    height: 4rem;
+    display: grid;
+    place-items: center;
+    background: var(--blue);
+    color: var(--paper);
+    clip-path: polygon(0 0, calc(100% - 1rem) 0, 100% 1rem, 100% 100%, 0 100%);
+  }
+  .wz-done__icon :global(.icon) {
+    width: 2rem;
+    height: 2rem;
+  }
+</style>

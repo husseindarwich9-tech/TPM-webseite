@@ -1,0 +1,68 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from './PageHero.astro';
+import { breadcrumbSchema } from '../data/seo';
+
+interface Props {
+  title: string;
+  description: string;
+  path: string;
+  blatt: string;
+}
+const { title, description, path, blatt } = Astro.props;
+const crumbs = [{ href: path, label: title }];
+---
+<Base title={title} description={description} schema={[breadcrumbSchema(crumbs)]}>
+  <PageHero blatt={blatt} kicker="Rechtliches" title={title} crumbs={crumbs} compact />
+  <section class="section section--tight">
+    <div class="wrap legal">
+      <div class="legal__note" role="note">
+        <strong>Hinweis:</strong> Diese Seite enthält Platzhalter. Die rechtlichen Angaben müssen vor der Veröffentlichung
+        von TPM bzw. einer fachkundigen Stelle geprüft und vervollständigt werden.
+      </div>
+      <div class="prose legal__body">
+        <slot />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .legal {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .legal__note {
+    padding: 1rem 1.25rem;
+    border-left: 3px solid var(--blue);
+    background: rgba(26, 99, 176, 0.07);
+    max-width: 70ch;
+  }
+  .legal__body :global(h2) {
+    font-size: 1.45rem;
+    font-weight: 720;
+    font-stretch: 110%;
+    letter-spacing: -0.015em;
+    margin: 2.5rem 0 0.75rem;
+  }
+  .legal__body :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .legal__body :global(h3) {
+    font-size: 1.1rem;
+    font-weight: 680;
+    margin: 1.5rem 0 0.5rem;
+  }
+  .legal__body :global(ul) {
+    padding-left: 1.2rem;
+    margin: 0.75rem 0;
+  }
+  .legal__body :global(li + li) {
+    margin-top: 0.3rem;
+  }
+  .legal__body :global(p + p),
+  .legal__body :global(p + ul),
+  .legal__body :global(ul + p) {
+    margin-top: 0.9rem;
+  }
+</style>

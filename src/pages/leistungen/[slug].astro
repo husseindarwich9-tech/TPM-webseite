@@ -1,0 +1,371 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import PlanFrame from '../../components/PlanFrame.astro';
+import TradeDrawing from '../../components/TradeDrawing.astro';
+import Split from '../../components/Split.astro';
+import Icon from '../../components/Icon.astro';
+import { Picture } from 'astro:assets';
+import { leistungen, leistungBySlug, phasen, titelUmbruch, type Leistung } from '../../data/leistungen';
+import { findeDatei, leistungsFotoDatei } from '../../data/bilder';
+import { breadcrumbSchema } from '../../data/seo';
+import { firma } from '../../data/firma';
+
+export function getStaticPaths() {
+  return leistungen.map((l) => ({ params: { slug: l.slug }, props: { leistung: l } }));
+}
+
+const { leistung: l } = Astro.props as { leistung: Leistung };
+const phase = phasen.find((p) => p.id === l.phase)!;
+const verwandt = l.verwandt.map((s) => leistungBySlug(s)!).filter(Boolean);
+const index = leistungen.findIndex((x) => x.slug === l.slug);
+const prev = leistungen[(index - 1 + leistungen.length) % leistungen.length];
+const next = leistungen[(index + 1) % leistungen.length];
+const foto = findeDatei(leistungsFotoDatei(l.slug));
+
+const crumbs = [
+  { href: '/leistungen/', label: 'Leistungen' },
+  { href: `/leistungen/${l.slug}/`, label: l.titel },
+];
+const schema = [
+  breadcrumbSchema(crumbs),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: `${l.titel} in Berlin`,
+    serviceType: l.titel,
+    description: l.meta,
+    url: `${firma.url}/leistungen/${l.slug}/`,
+    provider: { '@id': `${firma.url}/#unternehmen` },
+    areaServed: { '@type': 'City', name: 'Berlin' },
+  },
+];
+---
+<Base title={`${l.titel} in Berlin`} description={l.meta} schema={schema}>
+  <PageHero
+    blatt={`02.${l.nr}`}
+    kicker={`Leistung · Phase: ${phase.titel}`}
+    title={`${titelUmbruch(l.titel)}|in *Berlin.*`}
+    lead={l.kurz}
+    crumbs={crumbs}
+    size="h1"
+  >
+    <div class="hero-ctas" data-reveal>
+      <a href={`/anfrage/?leistung=${l.slug}`} class="btn" data-magnetic>Anfrage für {l.titel} <Icon name="arrow" /></a>
+      <a href={firma.telefonHref} class="btn btn--ghost"><Icon name="phone" /> {firma.telefon}</a>
+    </div>
+    <PlanFrame slot="aside" slug={l.slug} titel={l.titel} nr={l.nr} dark />
+  </PageHero>
+
+  <section class="section detail">
+    <div class="wrap detail__grid">
+      <div class="detail__intro">
+        <p class="label">Worum es geht</p>
+        <p class="detail__text" data-reveal>{l.intro}</p>
+      </div>
+      <div class="detail__scope">
+        <h2 class="mono scope__title" data-reveal>Was dazugehört</h2>
+        <ol role="list" class="scope">
+          {l.umfang.map((u, i) => (
+            <li data-reveal>
+              <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+              {u}
+            </li>
+          ))}
+        </ol>
+        <p class="scope__note muted" data-reveal>
+          Ihr Vorhaben ist nicht dabei? Beschreiben Sie es uns trotzdem. Wir sagen Ihnen offen, ob wir es übernehmen
+          können.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {foto && (
+    <section class="wrap foto" aria-label={`Projektfoto ${l.titel}`}>
+      <figure data-reveal-clip>
+        <Picture src={foto} alt={`${l.titel} – Projekt der TPM Bau GmbH`} formats={['avif', 'webp']} widths={[640, 1024, 1600].filter((w) => w <= foto.width)} sizes="100vw" />
+      </figure>
+    </section>
+  )}
+
+  <section class="section section--tight uses">
+    <div class="wrap">
+      <Split as="h2" class="h2 uses__title" text={`Typische Anlässe`} />
+      <div class="uses__grid">
+        <article class="use" data-reveal>
+          <span class="use__axis mono" aria-hidden="true">A</span>
+          <h3 class="h3">Für Privatkunden</h3>
+          <p class="muted">{l.privat}</p>
+          <a href={`/anfrage/?kunde=privat&leistung=${l.slug}`} class="arrow-link">Als Privatkunde anfragen <Icon name="arrow" /></a>
+        </article>
+        <article class="use" data-reveal>
+          <span class="use__axis mono" aria-hidden="true">B</span>
+          <h3 class="h3">Für Gewerbe &amp; Hausverwaltungen</h3>
+          <p class="muted">{l.gewerbe}</p>
+          <a href={`/anfrage/?kunde=gewerbe&leistung=${l.slug}`} class="arrow-link">Als Gewerbekunde anfragen <Icon name="arrow" /></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section related on-ink">
+    <div class="wrap">
+      <p class="label">Aus einer Hand</p>
+      <Split as="h2" class="h2 related__title" text="Passt dazu" />
+      <p class="muted related__lead" data-reveal>
+        Diese Gewerke kommen bei {l.titel} häufig zusammen. Wir stimmen sie aufeinander ab, damit kein Gewerk auf das
+        andere warten muss.
+      </p>
+      <ul role="list" class="related__list">
+        {verwandt.map((v) => (
+          <li data-reveal>
+            <a href={`/leistungen/${v.slug}/`} class="rel">
+              <span class="rel__icon" aria-hidden="true"><TradeDrawing slug={v.slug} animate={false} /></span>
+              <span class="rel__nr mono">{v.nr}</span>
+              <span class="rel__title">{v.titel}</span>
+              <span class="rel__kurz">{v.kurz}</span>
+              <Icon name="arrow" class="rel__arrow" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <nav class="pager wrap" aria-label="Weitere Leistungen">
+    <a href={`/leistungen/${prev.slug}/`} class="pager__link">
+      <span class="mono">Vorherige Leistung</span>
+      <span class="pager__title"><Icon name="arrow-left" /> {titelUmbruch(prev.titel)}</span>
+    </a>
+    <a href="/leistungen/" class="pager__all mono">Alle Leistungen</a>
+    <a href={`/leistungen/${next.slug}/`} class="pager__link pager__link--next">
+      <span class="mono">Nächste Leistung</span>
+      <span class="pager__title">{titelUmbruch(next.titel)} <Icon name="arrow" /></span>
+    </a>
+  </nav>
+</Base>
+
+<style>
+  .hero-ctas {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .detail__grid {
+    display: grid;
+    gap: 3rem;
+  }
+  .detail__text {
+    margin-top: 1.5rem;
+    font-size: clamp(1.35rem, 2.4vw, 2.1rem);
+    line-height: 1.3;
+    font-weight: 520;
+    font-stretch: 104%;
+    letter-spacing: -0.015em;
+    text-wrap: pretty;
+    max-width: 30ch;
+  }
+  .scope__title {
+    color: var(--blue);
+    margin-bottom: 1rem;
+  }
+  .scope {
+    margin: 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .scope li {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 1rem;
+    align-items: baseline;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 1.08rem;
+    font-weight: 540;
+  }
+  .scope .mono {
+    color: var(--muted);
+  }
+  .scope__note {
+    margin-top: 1.5rem;
+    font-size: var(--fs-small);
+    max-width: 48ch;
+  }
+  @media (min-width: 1000px) {
+    .detail__grid {
+      grid-template-columns: 1.2fr 1fr;
+      gap: 6rem;
+    }
+  }
+  .foto figure {
+    margin: 0 0 clamp(3rem, 6vw, 5rem);
+    overflow: hidden;
+  }
+  .uses {
+    border-top: 1px solid var(--line);
+  }
+  .uses__grid {
+    margin-top: 2.5rem;
+    display: grid;
+    gap: 1.5rem;
+  }
+  .use {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    padding: 2rem;
+    background: var(--paper-2);
+    clip-path: polygon(0 0, calc(100% - 1.5rem) 0, 100% 1.5rem, 100% 100%, 0 100%);
+  }
+  .use__axis {
+    position: absolute;
+    top: 1.75rem;
+    right: 2.5rem;
+    width: 2rem;
+    height: 2rem;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    color: var(--blue);
+  }
+  .use .h3 {
+    padding-right: 3rem;
+  }
+  .use .arrow-link {
+    justify-self: start;
+    margin-top: 0.5rem;
+  }
+  @media (min-width: 900px) {
+    .uses__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .use {
+      padding: 2.75rem;
+    }
+  }
+  .related__title {
+    margin-top: 1.25rem;
+  }
+  .related__lead {
+    margin-top: 1.25rem;
+    max-width: 52ch;
+  }
+  .related__list {
+    margin: 2.5rem 0 0;
+    border-top: 1px solid var(--line-light-strong);
+  }
+  .rel {
+    display: grid;
+    grid-template-columns: 3.25rem 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--line-light);
+    text-decoration: none;
+    transition: background-color 0.3s;
+  }
+  .rel__icon {
+    grid-row: span 2;
+    width: 3.25rem;
+    height: 3.25rem;
+    padding: 0.4rem;
+    border: 1px solid var(--line-light-strong);
+    color: var(--paper);
+    --trade-sw: 3.2;
+    --trade-bg: var(--ink);
+  }
+  .rel__nr {
+    display: none;
+  }
+  .rel__title {
+    font-size: clamp(1.25rem, 2.2vw, 2rem);
+    font-weight: 700;
+    font-stretch: 112%;
+    letter-spacing: -0.02em;
+  }
+  .rel__kurz {
+    grid-column: 2;
+    color: var(--muted-light);
+    font-size: var(--fs-small);
+  }
+  .rel :global(.rel__arrow) {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    transition: transform 0.4s var(--ease);
+  }
+  .rel:hover .rel__title {
+    color: var(--sky);
+  }
+  .rel:hover :global(.rel__arrow) {
+    transform: translateX(6px);
+  }
+  @media (min-width: 900px) {
+    .rel {
+      grid-template-columns: 3.25rem 3rem 1.2fr 1fr auto;
+      gap: 2rem;
+    }
+    .rel__icon {
+      grid-row: auto;
+    }
+    .rel__nr {
+      display: block;
+      color: var(--sky);
+    }
+    .rel__kurz {
+      grid-column: auto;
+    }
+    .rel :global(.rel__arrow) {
+      grid-column: auto;
+      grid-row: auto;
+    }
+  }
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding-block: 2.5rem;
+  }
+  .pager__link {
+    display: grid;
+    gap: 0.4rem;
+    min-width: 0;
+    text-decoration: none;
+    hyphens: manual;
+  }
+  .pager__link .mono {
+    color: var(--muted);
+  }
+  .pager__title {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 680;
+    font-stretch: 110%;
+    font-size: 1.1rem;
+  }
+  .pager__link--next {
+    text-align: right;
+    justify-items: end;
+  }
+  .pager__link:hover .pager__title {
+    color: var(--blue);
+  }
+  .pager__all {
+    display: none;
+  }
+  @media (min-width: 700px) {
+    .pager {
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+    }
+    .pager__all {
+      display: block;
+      color: var(--blue);
+    }
+  }
+</style>

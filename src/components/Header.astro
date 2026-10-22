@@ -450,6 +450,17 @@ const aktiv = (href: string) => pfad === href || (href !== '/' && pfad.startsWit
     justify-self: start;
   }
 
+  @media (max-width: 379px) {
+    .menu-btn__label {
+      display: none;
+    }
+    .brand :global(.logo__name) {
+      font-size: 1.08rem;
+    }
+    .brand :global(.logo__sub) {
+      font-size: 0.42rem;
+    }
+  }
   @media (min-width: 900px) {
     .nav {
       display: block;

@@ -1,0 +1,169 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Split from '../components/Split.astro';
+import Icon from '../components/Icon.astro';
+import { firma } from '../data/firma';
+import { breadcrumbSchema } from '../data/seo';
+
+const crumbs = [{ href: '/partner/', label: 'Partner' }];
+const mitglied = [
+  { name: 'Handwerkskammer Berlin', text: 'Die Selbstverwaltung des Berliner Handwerks.' },
+  { name: 'BG BAU', text: 'Berufsgenossenschaft der Bauwirtschaft, Trägerin der gesetzlichen Unfallversicherung am Bau.' },
+];
+---
+<Base
+  title="Partner, Auftraggeber & Mitgliedschaften"
+  description="Auftraggeber, Zulieferer und Mitgliedschaften der TPM Bau GmbH: u. a. Union Investment, Five Guys, Apleona, Raab Karcher, Brillux sowie Handwerkskammer Berlin und BG BAU."
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <PageHero
+    blatt="05"
+    kicker="Partner"
+    title="In guter|*Gesellschaft.*"
+    lead="Für wen wir arbeiten, mit wem wir arbeiten und wo wir organisiert sind."
+    crumbs={crumbs}
+  />
+
+  <section class="section">
+    <div class="wrap block">
+      <div class="block__head">
+        <p class="label">Auftraggeber</p>
+        <Split as="h2" class="h2" text="Für sie waren|wir *tätig.*" />
+        <p class="muted" data-reveal>Eine Auswahl von Unternehmen, für die wir Aufträge ausgeführt haben.</p>
+      </div>
+      <ul role="list" class="wall">
+        {firma.auftraggeber.map((n, i) => (
+          <li data-reveal>
+            <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+            <span class="wall__name">{n}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section on-ink">
+    <div class="wrap block">
+      <div class="block__head">
+        <p class="label">Zulieferer</p>
+        <Split as="h2" class="h2" text="Material von|*Fachhändlern.*" />
+        <p class="muted" data-reveal>Wir beziehen Baustoffe, Farben, Elektro- und Sanitärmaterial unter anderem von diesen Partnern.</p>
+      </div>
+      <ul role="list" class="wall wall--dark">
+        {firma.zulieferer.map((n, i) => (
+          <li data-reveal>
+            <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+            <span class="wall__name">{n}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap block">
+      <div class="block__head">
+        <p class="label">Mitgliedschaften</p>
+        <Split as="h2" class="h2" text="Organisiert im|*Handwerk.*" />
+      </div>
+      <ul role="list" class="members">
+        {mitglied.map((m) => (
+          <li data-reveal>
+            <h3 class="h3">{m.name}</h3>
+            <p class="muted">{m.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--tight on-blue cta">
+    <div class="wrap cta__inner">
+      <p class="cta__text">Sie möchten mit uns zusammenarbeiten, als Auftraggeber oder als Partner?</p>
+      <a href="/kontakt/" class="btn btn--lg">Kontakt aufnehmen <Icon name="arrow" /></a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .block {
+    display: grid;
+    gap: 3rem;
+  }
+  .block__head {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+  }
+  .block__head .muted {
+    max-width: 40ch;
+  }
+  .wall {
+    margin: 0;
+    display: grid;
+    border-top: 1px solid var(--line-strong);
+  }
+  .wall li {
+    display: flex;
+    align-items: baseline;
+    gap: 1.25rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .wall .mono {
+    color: var(--blue);
+  }
+  .wall--dark .mono {
+    color: var(--sky);
+  }
+  .wall__name {
+    font-size: clamp(1.4rem, 3vw, 2.5rem);
+    font-weight: 720;
+    font-stretch: 114%;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+  }
+  .members {
+    margin: 0;
+    display: grid;
+    gap: 1.5rem;
+  }
+  .members li {
+    padding: 2rem;
+    border: 1px solid var(--line-strong);
+    display: grid;
+    gap: 0.6rem;
+  }
+  @media (min-width: 1000px) {
+    .block {
+      grid-template-columns: 1fr 1.5fr;
+      gap: 6rem;
+    }
+    .block__head {
+      position: sticky;
+      top: calc(var(--header-h) + 3rem);
+    }
+    .members {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .cta__inner {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+  }
+  .cta__text {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-weight: 680;
+    font-stretch: 110%;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    max-width: 28ch;
+  }
+  @media (min-width: 900px) {
+    .cta__inner {
+      grid-template-columns: 1fr auto;
+    }
+  }
+</style>

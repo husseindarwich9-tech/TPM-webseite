@@ -1,0 +1,151 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { faqGruppen } from '../data/faq';
+import { breadcrumbSchema } from '../data/seo';
+
+const crumbs = [{ href: '/faq/', label: 'Häufige Fragen' }];
+const markiere = (t: string) =>
+  t.replace(/\[PLATZHALTER:[^\]]*\]/g, (m) => `<span class="placeholder-text">${m}</span>`);
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqGruppen
+    .flatMap((g) => g.fragen)
+    .filter((f) => !f.offen)
+    .map((f) => ({ '@type': 'Question', name: f.frage, acceptedAnswer: { '@type': 'Answer', text: f.antwort } })),
+};
+---
+<Base
+  title="Häufige Fragen (FAQ)"
+  description="Antworten auf häufige Fragen an die TPM Bau GmbH: Leistungen, Ablauf einer Anfrage, Kosten, Notfälle, Einsatzgebiet und Mitgliedschaften."
+  schema={[breadcrumbSchema(crumbs), faqSchema]}
+>
+  <PageHero
+    blatt="07"
+    kicker="Häufige Fragen"
+    title="Gut zu|*wissen.*"
+    lead="Die wichtigsten Antworten auf einen Blick. Ihre Frage ist nicht dabei? Rufen Sie uns an oder schreiben Sie uns."
+    crumbs={crumbs}
+  />
+
+  <section class="section">
+    <div class="wrap faq">
+      {faqGruppen.map((g, gi) => (
+        <div class="faq__group">
+          <div class="faq__head" data-reveal>
+            <span class="mono">{String(gi + 1).padStart(2, '0')}</span>
+            <h2 class="h3">{g.titel}</h2>
+          </div>
+          <div class="faq__items">
+            {g.fragen.map((f) => (
+              <details class="qa" data-accordion data-reveal>
+                <summary>
+                  <span class="qa__q">{f.frage}</span>
+                  <span class="qa__icon" aria-hidden="true"><Icon name="plus" /></span>
+                </summary>
+                <div class="qa__a">
+                  <p set:html={markiere(f.antwort)} />
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .faq {
+    display: grid;
+    gap: clamp(3rem, 6vw, 5rem);
+  }
+  .faq__group {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .faq__head {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+  }
+  .faq__head .mono {
+    color: var(--blue);
+  }
+  .faq__items {
+    border-top: 1px solid var(--line-strong);
+  }
+  .qa {
+    border-bottom: 1px solid var(--line-strong);
+  }
+  .qa summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.4rem 0;
+    cursor: pointer;
+  }
+  .qa summary::-webkit-details-marker {
+    display: none;
+  }
+  .qa__q {
+    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+    font-weight: 640;
+    font-stretch: 106%;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    transition: color 0.2s;
+  }
+  .qa summary:hover .qa__q {
+    color: var(--blue);
+  }
+  .qa__icon {
+    flex: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    transition:
+      transform 0.45s var(--ease),
+      background-color 0.3s,
+      color 0.3s;
+  }
+  .qa[open] .qa__icon {
+    transform: rotate(45deg);
+    background: var(--blue);
+    border-color: var(--blue);
+    color: var(--paper);
+  }
+  .qa__a {
+    padding: 0 3.5rem 1.6rem 0;
+    color: var(--muted);
+    max-width: 70ch;
+  }
+  .qa[open] .qa__a {
+    animation: qa-in 0.5s var(--ease);
+  }
+  @keyframes qa-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+  @media (min-width: 1000px) {
+    .faq__group {
+      grid-template-columns: 1fr 2.4fr;
+      gap: 4rem;
+    }
+    .faq__head {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+      align-self: start;
+      padding-top: 1.4rem;
+    }
+  }
+</style>

@@ -2,7 +2,7 @@
 // Leistungsverzeichnis: nummerierte Zeilen, auf dem Desktop folgt eine Werkzeichnung der Maus.
 import TradeDrawing from './TradeDrawing.astro';
 import Icon from './Icon.astro';
-import { leistungen, phasen, type Leistung } from '../data/leistungen';
+import { leistungen, phasen, titelUmbruch, type Leistung } from '../data/leistungen';
 
 interface Props {
   grouped?: boolean;
@@ -35,7 +35,7 @@ const gruppen: { titel?: string; text?: string; nr?: string; items: Leistung[] }
               <span class="row__icon" aria-hidden="true">
                 <TradeDrawing slug={l.slug} animate={false} />
               </span>
-              <span class="row__title">{l.titel}</span>
+              <span class="row__title">{titelUmbruch(l.titel)}</span>
               <span class="row__kurz">{l.kurz}</span>
               <span class="row__arrow" aria-hidden="true">
                 <Icon name="arrow" />
@@ -85,7 +85,7 @@ const gruppen: { titel?: string; text?: string; nr?: string; items: Leistung[] }
   .row {
     position: relative;
     display: grid;
-    grid-template-columns: 2.25rem 3rem 1fr auto;
+    grid-template-columns: 2rem 3rem minmax(0, 1fr) auto;
     align-items: center;
     gap: 0.9rem;
     padding: 1.1rem 0;
@@ -122,7 +122,8 @@ const gruppen: { titel?: string; text?: string; nr?: string; items: Leistung[] }
     height: 100%;
   }
   .row__title {
-    font-size: clamp(1.3rem, 3.4vw, 3.1rem);
+    hyphens: manual;
+    font-size: clamp(1.25rem, 3.4vw, 3.1rem);
     font-weight: 720;
     font-stretch: 114%;
     letter-spacing: -0.025em;

@@ -1,0 +1,57 @@
+---
+import LegalPage from '../components/LegalPage.astro';
+import { firma } from '../data/firma';
+const ph = (t: string) => `[PLATZHALTER: ${t}]`;
+---
+<LegalPage title="Impressum" description="Impressum der TPM Bau GmbH, Gustav-Müller-Platz 3, 10829 Berlin." path="/impressum/" blatt="R1">
+  <h2>Angaben gemäß § 5 DDG</h2>
+  <p>
+    {firma.name}<br />
+    {firma.adresse.strasse}<br />
+    {firma.adresse.plz} {firma.adresse.ort}
+  </p>
+
+  <h2>Vertreten durch</h2>
+  <p>Geschäftsführer: {firma.geschaeftsfuehrer}</p>
+
+  <h2>Kontakt</h2>
+  <p>
+    Telefon: <a href={firma.telefonHref}>{firma.telefon}</a><br />
+    E-Mail: <a href={firma.emailHref}>{firma.email}</a>
+  </p>
+
+  <h2>Registereintrag</h2>
+  <p>
+    Registergericht: <span class="placeholder-text">{ph('Amtsgericht, z. B. Amtsgericht Charlottenburg')}</span><br />
+    Registernummer: <span class="placeholder-text">{ph('HRB-Nummer')}</span>
+  </p>
+
+  <h2>Umsatzsteuer-ID</h2>
+  <p>
+    Umsatzsteuer-Identifikationsnummer gemäß § 27a Umsatzsteuergesetz:
+    <span class="placeholder-text">{ph('USt-IdNr.')}</span>
+  </p>
+
+  <h2>Berufsrechtliche Angaben</h2>
+  <p>
+    Zuständige Kammer: Handwerkskammer Berlin<br />
+    Eintragung in die Handwerksrolle: <span class="placeholder-text">{ph('Gewerke und Betriebsnummer laut Handwerksrolle')}</span><br />
+    Berufsbezeichnung und Staat der Verleihung: <span class="placeholder-text">{ph('z. B. Meistertitel, verliehen in Deutschland')}</span><br />
+    Berufsrechtliche Regelungen: Handwerksordnung (HwO), abrufbar unter
+    <a href="https://www.gesetze-im-internet.de/hwo/" rel="noopener" target="_blank">gesetze-im-internet.de</a>
+  </p>
+
+  <h2>Berufshaftpflichtversicherung</h2>
+  <p><span class="placeholder-text">{ph('Name und Sitz des Versicherers, räumlicher Geltungsbereich – nur falls zutreffend')}</span></p>
+
+  <h2>Verantwortlich für den Inhalt</h2>
+  <p>{firma.geschaeftsfuehrer}, Anschrift wie oben <span class="placeholder-text">{ph('bitte bestätigen')}</span></p>
+
+  <h2>Verbraucherstreitbeilegung</h2>
+  <p>
+    <span class="placeholder-text">{ph('Angabe, ob die TPM Bau GmbH bereit oder verpflichtet ist, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen')}</span>
+  </p>
+
+  <h2>Bildnachweise</h2>
+  <p>Alle Zeichnungen und Grafiken auf dieser Website wurden eigens für die TPM Bau GmbH erstellt. Fotos stammen von der TPM Bau GmbH.</p>
+</LegalPage>

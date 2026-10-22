@@ -290,3 +290,15 @@ export const leistungen: Leistung[] = [
 ];
 
 export const leistungBySlug = (slug: string) => leistungen.find((l) => l.slug === slug);
+
+/** Titel mit weichen Trennstellen für große Überschriften auf schmalen Bildschirmen */
+export const titelUmbruch = (titel: string) =>
+  titel
+    .replace('Spachtelarbeiten', 'Spachtel­arbeiten')
+    .replace('Malerarbeiten', 'Maler­arbeiten')
+    .replace('Bodenlegearbeiten', 'Boden­lege­arbeiten')
+    .replace('Fliesenlegearbeiten', 'Fliesen­lege­arbeiten')
+    .replace('Tischlerarbeiten', 'Tischler­arbeiten')
+    .replace('Elektroinstallation', 'Elektro­installation')
+    .replace('Kleinreparaturen', 'Klein­reparaturen')
+    .replace('Entrümpelung', 'Entrüm­pelung');

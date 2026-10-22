@@ -1,0 +1,100 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceIndex from '../../components/ServiceIndex.astro';
+import Icon from '../../components/Icon.astro';
+import Split from '../../components/Split.astro';
+import { leistungen } from '../../data/leistungen';
+import { breadcrumbSchema } from '../../data/seo';
+import { firma } from '../../data/firma';
+
+const crumbs = [{ href: '/leistungen/', label: 'Leistungen' }];
+const schema = [
+  breadcrumbSchema(crumbs),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Leistungen der TPM Bau GmbH',
+    itemListElement: leistungen.map((l, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: l.titel,
+      url: `${firma.url}/leistungen/${l.slug}/`,
+    })),
+  },
+];
+---
+<Base
+  title="Leistungen: Innenausbau, Trockenbau, Sanitär & mehr in Berlin"
+  description="Alle 12 Leistungen der TPM Bau GmbH in Berlin: vom Rückbau über Trockenbau, Elektro und Sanitär bis zu Maler-, Boden- und Fliesenarbeiten. Alle Gewerke aus einer Hand."
+  schema={schema}
+>
+  <PageHero
+    blatt="02"
+    kicker="Leistungsverzeichnis"
+    title="Zwölf Gewerke.|*Ein Ablauf.*"
+    lead="Wir ordnen unsere Leistungen so, wie ein Vorhaben tatsächlich abläuft: vom Vorbereiten über Ausbau und Installation bis zu den Oberflächen. Sie können einzelne Gewerke beauftragen oder alles aus einer Hand."
+    crumbs={crumbs}
+  >
+    <div class="hero-cta" data-reveal>
+      <a href="/anfrage/" class="btn">Anfrage starten <Icon name="arrow" /></a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap">
+      <ServiceIndex grouped />
+    </div>
+  </section>
+
+  <section class="section on-ink one-hand">
+    <div class="wrap one-hand__grid">
+      <div>
+        <p class="label">Alles aus einer Hand</p>
+        <Split as="h2" class="h2" text="Sie haben|*einen* Ansprechpartner." />
+      </div>
+      <div class="one-hand__text" data-reveal>
+        <p class="lead">
+          Statt mehrere Betriebe einzeln zu beauftragen und Termine selbst abzustimmen, koordinieren unsere Bauleiter
+          und Projektmanager die Gewerke untereinander.
+        </p>
+        <p class="muted">
+          Das spart Ihnen Abstimmungsaufwand und vermeidet Leerlauf zwischen den Gewerken, etwa wenn der
+          Trockenbau auf die Elektrik warten muss oder der Maler auf den Putz.
+        </p>
+        <a href="/anfrage/" class="arrow-link">Vorhaben beschreiben <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero-cta {
+    margin-top: 2.5rem;
+  }
+  .one-hand__grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .one-hand__grid .h2 {
+    margin-top: 1.25rem;
+  }
+  .one-hand__text {
+    display: grid;
+    gap: 1.5rem;
+    align-content: end;
+  }
+  .one-hand__text .muted {
+    max-width: 52ch;
+  }
+  .one-hand__text .arrow-link {
+    justify-self: start;
+  }
+  @media (min-width: 1000px) {
+    .one-hand__grid {
+      grid-template-columns: 1.2fr 1fr;
+      gap: 6rem;
+      align-items: end;
+    }
+  }
+</style>

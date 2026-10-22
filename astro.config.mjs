@@ -5,6 +5,8 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://www.tpm-bau.de',
   trailingSlash: 'always',
+  // Klassen-Strategie: Scoped-Styles greifen auch, wenn eine Klasse an eine Kind-Komponente übergeben wird
+  scopedStyleStrategy: 'class',
   build: { format: 'directory', inlineStylesheets: 'auto' },
   integrations: [
     sitemap({

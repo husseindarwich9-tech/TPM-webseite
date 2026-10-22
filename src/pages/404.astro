@@ -1,0 +1,86 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import TradeDrawing from '../components/TradeDrawing.astro';
+import { leistungen } from '../data/leistungen';
+---
+<Base title="Seite nicht gefunden" description="Diese Seite gibt es nicht (mehr). Hier geht es weiter zu den Leistungen und zum Kontakt der TPM Bau GmbH." noindex>
+  <section class="nf on-ink raster">
+    <div class="wrap nf__inner">
+      <div>
+        <p class="plan-tag"><b>Fehler 404</b> · Blatt nicht im Plansatz</p>
+        <h1 class="nf__title"><span class="outline-text">4</span>0<span class="outline-text">4</span></h1>
+        <p class="lead">Diese Seite haben wir nicht gefunden. Vielleicht wurde sie verschoben, oder in der Adresse steckt ein Tippfehler.</p>
+        <div class="nf__ctas">
+          <a href="/" class="btn">Zur Startseite <Icon name="arrow" /></a>
+          <a href="/anfrage/" class="btn btn--ghost">Anfrage starten</a>
+        </div>
+      </div>
+      <div class="nf__drawing" aria-hidden="true">
+        <TradeDrawing slug="kleinreparaturen" />
+      </div>
+    </div>
+  </section>
+  <section class="section section--tight">
+    <div class="wrap">
+      <h2 class="label">Häufig gesucht</h2>
+      <ul role="list" class="nf__links">
+        {leistungen.slice(0, 6).map((l) => (
+          <li><a href={`/leistungen/${l.slug}/`} class="arrow-link">{l.titel} <Icon name="arrow" /></a></li>
+        ))}
+        <li><a href="/kontakt/" class="arrow-link">Kontakt <Icon name="arrow" /></a></li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf {
+    padding-top: calc(var(--header-h) + clamp(3rem, 8vw, 6rem));
+    padding-bottom: clamp(3rem, 8vw, 6rem);
+  }
+  .nf__inner {
+    display: grid;
+    gap: 3rem;
+    align-items: center;
+  }
+  .plan-tag b {
+    color: var(--sky);
+  }
+  .nf__title {
+    font-size: clamp(7rem, 30vw, 20rem);
+    line-height: 0.85;
+    font-weight: 800;
+    font-stretch: 125%;
+    letter-spacing: -0.05em;
+    margin: 1.5rem 0 2rem;
+  }
+  .nf__title .outline-text {
+    -webkit-text-stroke-color: var(--sky);
+  }
+  .nf__ctas {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .nf__drawing {
+    color: var(--paper);
+    --trade-bg: var(--ink);
+    --trade-sw: 0.9;
+    max-width: 22rem;
+    width: 70%;
+    justify-self: center;
+  }
+  .nf__links {
+    margin: 1.5rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+  }
+  @media (min-width: 900px) {
+    .nf__inner {
+      grid-template-columns: 1.4fr 1fr;
+    }
+  }
+</style>
