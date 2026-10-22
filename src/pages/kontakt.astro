@@ -23,8 +23,9 @@ const crumbs = [{ href: '/kontakt/', label: 'Kontakt' }];
     crumbs={crumbs}
   />
 
-  <section class="contact">
-    <div class="wrap contact__grid">
+  <section class="contact on-ink">
+    <div class="wrap">
+    <div class="contact__grid">
       <a href={firma.telefonHref} class="cbox" data-reveal>
         <span class="cbox__icon"><Icon name="phone" /></span>
         <span class="mono">Telefon</span>
@@ -43,6 +44,7 @@ const crumbs = [{ href: '/kontakt/', label: 'Kontakt' }];
         <span class="cbox__value">{firma.adresse.strasse}<br />{firma.adresse.plz} {firma.adresse.ort}</span>
         <span class="cbox__note">Auf OpenStreetMap ansehen <Icon name="external" class="cbox__ext" /><span class="visually-hidden"> (öffnet in neuem Tab)</span></span>
       </a>
+    </div>
     </div>
   </section>
 
@@ -125,6 +127,11 @@ const crumbs = [{ href: '/kontakt/', label: 'Kontakt' }];
     display: grid;
     gap: 1.25rem;
     align-content: start;
+  }
+  @media (min-width: 1100px) {
+    .form-wrap__head .h2 {
+      font-size: clamp(2rem, 3.2vw, 3.25rem);
+    }
   }
   @media (min-width: 1100px) {
     .form-wrap {

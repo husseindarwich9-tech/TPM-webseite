@@ -8,9 +8,12 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview --host 0.0.0.0 --port 4321",
-    "screenshots": "node scripts/screenshots.mjs",
+    "serve": "node scripts/serve.mjs 4322",
     "test:anfrage": "node scripts/test-anfrage.mjs",
-    "lighthouse": "node scripts/lighthouse.mjs"
+    "check:overflow": "node scripts/check-overflow.mjs",
+    "screenshots": "node scripts/screenshots.mjs && node scripts/anfrage-shots.mjs && node scripts/animation-shots.mjs",
+    "lighthouse": "node scripts/lighthouse.mjs",
+    "icons": "node scripts/generate-icons.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

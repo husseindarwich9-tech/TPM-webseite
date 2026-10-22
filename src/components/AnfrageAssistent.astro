@@ -383,8 +383,7 @@ const schritte = ['Kunde', 'Leistungen', 'Details', 'Fotos', 'Termin', 'Kontakt'
     }
   }
   .wz-legend {
-    display: grid;
-    gap: 0.6rem;
+    display: block;
     padding: 0;
     margin-bottom: 1.75rem;
     font-size: clamp(1.6rem, 3.4vw, 2.6rem);
@@ -395,6 +394,8 @@ const schritte = ['Kunde', 'Leistungen', 'Details', 'Fotos', 'Termin', 'Kontakt'
     outline: none;
   }
   .wz-legend .mono {
+    display: block;
+    margin-bottom: 0.6rem;
     color: var(--blue);
     font-size: 0.72rem;
     letter-spacing: 0.1em;
@@ -840,8 +841,8 @@ const schritte = ['Kunde', 'Leistungen', 'Details', 'Fotos', 'Termin', 'Kontakt'
   }
   .wz-review :global(dl > div) {
     display: grid;
-    grid-template-columns: minmax(7rem, 10rem) 1fr auto;
-    gap: 1rem;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.2rem 1rem;
     align-items: baseline;
     padding: 0.75rem 1.25rem;
     border-bottom: 1px solid var(--line);
@@ -854,7 +855,25 @@ const schritte = ['Kunde', 'Leistungen', 'Details', 'Fotos', 'Termin', 'Kontakt'
     color: var(--muted);
   }
   .wz-review :global(dd) {
-    word-break: break-word;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    overflow-wrap: anywhere;
+    hyphens: none;
+  }
+  .wz-review :global(dt) {
+    font-size: 0.85rem;
+  }
+  @media (min-width: 560px) {
+    .wz-review :global(dl > div) {
+      grid-template-columns: 9rem minmax(0, 1fr) auto;
+    }
+    .wz-review :global(dd) {
+      grid-column: auto;
+      grid-row: auto;
+    }
+    .wz-review :global(dt) {
+      font-size: inherit;
+    }
   }
   .wz-review :global(button) {
     background: none;

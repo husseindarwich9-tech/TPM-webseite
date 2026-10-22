@@ -39,8 +39,8 @@ const ablauf = [
 ];
 ---
 <Base
-  title="TPM Bau GmbH – Innenausbau, Sanierung & alle Gewerke aus einer Hand in Berlin"
-  description="TPM Bau GmbH aus Berlin: Innenausbau, Trockenbau, Maler-, Boden- und Fliesenarbeiten, Elektro, Sanitär und mehr – alle Gewerke aus einer Hand für Privatkunden, Gewerbe und Hausverwaltungen."
+  title="TPM Bau GmbH Berlin – Innenausbau & alle Gewerke aus einer Hand"
+  description="TPM Bau GmbH aus Berlin: Innenausbau, Trockenbau, Maler-, Fliesen- und Bodenarbeiten, Elektro und Sanitär – alle Gewerke aus einer Hand für Privat, Gewerbe und Hausverwaltungen."
 >
   <!-- ═════════ HERO ═════════ -->
   <section class:list={['hero on-ink', { 'hero--foto': !!foto.src }]} data-hero>
@@ -415,9 +415,24 @@ const ablauf = [
   .hero__foto {
     margin: 0;
     position: relative;
+    justify-self: start;
     border: 1px solid var(--line-light-strong);
     padding: 0.6rem;
     background: var(--ink-2);
+  }
+  /* Foto nie beschneiden: Höhe begrenzen, Breite ergibt sich aus dem Seitenverhältnis */
+  .hero__foto :global(img) {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: min(52svh, 520px);
+  }
+  .hero--foto .hero__art {
+    display: none;
+  }
+  .hero--foto .hero__foto {
+    order: -1;
   }
   .hero__foto figcaption {
     margin-top: 0.6rem;
@@ -461,17 +476,20 @@ const ablauf = [
   }
   @media (min-width: 1000px) {
     .hero--foto .hero__inner {
-      grid-template-columns: 1.5fr 1fr;
+      grid-template-columns: minmax(0, 1.45fr) auto;
       align-items: end;
       gap: 4rem;
     }
-    .hero--foto .hero__art {
-      right: auto;
-      left: 30vw;
-      opacity: 0.35;
+    .hero--foto .hero__foto {
+      order: 0;
+      justify-self: end;
+    }
+    .hero--foto .hero__foto :global(img) {
+      max-height: calc(100svh - var(--header-h) - 12rem);
+      max-width: 36vw;
     }
     .hero--foto .hero__title {
-      font-size: clamp(3rem, 7vw, 7.5rem);
+      font-size: clamp(3rem, 5.8vw, 6.5rem);
     }
     .hero--foto .hero__bottom {
       grid-template-columns: 1fr;
@@ -653,7 +671,7 @@ const ablauf = [
     max-width: 14ch;
   }
   .values__intro .label {
-    color: rgba(243, 241, 236, 0.85);
+    color: var(--paper);
   }
   .values__hint {
     display: none;
@@ -665,7 +683,7 @@ const ablauf = [
     gap: 1rem;
   }
   .value__nr {
-    color: var(--sky-soft);
+    color: var(--paper);
   }
   .value__title {
     font-size: clamp(2.2rem, 10.5vw, 10rem);
@@ -678,7 +696,8 @@ const ablauf = [
     font-size: clamp(1.15rem, 2vw, 1.6rem);
     font-weight: 560;
     font-stretch: 110%;
-    color: var(--sky-soft);
+    color: var(--paper);
+    opacity: 1;
   }
   .value__text {
     max-width: 44ch;

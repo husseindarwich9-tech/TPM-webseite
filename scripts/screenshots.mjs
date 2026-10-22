@@ -3,13 +3,12 @@
 import { chromium } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
+import { CHROME } from './chrome.mjs';
 
 const BASE = process.argv[2] || 'http://localhost:4321';
 const FILTER = process.argv[3] || '';
 const OUT = path.resolve('docs/screenshots');
-const EXEC = fs.existsSync('/opt/pw-browsers/chromium-1194/chrome-linux/chrome')
-  ? '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
-  : undefined;
+const EXEC = CHROME;
 
 const sitemap = fs.readFileSync('dist/sitemap-0.xml', 'utf8');
 let pages = [...sitemap.matchAll(/<loc>https:\/\/www\.tpm-bau\.de([^<]*)<\/loc>/g)].map((m) => m[1]);

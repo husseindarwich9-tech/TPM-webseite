@@ -1,11 +1,12 @@
 // Prüft alle Seiten auf horizontales Überlaufen (375 px) und meldet JS-Fehler.
 import { chromium } from 'playwright';
 import fs from 'node:fs';
+import { CHROME } from './chrome.mjs';
 const BASE = process.argv[2] || 'http://localhost:4321';
 const sitemap = fs.readFileSync('dist/sitemap-0.xml', 'utf8');
 const pages = [...sitemap.matchAll(/<loc>https:\/\/www\.tpm-bau\.de([^<]*)<\/loc>/g)].map((m) => m[1]);
 pages.push('/gibt-es-nicht/');
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+const browser = await chromium.launch({ executablePath: CHROME });
 let probleme = 0;
 for (const w of [320, 375, 768]) {
   const page = await browser.newPage({ viewport: { width: w, height: 800 } });

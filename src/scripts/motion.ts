@@ -113,7 +113,7 @@ function init() {
   /* ── Fließtext, der sich beim Scrollen „einschreibt“ ── */
   document.querySelectorAll<HTMLElement>('[data-scrub-words]').forEach((el) => {
     gsap.to(el.querySelectorAll('.wd'), {
-      opacity: 1,
+      color: getComputedStyle(el).color,
       ease: 'none',
       stagger: 0.1,
       scrollTrigger: { trigger: el, start: 'top 80%', end: 'bottom 45%', scrub: 0.5 },

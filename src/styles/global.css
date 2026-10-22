@@ -247,7 +247,7 @@ dd {
   background: var(--blue);
   color: var(--paper);
   --text: var(--paper);
-  --muted: rgba(243, 241, 236, 0.82);
+  --muted: var(--paper);
   --line: rgba(243, 241, 236, 0.22);
 }
 
@@ -539,8 +539,9 @@ html.motion .sw > span {
 html.motion svg[data-draw] {
   opacity: 0;
 }
+/* noch nicht „eingeschrieben“: Grau mit mind. 3:1 Kontrast (große Schrift, WCAG AA) */
 html.motion [data-scrub-words] .wd {
-  opacity: 0.16;
+  color: #7d8591;
 }
 html.motion [data-reveal-clip] {
   clip-path: inset(0 0 100% 0);

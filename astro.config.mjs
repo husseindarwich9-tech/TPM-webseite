@@ -4,6 +4,7 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://www.tpm-bau.de',
+  outDir: process.env.ASTRO_OUT_DIR || './dist',
   trailingSlash: 'always',
   // Klassen-Strategie: Scoped-Styles greifen auch, wenn eine Klasse an eine Kind-Komponente übergeben wird
   scopedStyleStrategy: 'class',

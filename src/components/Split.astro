@@ -26,7 +26,8 @@ const zeilen = text.split('|').map((z) =>
 );
 const plain = text.replace(/[|*]/g, ' ').replace(/\s+/g, ' ').trim();
 ---
-<Tag class:list={['split', klasse]} id={id} data-split={trigger} aria-label={plain}>
+<Tag class:list={['split', klasse]} id={id} data-split={trigger}>
+  <span class="visually-hidden">{plain}</span>
   {zeilen.map((z) => (
     <span class="sl" aria-hidden="true">
       {z.map((w, i) => (

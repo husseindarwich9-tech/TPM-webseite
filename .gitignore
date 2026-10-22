@@ -6,3 +6,5 @@ dist/
 !.env.example
 docs/lighthouse/*.html
 .DS_Store
+dist-test/
+docs/lighthouse/*.json

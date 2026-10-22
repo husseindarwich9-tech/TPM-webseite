@@ -3,6 +3,7 @@
 import sharp from 'sharp';
 import fs from 'node:fs';
 import { chromium } from 'playwright';
+import { CHROME } from './chrome.mjs';
 
 const mark = fs.readFileSync('public/favicon.svg');
 const onInk = (size, pad) =>
@@ -42,7 +43,7 @@ h1 span{color:#6faad6}
 <h1>Bauen mit Leidenschaft.<br><span>Handeln mit Verantwortung.</span></h1>
 <p class="tag">Alle Gewerke aus einer Hand · Berlin</p>
 </body></html>`;
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+const browser = await chromium.launch({ executablePath: CHROME });
 const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
 await page.setContent(html);
 await page.waitForTimeout(300);

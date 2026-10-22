@@ -12,7 +12,7 @@ interface Props {
 const { compact = false } = Astro.props;
 const jahr = new Date().getFullYear();
 ---
-<footer class="footer on-ink">
+<footer class:list={['footer on-ink', { 'footer--compact': compact }]}>
   {!compact && (
     <div class="cta wrap">
       <p class="label">Kontakt</p>
@@ -35,7 +35,7 @@ const jahr = new Date().getFullYear();
 
   <div class="grid wrap">
     <div class="col col--brand">
-      <a href="/" aria-label="TPM Bau GmbH – Startseite" class="brand"><Logo light /></a>
+      <a href="/" class="brand"><Logo light /><span class="visually-hidden"> – zur Startseite</span></a>
       <p class="claim">{firma.leitsatz[0]} –<br />{firma.leitsatz[1]}</p>
       <address class="addr">
         {firma.name}<br />
@@ -116,6 +116,12 @@ const jahr = new Date().getFullYear();
     overflow: hidden;
     padding-top: clamp(5rem, 11vw, 10rem);
     border-top: 1px solid var(--line-light);
+  }
+  .footer--compact {
+    padding-top: 0;
+  }
+  .footer--compact .grid {
+    border-top: 0;
   }
   .cta {
     position: relative;
