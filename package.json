@@ -13,7 +13,8 @@
     "check:overflow": "node scripts/check-overflow.mjs",
     "screenshots": "node scripts/screenshots.mjs && node scripts/anfrage-shots.mjs && node scripts/animation-shots.mjs",
     "lighthouse": "node scripts/lighthouse.mjs",
-    "icons": "node scripts/generate-icons.mjs"
+    "icons": "node scripts/generate-icons.mjs",
+    "vorschau": "astro build && node scripts/vorschau.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

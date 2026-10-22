@@ -8,3 +8,4 @@ docs/lighthouse/*.html
 .DS_Store
 dist-test/
 docs/lighthouse/*.json
+vorschau/

@@ -22,6 +22,9 @@ npm run preview             # gebaute Seite ansehen: http://localhost:4321
 
 Voraussetzung: Node.js 20 oder neuer.
 
+**Vorschau ohne Server:** `npm run vorschau` erzeugt `vorschau/` (plus `TPM-Bau-Vorschau.zip`). Darin ist jede Seite
+eine eigenständige HTML-Datei mit eingebetteten Schriften, Stilen und Animationen. `index.html` per Doppelklick öffnen.
+
 ## Seiten
 
 | Pfad | Inhalt |
