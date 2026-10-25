@@ -24,6 +24,8 @@ Voraussetzung: Node.js 20 oder neuer.
 
 **Vorschau ohne Server:** `npm run vorschau` erzeugt `vorschau/` (plus `TPM-Bau-Vorschau.zip`). Darin ist jede Seite
 eine eigenständige HTML-Datei mit eingebetteten Schriften, Stilen und Animationen. `index.html` per Doppelklick öffnen.
+Zusätzlich entsteht `vorschau/TPM-Bau-Vorschau.html`: die komplette Seite mit allen Unterseiten in **einer** Datei
+(Navigation über einen kleinen Router). Sie lässt sich direkt in einer App-Vorschau oder per Doppelklick öffnen.
 
 ## Seiten
 
