@@ -5,7 +5,7 @@ Hier gehören die echten Fotos der TPM Bau GmbH hinein. Welche Datei wo erschein
 
 | Dateiname | Wo erscheint das Foto? |
 |---|---|
-| `startfoto.jpg` | Startseite (Hero, prominent) und „Über uns“ (Team) – Mitarbeiter im TPM-Shirt vor dem Wandgemälde |
+| `startfoto.jpg` | Startseite (groß im Abschnitt „Wer wir sind“) und „Über uns“ (Team) – Mitarbeiter im TPM-Shirt vor dem Wandgemälde |
 | `leistung-<slug>.jpg`, z. B. `leistung-trockenbau.jpg` | Auf der jeweiligen Leistungsseite (erscheint automatisch) |
 | weitere (Team, Geschäftsführer, Karriere, Gewerbe) | Dateiname in `src/data/bilder.ts` beim passenden Eintrag unter `datei` eintragen |
 

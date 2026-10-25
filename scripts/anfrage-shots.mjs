@@ -2,7 +2,7 @@
 import { chromium } from 'playwright';
 import sharp from 'sharp';
 import { CHROME } from './chrome.mjs';
-const BASE = process.argv[2] || 'http://localhost:4321';
+const BASE = process.argv[2] || 'http://127.0.0.1:4321';
 const browser = await chromium.launch({ executablePath: CHROME });
 const foto = await sharp({ create: { width: 1200, height: 900, channels: 3, background: '#a9cdea' } }).jpeg().toBuffer();
 for (const [w, h] of [[1440, 1000], [375, 812]]) {

@@ -89,6 +89,10 @@ setzen.
 ## Technik
 
 - **Astro 5**, rein statische Ausgabe, `trailingSlash: always`, Sitemap über `@astrojs/sitemap`
+- **„Ein Raum, zwölf Gewerke“**: isometrische Raum-Illustration (`src/components/BauRaum.astro`), die beim Scrollen
+  Gewerk für Gewerk saniert wird (`src/scripts/bauraum.ts`, `src/components/BauSequenz.astro`). Auf den Leistungsseiten
+  zeigt sie das jeweilige Gewerk in Schleife. Dazu kommen Maßband, Kreuzlinienlaser, Zollstock, Wasserwaage und
+  Schraube (`src/scripts/handwerk.ts`).
 - **GSAP 3 + ScrollTrigger**: Wort-Reveals, sich zeichnende Linien, gepinnter horizontaler Werte-Abschnitt,
   Ablauf-Linie, Maus-Vorschau im Leistungsverzeichnis. **Lenis** für weiches Scrollen.
 - **`prefers-reduced-motion`**: Dann ist alles sofort sichtbar und statisch (kein Lenis, keine Scroll-Animationen).

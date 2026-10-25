@@ -7,7 +7,7 @@ Erfunden wurde nichts: Keine Zahlen, Projekte, Bewertungen, Zertifikate, Preise 
 
 | Was | Wo auf der Seite | Hinweis |
 |---|---|---|
-| **`startfoto.jpg`** (Mitarbeiter im TPM-Shirt vor dem Wandgemälde) | Startseite (Hero), Über uns (Team) | Lag beim Bau nicht im Projekt. In `bilder-vom-kunden/` legen und neu bauen, dann erscheint es automatisch. Beide Layouts (mit und ohne Foto) sind getestet. Das Foto wird nie beschnitten. |
+| **`startfoto.jpg`** (Mitarbeiter im TPM-Shirt vor dem Wandgemälde) | Startseite (groß im Abschnitt „Wer wir sind“ direkt nach dem Bauablauf), Über uns (Team) | Lag beim Bau nicht im Projekt. In `bilder-vom-kunden/` legen und neu bauen, dann erscheint es automatisch. Das Foto wird nie beschnitten. Seit Version 2 ist der Hero der animierte Bauablauf. Soll das Foto stattdessen in den ersten Bildschirm, ist das eine kleine Änderung. |
 | Original-Logo als SVG | überall | `www.tpm-bau.de` war aus der Arbeitsumgebung gesperrt. Das Logo wurde exakt nach den Koordinaten aus dem Briefing nachgebaut. Bitte mit der Originaldatei abgleichen. |
 | Teamfoto, Porträt des Geschäftsführers | Über uns | Platzhalterfläche mit Hinweis |
 | Foto „Mitarbeitende bei der Arbeit“ | Karriere | Platzhalterfläche mit Hinweis |

@@ -1,7 +1,7 @@
 // Screenshots von Animations- und Interaktionszuständen → docs/screenshots/animation-*.png
 import { chromium } from 'playwright';
 import { CHROME } from './chrome.mjs';
-const BASE = process.argv[2] || 'http://localhost:4321';
+const BASE = process.argv[2] || 'http://127.0.0.1:4321';
 const browser = await chromium.launch({ executablePath: CHROME });
 const out = (n) => `docs/screenshots/animation-${n}.png`;
 

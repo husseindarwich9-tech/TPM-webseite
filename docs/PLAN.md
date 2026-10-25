@@ -36,3 +36,23 @@ Firmendaten. Ein Abgleich mit der alten Seite steht in `docs/OFFENE-PUNKTE.md`.
    führt in sechs kurzen Schritten durch. Auf dem Handy bleibt unten eine feste Leiste mit Anrufen / E-Mail / Anfrage.
 9. **Technik:** Astro erzeugt rein statische Seiten für den eigenen Hetzner-Server. Schriften und Bibliotheken liegen
    lokal, es gibt keine Cookies, keine externen Dienste und keine eingebettete Karte.
+
+## Version 2: „Ein Raum, zwölf Gewerke“
+
+Rückmeldung: Die Seite soll einzigartiger werden, mit Animationen, die zum Handwerk passen. Die Antwort darauf:
+
+1. **Der Hero ist eine Baustelle.** Auf der Startseite steht ein isometrischer Altbau-Raum: Kartons, alte Fliesen,
+   vergilbte Tapete. Beim Scrollen wird er Gewerk für Gewerk saniert. Die Kartons verschwinden, Tapete und Fliesen
+   fallen, Leitungen zeichnen sich in die Wand, Ständerwerk und Platten wachsen, eine Kelle zieht den Putz, ein
+   Farbroller streicht die Wände. Danach legen sich Fliesen und Dielen, Tür und Fenster werden eingesetzt, Küche und
+   Licht gehen an. Zum Schluss wird ein schiefes Bild gerade gerückt und der Raum „übergeben“. Zu jedem Schritt erscheinen
+   Gewerk, Leistungsnummer und ein Satz dazu. So wird „alle Gewerke aus einer Hand“ erlebbar statt behauptet.
+2. **Jede Leistungsseite zeigt ihr Gewerk bei der Arbeit:** derselbe Raum im Zustand kurz davor, und nur dieses
+   Gewerk läuft in Schleife.
+3. **Werkzeuge als Interaktion:** ein Maßband am rechten Rand misst die gescrollte Strecke, ein Kreuzlinienlaser folgt
+   der Maus über den Bühnen, im Ablauf klappt sich ein Zollstock Glied für Glied auf, die Wasserwaage bei „Präzision“
+   schwingt mit der Scrollgeschwindigkeit und kommt ins Lot. Transparentpapier-Planlagen fächern sich auf, eine Schraube
+   dreht sich ins Holz.
+4. **Technik:** Die Raum-Illustration wird aus einem einzigen Koordinatenmodell berechnet (`src/components/BauRaum.astro`),
+   die Bewegungen je Gewerk liegen in `src/scripts/bauraum.ts`. Die Animationen bauen sich Gewerk für Gewerk in kurzen
+   Abschnitten auf, damit das Handy nicht blockiert. Bei reduzierter Bewegung zeigt die Seite den fertigen Raum.

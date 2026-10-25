@@ -1,0 +1,469 @@
+---
+// Startseiten-Bühne: Hero + „Ein Raum, zwölf Gewerke“. Beim Scrollen wird der Raum Gewerk für Gewerk saniert.
+import BauRaum from './BauRaum.astro';
+import Split from './Split.astro';
+import Icon from './Icon.astro';
+import { bauablauf } from '../data/bauablauf';
+import { titelUmbruch } from '../data/leistungen';
+---
+<section class="bau on-ink" data-bau data-laser aria-labelledby="bau-titel">
+  <div class="bau__bg" aria-hidden="true"></div>
+  <div class="bau__inner wrap">
+    <div class="bau__text">
+      <div class="bau__hero" data-bau-hero>
+        <p class="plan-tag bau__kicker" data-hero-fade>
+          <b>Blatt 01</b><span class="hide-sm"> · Technical Project Management</span> · Berlin
+        </p>
+        <Split as="h1" id="bau-titel" class="bau__title" text="Bauen mit|Leidenschaft.|Handeln mit|*Verantwortung.*" trigger="load" />
+        <p class="bau__lead" data-hero-fade>
+          Innenausbau, Sanierung und Instandhaltung in Berlin. Alle Gewerke aus einer Hand, für Privatkunden, Gewerbe
+          und Hausverwaltungen.
+        </p>
+        <div class="bau__ctas" data-hero-fade>
+          <a href="/anfrage/" class="btn btn--lg" data-magnetic>Anfrage starten <Icon name="arrow" /></a>
+          <a href="/leistungen/" class="btn btn--ghost btn--lg bau__cta2">Leistungen ansehen</a>
+        </div>
+        <p class="bau__hint mono" data-hero-fade aria-hidden="true">
+          <span class="bau__hint-line"></span> Scrollen: ein Raum, zwölf Gewerke
+        </p>
+      </div>
+
+      <div class="bau__steps" data-bau-steps>
+        <h2 class="visually-hidden">Ein Raum, zwölf Gewerke: So greifen unsere Leistungen ineinander</h2>
+        <ol role="list">
+          {bauablauf.map((s, i) => (
+            <li class="bau-step" data-bau-step={i}>
+              <p class="bau-step__meta mono">
+                <span class="bau-step__count">Schritt {s.schritt} / 12</span>
+                <span class="bau-step__nr">Leistung {s.nr}</span>
+              </p>
+              <h3 class="bau-step__title">{titelUmbruch(s.titel)}</h3>
+              <p class="bau-step__text">{s.text}</p>
+              <a href={`/leistungen/${s.slug}/`} class="arrow-link bau-step__link" tabindex="-1">
+                Mehr zu {s.titel} <Icon name="arrow" />
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <div class="bau__final" data-bau-final>
+        <p class="plan-tag"><b>Übergabe</b> · Ein Raum, zwölf Gewerke</p>
+        <p class="bau__final-title">Ein Ansprechpartner.<br /><span class="accent">Alles aus einer Hand.</span></p>
+        <a href="/anfrage/" class="btn btn--lg" tabindex="-1">Ihr Vorhaben anfragen <Icon name="arrow" /></a>
+      </div>
+    </div>
+
+    <div class="bau__stage">
+      <div class="bau__room" data-bau-room>
+        <BauRaum />
+      </div>
+      <div class="bau__progress" aria-hidden="true">
+        <span class="bau__progress-label mono" data-bau-label>Altbestand</span>
+        <ol class="bau__ticks">
+          {bauablauf.map((s, i) => <li data-bau-tick={i} title={s.titel}></li>)}
+        </ol>
+      </div>
+    </div>
+  </div>
+  <a href="#nach-bau" class="bau__skip mono" data-bau-skip>Bauablauf überspringen <Icon name="arrow-down" /></a>
+</section>
+<div id="nach-bau" tabindex="-1"></div>
+
+<style>
+  .bau {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    padding-top: var(--header-h);
+  }
+  .bau__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      radial-gradient(70% 60% at 72% 48%, rgba(26, 99, 176, 0.22), transparent 70%),
+      linear-gradient(to right, var(--line-light) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--line-light) 1px, transparent 1px);
+    background-size:
+      100% 100%,
+      clamp(4rem, 7vw, 6rem) clamp(4rem, 7vw, 6rem),
+      clamp(4rem, 7vw, 6rem) clamp(4rem, 7vw, 6rem);
+  }
+  .bau__inner {
+    display: grid;
+    gap: 2rem;
+    padding-block: 2rem 3rem;
+  }
+  .bau__text {
+    display: grid;
+  }
+  .bau__hero,
+  .bau__steps,
+  .bau__final {
+    grid-area: 1 / 1;
+  }
+  .bau__kicker {
+    margin-bottom: 1.25rem;
+  }
+  .bau__kicker b,
+  .bau__final .plan-tag b {
+    color: var(--sky);
+  }
+  .bau__title {
+    font-size: clamp(2.2rem, 10.6vw, 7.5rem);
+    line-height: 0.9;
+    font-weight: 780;
+    letter-spacing: -0.035em;
+  }
+  .bau__lead {
+    margin-top: 1.5rem;
+    font-size: var(--fs-lead);
+    line-height: 1.45;
+    max-width: 34ch;
+    color: rgba(243, 241, 236, 0.86);
+  }
+  .bau__ctas {
+    margin-top: 1.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .bau__hint {
+    display: none;
+  }
+  .hide-sm {
+    display: none;
+  }
+
+  /* Schritte und Finale: nur mit Animation sichtbar */
+  .bau__steps,
+  .bau__final,
+  .bau__progress,
+  .bau__skip {
+    display: none;
+  }
+  .bau__steps ol {
+    margin: 0;
+    padding: 0;
+    display: grid;
+  }
+  .bau-step {
+    grid-area: 1 / 1;
+    display: grid;
+    gap: 0.8rem;
+    align-content: start;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(24px);
+    transition:
+      opacity 0.45s var(--ease),
+      transform 0.6s var(--ease),
+      visibility 0s linear 0.45s;
+  }
+  .bau-step.is-active {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity 0.45s var(--ease) 0.08s,
+      transform 0.6s var(--ease) 0.08s,
+      visibility 0s;
+  }
+  .bau-step.is-past {
+    transform: translateY(-24px);
+  }
+  .bau-step__meta {
+    display: flex;
+    gap: 1rem;
+    color: var(--muted-light);
+  }
+  .bau-step__count {
+    color: var(--sky);
+  }
+  .bau-step__title {
+    font-size: clamp(1.9rem, 3.7vw, 3.9rem);
+    font-weight: 780;
+    font-stretch: 112%;
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+    hyphens: manual;
+  }
+  .bau-step__text {
+    font-size: var(--fs-lead);
+    line-height: 1.45;
+    max-width: 30ch;
+    color: rgba(243, 241, 236, 0.88);
+  }
+  .bau-step__link {
+    justify-self: start;
+    color: var(--paper);
+  }
+  .bau__final {
+    align-content: start;
+    gap: 1.25rem;
+    opacity: 0;
+    visibility: hidden;
+  }
+  .bau__final .btn {
+    justify-self: start;
+  }
+  .bau__final {
+    transform: translateY(24px);
+    transition:
+      opacity 0.5s var(--ease),
+      transform 0.7s var(--ease),
+      visibility 0s linear 0.5s;
+  }
+  .bau__final:global(.is-active) {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity 0.5s var(--ease) 0.1s,
+      transform 0.7s var(--ease) 0.1s,
+      visibility 0s;
+  }
+  .bau__final-title {
+    font-size: clamp(1.9rem, 3.7vw, 3.9rem);
+    font-weight: 780;
+    font-stretch: 112%;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  .bau__stage {
+    position: relative;
+    display: grid;
+    gap: 1rem;
+    align-content: center;
+  }
+  .bau__room {
+    width: min(100%, 640px);
+    margin-inline: auto;
+  }
+  .bau__progress {
+    gap: 0.6rem;
+    justify-items: center;
+  }
+  .bau__progress-label {
+    display: none;
+    color: var(--sky);
+    font-size: 0.68rem;
+  }
+  .bau__ticks {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 4px;
+    width: min(100%, 360px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .bau__ticks li {
+    height: 3px;
+    background: var(--line-light-strong);
+    transition: background-color 0.3s;
+  }
+  .bau__ticks li.is-done {
+    background: var(--sky);
+  }
+  .bau__ticks li.is-current {
+    background: var(--paper);
+  }
+  .bau__skip {
+    position: absolute;
+    right: var(--gutter);
+    bottom: 1.25rem;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted-light);
+    text-decoration: none;
+    font-size: 0.68rem;
+    padding: 0.5rem 0;
+  }
+  @media (max-width: 899px) {
+    .bau__skip {
+      bottom: auto;
+      top: calc(var(--header-h) + 0.25rem);
+    }
+  }
+  .bau__skip :global(.icon) {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+  .bau__skip:hover {
+    color: var(--paper);
+  }
+
+  @media (min-width: 600px) {
+    .hide-sm {
+      display: inline;
+    }
+    .bau__title {
+      font-size: clamp(3rem, 9vw, 7.5rem);
+    }
+  }
+  @media (min-width: 1000px) {
+    .bau__inner {
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      align-items: center;
+      gap: 3rem;
+      min-height: calc(100svh - var(--header-h));
+    }
+    .bau__title {
+      font-size: clamp(3rem, 6.2vw, 7rem);
+    }
+    .bau__room {
+      width: 100%;
+      max-width: calc((100svh - var(--header-h) - 7rem) * 1.01);
+    }
+  }
+
+  /* ── Mit Animation: gepinnte Bühne ── */
+  :global(html.motion) .bau {
+    height: 100svh;
+  }
+  :global(html.motion) .bau__steps,
+  :global(html.motion) .bau__final {
+    display: grid;
+  }
+  :global(html.motion) .bau__progress {
+    display: grid;
+  }
+  :global(html.motion) .bau__skip,
+  :global(html.motion) .bau__hint {
+    display: inline-flex;
+  }
+  :global(html.motion) .bau__hint {
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    color: var(--muted-light);
+    font-size: 0.68rem;
+  }
+  .bau__hint-line {
+    width: 2.5rem;
+    height: 1px;
+    background: var(--sky);
+    transform-origin: left;
+    animation: hint 2.4s var(--ease-in-out) infinite;
+  }
+  @keyframes hint {
+    0%,
+    100% {
+      transform: scaleX(0.3);
+    }
+    50% {
+      transform: scaleX(1);
+    }
+  }
+  :global(html.motion) .bau__inner {
+    height: calc(100svh - var(--header-h));
+    padding-block: 1.75rem calc(4.25rem + env(safe-area-inset-bottom) + 0.75rem);
+    gap: 1.25rem;
+    grid-template-rows: auto minmax(0, 1fr);
+    align-content: stretch;
+  }
+  :global(html.motion) .bau__stage {
+    grid-row: 1;
+  }
+  :global(html.motion) .bau__room {
+    width: auto;
+    max-width: 100%;
+    height: 33svh;
+    aspect-ratio: 584 / 576;
+  }
+  :global(html.motion) .bau__room :global(svg) {
+    height: 100%;
+    width: auto;
+    margin-inline: auto;
+  }
+  :global(html.motion) .bau__text {
+    grid-row: 2;
+    align-items: start;
+  }
+  :global(html.motion) .bau__title {
+    font-size: clamp(2rem, 9.4vw, 7rem);
+  }
+  :global(html.motion) .bau__lead {
+    margin-top: 1rem;
+    font-size: 1.02rem;
+  }
+  :global(html.motion) .bau__ctas {
+    margin-top: 1.25rem;
+  }
+  :global(html.motion) .bau__cta2 {
+    display: none;
+  }
+  @media (max-width: 599px) {
+    :global(html.motion) .bau__ctas :global(.btn--lg) {
+      min-height: 3.4rem;
+      font-size: 1rem;
+    }
+    :global(html.motion) .bau__hint {
+      display: none;
+    }
+  }
+  @media (min-width: 600px) {
+    :global(html.motion) .bau__cta2 {
+      display: inline-flex;
+    }
+  }
+  @media (min-width: 1000px) {
+    :global(html.motion) .bau__inner {
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+      grid-template-rows: 1fr;
+      align-items: center;
+      padding-block: 1rem 3rem;
+    }
+    .bau__progress-label {
+      display: block;
+    }
+    .bau-step,
+    .bau__final {
+      align-content: center;
+      gap: 1rem;
+    }
+    :global(html.motion) .bau__stage,
+    :global(html.motion) .bau__text {
+      grid-row: 1;
+    }
+    :global(html.motion) .bau__stage {
+      grid-column: 2;
+    }
+    :global(html.motion) .bau__text {
+      grid-column: 1;
+      align-items: center;
+    }
+    :global(html.motion) .bau__room {
+      height: calc(100svh - var(--header-h) - 8rem);
+    }
+    :global(html.motion) .bau__title {
+      font-size: clamp(3rem, 6vw, 6.8rem);
+    }
+    :global(html.motion) .bau__lead {
+      margin-top: 1.5rem;
+      font-size: var(--fs-lead);
+    }
+    :global(html.motion) .bau__ctas {
+      margin-top: 1.75rem;
+    }
+  }
+  @media (max-height: 800px) and (max-width: 999px) {
+    :global(html.motion) .bau__room {
+      height: 27svh;
+    }
+    :global(html.motion) .bau__inner {
+      padding-top: 1.5rem;
+    }
+  }
+  @media (max-height: 700px) and (max-width: 999px) {
+    :global(html.motion) .bau__room {
+      height: 28svh;
+    }
+    :global(html.motion) .bau__lead {
+      display: none;
+    }
+  }
+</style>

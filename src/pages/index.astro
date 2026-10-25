@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Split from '../components/Split.astro';
 import Icon from '../components/Icon.astro';
-import LogoMark from '../components/LogoMark.astro';
+import BauSequenz from '../components/BauSequenz.astro';
 import TradeDrawing from '../components/TradeDrawing.astro';
 import ServiceIndex from '../components/ServiceIndex.astro';
 import Quotes from '../components/Quotes.astro';
@@ -42,70 +42,7 @@ const ablauf = [
   title="TPM Bau GmbH Berlin – Innenausbau & alle Gewerke aus einer Hand"
   description="TPM Bau GmbH aus Berlin: Innenausbau, Trockenbau, Maler-, Fliesen- und Bodenarbeiten, Elektro und Sanitär – alle Gewerke aus einer Hand für Privat, Gewerbe und Hausverwaltungen."
 >
-  <!-- ═════════ HERO ═════════ -->
-  <section class:list={['hero on-ink', { 'hero--foto': !!foto.src }]} data-hero>
-    <div class="hero__grid raster" aria-hidden="true"></div>
-    <div class="hero__art" data-hero-art aria-hidden="true">
-      <svg class="hero__dims" viewBox="0 0 600 600" fill="none">
-        <path data-hero-line pathLength="1" d="M0 548 H600" />
-        <path data-hero-line pathLength="1" d="M0 538 V558 M372 538 V558 M600 538 V558" />
-        <path data-hero-line pathLength="1" d="M372 0 V548" class="dash" />
-        <path data-hero-line pathLength="1" d="M-40 497 H640" class="dash" />
-        <circle data-hero-line pathLength="1" cx="372" cy="7" r="9" />
-      </svg>
-      <LogoMark class="hero__mark" draw />
-      <span class="hero__dimlabel hero__dimlabel--a mono" data-hero-fade>Achse A</span>
-      <span class="hero__dimlabel hero__dimlabel--b mono" data-hero-fade>Firstpunkt</span>
-    </div>
-
-    <div class="wrap hero__inner">
-      <div class="hero__text">
-        <p class="plan-tag hero__kicker" data-hero-fade>
-          <b>Blatt 01</b><span class="hide-sm"> · Technical Project Management</span> · Berlin
-        </p>
-        <Split
-          as="h1"
-          class="hero__title"
-          text="Bauen mit|Leidenschaft.|Handeln mit|*Verantwortung.*"
-          trigger="load"
-        />
-        <div class="hero__bottom">
-          <p class="hero__lead" data-hero-fade>
-            Innenausbau, Sanierung und Instandhaltung in Berlin. Alle Gewerke aus einer Hand, für Privatkunden,
-            Gewerbe und Hausverwaltungen.
-          </p>
-          <div class="hero__ctas" data-hero-fade>
-            <a href="/anfrage/" class="btn btn--lg" data-magnetic>Anfrage starten <Icon name="arrow" /></a>
-            <a href="/leistungen/" class="btn btn--ghost btn--lg">Leistungen ansehen</a>
-          </div>
-        </div>
-      </div>
-
-      {foto.src && (
-        <figure class="hero__foto" data-hero-fade>
-          <Picture
-            src={foto.src}
-            alt={foto.alt}
-            formats={['avif', 'webp']}
-            widths={[480, 720, 960, 1200].filter((w) => w <= foto.src!.width)}
-            sizes="(min-width: 1000px) 38vw, 92vw"
-            loading="eager"
-            fetchpriority="high"
-          />
-          <figcaption class="mono">Team TPM · Berlin</figcaption>
-        </figure>
-      )}
-    </div>
-
-    <div class="wrap">
-      <ul role="list" class="hero__facts" data-hero-fade>
-        <li><span class="mono">Gegründet</span>{firma.gruendung} in Berlin</li>
-        <li><span class="mono">Leistungen</span>12 Gewerke, ein Ansprechpartner</li>
-        <li><span class="mono">Für</span>Privat, Gewerbe, Hausverwaltungen</li>
-        <li><span class="mono">Mitglied</span>Handwerkskammer Berlin · BG BAU</li>
-      </ul>
-    </div>
-  </section>
+  <BauSequenz />
 
   <!-- ═════════ AUFTRAGGEBER ═════════ -->
   <section class="clients on-ink" aria-labelledby="clients-title">
@@ -113,6 +50,14 @@ const ablauf = [
       <h2 id="clients-title" class="label">Auftraggeber (Auswahl)</h2>
     </div>
     <Marquee items={[...firma.auftraggeber]} />
+    <div class="wrap">
+      <ul role="list" class="facts">
+        <li><span class="mono">Gegründet</span>{firma.gruendung} in Berlin</li>
+        <li><span class="mono">Leistungen</span>12 Gewerke, ein Ansprechpartner</li>
+        <li><span class="mono">Für</span>Privat, Gewerbe, Hausverwaltungen</li>
+        <li><span class="mono">Mitglied</span>Handwerkskammer Berlin · BG BAU</li>
+      </ul>
+    </div>
   </section>
 
   <!-- ═════════ INTRO ═════════ -->
@@ -135,6 +80,20 @@ const ablauf = [
         </div>
       </div>
     </div>
+    {foto.src && (
+      <div class="wrap">
+        <figure class="intro__foto" data-reveal-clip>
+          <Picture
+            src={foto.src}
+            alt={foto.alt}
+            formats={['avif', 'webp']}
+            widths={[480, 800, 1200, 1600].filter((w) => w <= foto.src!.width)}
+            sizes="(min-width: 1000px) 60vw, 100vw"
+          />
+          <figcaption class="mono">Team TPM · Berlin</figcaption>
+        </figure>
+      </div>
+    )}
   </section>
 
   <!-- ═════════ LEISTUNGEN ═════════ -->
@@ -210,6 +169,59 @@ const ablauf = [
           <h3 class="value__title">{w.titel}</h3>
           {'zusatz' in w && <p class="value__add">{w.zusatz}</p>}
           <p class="value__text">{w.text}</p>
+          <div class="value__tool" aria-hidden="true">
+            {i === 0 && (
+              <>
+                <svg class="waage" viewBox="0 0 260 64" data-waage>
+                  <rect x="2" y="12" width="256" height="40" rx="4" fill="#f3f1ec" stroke="#0a1626" stroke-width="1.5" />
+                  <rect x="2" y="12" width="22" height="40" rx="4" fill="#0a1626" />
+                  <rect x="236" y="12" width="22" height="40" rx="4" fill="#0a1626" />
+                  <path d={Array.from({ length: 26 }, (_, k) => `M${32 + k * 8} 52 V${k % 5 === 0 ? 44 : 48}`).join(' ')} stroke="#0a1626" stroke-width="1" />
+                  <rect x="96" y="19" width="68" height="22" rx="11" fill="#bfe0f5" stroke="#0a1626" stroke-width="1.3" />
+                  <ellipse class="waage__blase" cx="130" cy="30" rx="9" ry="6.5" fill="#ffffff" stroke="#1a63b0" stroke-width="1.2" />
+                  <path d="M118 19 V41 M142 19 V41" stroke="#0a1626" stroke-width="1.3" />
+                </svg>
+                <p class="value__lot mono is-lot" data-lot>Im Lot</p>
+              </>
+            )}
+            {i === 1 && (
+              <svg class="lagen" viewBox="0 0 280 190" data-lagen>
+                {[0, 1, 2].map((k) => (
+                  <g class="lage">
+                    <rect x="40" y="50" width="170" height="120" fill="rgba(243,241,236,0.12)" stroke="rgba(243,241,236,0.75)" stroke-width="1" />
+                    {k === 0 && <path d="M58 70 H190 V150 H58 Z M58 112 H120 M150 70 V112" fill="none" stroke="#f3f1ec" stroke-width="1.6" />}
+                    {k === 1 && <path d="M58 160 H190 M58 156 V164 M124 156 V164 M190 156 V164 M200 70 V150 M196 70 H204 M196 150 H204" fill="none" stroke="#bfe0f5" stroke-width="1" />}
+                    {k === 2 && (
+                      <g fill="none" stroke="#f3f1ec" stroke-width="1.2">
+                        <circle cx="90" cy="92" r="7" /><path d="M85 87 L95 97 M95 87 L85 97" />
+                        <circle cx="160" cy="132" r="5" /><path d="M90 99 V128 H155" stroke-dasharray="3 3" />
+                      </g>
+                    )}
+                  </g>
+                ))}
+              </svg>
+            )}
+            {i === 2 && (
+              <svg class="schraube" viewBox="0 0 120 170" data-schraube>
+                <defs>
+                  <clipPath id="schaft-clip"><rect x="51" y="40" width="18" height="74" /></clipPath>
+                </defs>
+                <g class="schraube__teil">
+                  <path d="M60 114 L52 114 L60 132 L68 114 Z" fill="#c8d0d8" stroke="#0a1626" stroke-width="1.2" stroke-linejoin="round" />
+                  <rect x="52" y="40" width="16" height="74" fill="#c8d0d8" stroke="#0a1626" stroke-width="1.2" />
+                  <g clip-path="url(#schaft-clip)">
+                    <g class="schraube__gewinde">
+                      <path d={Array.from({ length: 40 }, (_, k) => `M50 ${30 + k * 7} L70 ${24 + k * 7}`).join(' ')} stroke="#0a1626" stroke-width="1.2" />
+                    </g>
+                  </g>
+                  <path d="M34 26 H86 L80 40 H40 Z" fill="#e3e8ec" stroke="#0a1626" stroke-width="1.2" stroke-linejoin="round" />
+                  <rect x="57" y="26" width="6" height="5" fill="#0a1626" />
+                </g>
+                <rect x="6" y="96" width="108" height="56" rx="2" fill="#c99e6c" stroke="#0a1626" stroke-width="1.2" />
+                <path d="M12 108 C40 102 70 114 108 106 M12 122 C46 116 76 128 108 120 M12 138 C38 132 72 144 108 136" fill="none" stroke="#9a7148" stroke-width="1.2" />
+              </svg>
+            )}
+          </div>
         </article>
       ))}
     </div>
@@ -229,10 +241,10 @@ const ablauf = [
         <a href="/anfrage/" class="btn process__cta" data-reveal>Schritt 1 starten <Icon name="arrow" /></a>
       </div>
       <div class="steps-wrap" data-progress>
-      <span class="steps__rail" aria-hidden="true"><span data-progress-line></span></span>
       <ol role="list" class="steps">
         {ablauf.map((s, i) => (
           <li class="step" data-step>
+            <span class="rule" aria-hidden="true"><span class="rule__num">{(i + 1) * 20}</span></span>
             <span class="step__nr mono">0{i + 1}</span>
             <div>
               <h3 class="h3">{s.titel}</h3>
@@ -279,223 +291,6 @@ const ablauf = [
 </Base>
 
 <style>
-  /* ── Hero ── */
-  .hero {
-    position: relative;
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding-top: calc(var(--header-h) + 2rem);
-    overflow: hidden;
-    isolation: isolate;
-  }
-  .hero__grid {
-    position: absolute;
-    inset: 0;
-    z-index: -2;
-    -webkit-mask-image: radial-gradient(90% 80% at 70% 35%, #000 20%, transparent 80%);
-    mask-image: radial-gradient(90% 80% at 70% 35%, #000 20%, transparent 80%);
-  }
-  .hero__art {
-    position: relative;
-    z-index: -1;
-    width: 54vw;
-    max-width: 340px;
-    aspect-ratio: 600 / 600;
-    margin: 0 var(--gutter) 1.5rem auto;
-  }
-  .hide-sm {
-    display: none;
-  }
-  .hero__mark {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: auto;
-  }
-  html.motion .hero__mark polygon {
-    fill-opacity: 0;
-  }
-  .hero__dims {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
-  .hero__dims path,
-  .hero__dims circle {
-    stroke: var(--sky);
-    stroke-width: 1;
-    vector-effect: non-scaling-stroke;
-    opacity: 0.55;
-  }
-  .hero__dims .dash {
-    stroke-dasharray: 4 6;
-    opacity: 0.3;
-  }
-  html.motion [data-hero-line] {
-    stroke-dasharray: 1 1;
-    stroke-dashoffset: 1;
-  }
-  html.motion [data-hero-fade] {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  .hero__dimlabel {
-    position: absolute;
-    white-space: nowrap;
-    color: var(--sky);
-    font-size: 0.65rem;
-  }
-  .hero__dimlabel--a {
-    left: 62%;
-    top: 93.5%;
-  }
-  .hero__dimlabel--b {
-    left: 64%;
-    top: -0.5%;
-  }
-
-  .hero__inner {
-    position: relative;
-    display: grid;
-    gap: 2.5rem;
-    padding-bottom: 2rem;
-  }
-  .hero__kicker {
-    margin-bottom: 1.5rem;
-  }
-  .hero__kicker b {
-    color: var(--sky);
-  }
-  .hero__title {
-    font-size: clamp(2.2rem, 10.6vw, 9.4rem);
-    line-height: 0.9;
-    font-weight: 780;
-    font-stretch: 100%;
-    letter-spacing: -0.035em;
-  }
-  .hero__bottom {
-    margin-top: clamp(1.75rem, 4vw, 3rem);
-    display: grid;
-    gap: 1.75rem;
-  }
-  .hero__lead {
-    font-size: var(--fs-lead);
-    line-height: 1.45;
-    max-width: 34ch;
-    color: rgba(243, 241, 236, 0.86);
-  }
-  .hero__ctas {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-  .hero__facts {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem 1.5rem;
-    margin: 0;
-    padding-block: 1.5rem 2rem;
-    border-top: 1px solid var(--line-light);
-    font-size: 0.9rem;
-    line-height: 1.35;
-  }
-  .hero__facts li {
-    display: grid;
-    gap: 0.3rem;
-  }
-  .hero__facts .mono {
-    color: var(--sky);
-    font-size: 0.66rem;
-  }
-  .hero__foto {
-    margin: 0;
-    position: relative;
-    justify-self: start;
-    border: 1px solid var(--line-light-strong);
-    padding: 0.6rem;
-    background: var(--ink-2);
-  }
-  /* Foto nie beschneiden: Höhe begrenzen, Breite ergibt sich aus dem Seitenverhältnis */
-  .hero__foto :global(img) {
-    display: block;
-    width: auto;
-    max-width: 100%;
-    height: auto;
-    max-height: min(52svh, 520px);
-  }
-  .hero--foto .hero__art {
-    display: none;
-  }
-  .hero--foto .hero__foto {
-    order: -1;
-  }
-  .hero__foto figcaption {
-    margin-top: 0.6rem;
-    color: var(--muted-light);
-    font-size: 0.65rem;
-  }
-
-  @media (min-width: 600px) {
-    .hero__title {
-      font-size: clamp(3rem, 9vw, 9.4rem);
-    }
-  }
-  @media (min-width: 600px) {
-    .value__title {
-      font-stretch: 112%;
-    }
-    .hide-sm {
-      display: inline;
-    }
-  }
-  @media (min-width: 900px) {
-    .hero__art {
-      position: absolute;
-      margin: 0;
-      max-width: none;
-      right: 4vw;
-      top: calc(var(--header-h) + 6vh);
-      width: min(40vw, 640px);
-    }
-    .hero__bottom {
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: end;
-      gap: 3rem;
-    }
-    .hero__facts {
-      grid-template-columns: repeat(4, 1fr);
-    }
-    .hero__title {
-      font-size: clamp(3rem, 6.6vw, 7.5rem);
-    }
-  }
-  @media (min-width: 1000px) {
-    .hero--foto .hero__inner {
-      grid-template-columns: minmax(0, 1.45fr) auto;
-      align-items: end;
-      gap: 4rem;
-    }
-    .hero--foto .hero__foto {
-      order: 0;
-      justify-self: end;
-    }
-    .hero--foto .hero__foto :global(img) {
-      max-height: calc(100svh - var(--header-h) - 12rem);
-      max-width: 36vw;
-    }
-    .hero--foto .hero__title {
-      font-size: clamp(3rem, 5.8vw, 6.5rem);
-    }
-    .hero--foto .hero__bottom {
-      grid-template-columns: 1fr;
-    }
-  }
-
   /* ── Auftraggeber ── */
   .clients {
     padding-block: clamp(3rem, 6vw, 5rem);
@@ -503,6 +298,49 @@ const ablauf = [
   }
   .clients__head {
     margin-bottom: 1.75rem;
+  }
+  .facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem 1.5rem;
+    margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line-light);
+    font-size: 0.9rem;
+    line-height: 1.35;
+  }
+  .facts li {
+    display: grid;
+    gap: 0.3rem;
+  }
+  .facts .mono {
+    color: var(--sky);
+    font-size: 0.66rem;
+  }
+  @media (min-width: 900px) {
+    .facts {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .intro__foto {
+    margin: clamp(3rem, 6vw, 5rem) 0 0 auto;
+    width: fit-content;
+    max-width: 100%;
+    border: 1px solid var(--line-strong);
+    padding: 0.6rem;
+    background: var(--paper-2);
+    overflow: hidden;
+  }
+  .intro__foto :global(img) {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 80svh;
+  }
+  .intro__foto figcaption {
+    margin-top: 0.6rem;
+    color: var(--muted);
+    font-size: 0.65rem;
   }
 
   /* ── Intro ── */
@@ -699,6 +537,39 @@ const ablauf = [
     color: var(--paper);
     opacity: 1;
   }
+  .value__tool {
+    margin-top: 1.25rem;
+    display: grid;
+    gap: 0.6rem;
+    justify-items: start;
+  }
+  .waage {
+    width: min(260px, 70vw);
+  }
+  .lagen {
+    width: min(260px, 70vw);
+  }
+  .schraube {
+    width: 96px;
+  }
+  .value__lot {
+    color: var(--paper);
+    opacity: 0.45;
+    transition: opacity 0.3s;
+  }
+  .value__lot:global(.is-lot) {
+    opacity: 1;
+  }
+  .value__lot::before {
+    content: '';
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-right: 0.5rem;
+    border-radius: 50%;
+    background: #9be29b;
+    vertical-align: middle;
+  }
   .value__text {
     max-width: 44ch;
     font-size: 1.1rem;
@@ -736,10 +607,48 @@ const ablauf = [
       color: rgba(243, 241, 236, 0.8);
     }
     :global(html.motion-ready) .value {
-      width: 74vw;
+      width: 78vw;
       border-top: 0;
       border-left: 1px solid rgba(243, 241, 236, 0.22);
       padding-inline: 5vw;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas:
+        'nr nr'
+        'title title'
+        'add tool'
+        'text tool';
+      column-gap: 4vw;
+      align-content: center;
+    }
+    :global(html.motion-ready) .value__nr {
+      grid-area: nr;
+    }
+    :global(html.motion-ready) .value__title {
+      grid-area: title;
+      font-size: clamp(4rem, 6.8vw, 8.5rem);
+    }
+    :global(html.motion-ready) .value__add {
+      grid-area: add;
+      align-self: end;
+    }
+    :global(html.motion-ready) .value__text {
+      grid-area: text;
+      align-self: start;
+    }
+    :global(html.motion-ready) .value__tool {
+      grid-area: tool;
+      margin-top: 0;
+      align-self: center;
+      justify-items: center;
+    }
+    :global(html.motion-ready) .waage {
+      width: min(440px, 100%);
+    }
+    :global(html.motion-ready) .lagen {
+      width: min(400px, 100%);
+    }
+    :global(html.motion-ready) .schraube {
+      width: 150px;
     }
     :global(html.motion-ready) .values__progress {
       display: block;
@@ -783,19 +692,39 @@ const ablauf = [
     padding: 0;
     display: grid;
   }
-  .steps__rail {
+  /* Zollstock: klappt sich Schritt für Schritt auf */
+  .rule {
     position: absolute;
-    left: 1.25rem;
-    top: 1.5rem;
-    bottom: 1.5rem;
-    width: 1px;
-    background: var(--line);
+    z-index: 0;
+    left: calc(1.25rem - 11px);
+    top: 2.75rem;
+    width: 22px;
+    height: 100%;
+    border-radius: 2px;
+    background:
+      repeating-linear-gradient(to bottom, rgba(243, 241, 236, 0.85) 0 1px, transparent 1px 8px) left top / 32% 100% no-repeat,
+      repeating-linear-gradient(to bottom, rgba(243, 241, 236, 0.95) 0 1px, transparent 1px 40px) left top / 62% 100% no-repeat,
+      var(--blue);
+    box-shadow: 0 6px 14px -8px rgba(10, 22, 38, 0.6);
+    transform-origin: 50% 0;
+    transform: rotate(0deg);
+    transition: transform 0.9s cubic-bezier(0.3, 1.35, 0.5, 1);
   }
-  .steps__rail span {
+  .step:last-child .rule {
+    height: calc(100% - 4.75rem);
+  }
+  .rule__num {
     position: absolute;
-    inset: 0;
-    background: var(--blue);
-    transform-origin: top;
+    right: 3px;
+    bottom: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    color: var(--paper);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+  }
+  :global(html.motion) .step:not(.is-active) .rule {
+    transform: rotate(178deg);
   }
   .step {
     position: relative;

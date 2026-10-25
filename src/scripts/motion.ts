@@ -3,6 +3,7 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
+import { bauSequenz, fokusRaeume, laser, massband, werkzeuge } from './handwerk';
 
 const root = document.documentElement;
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -13,7 +14,12 @@ if (root.classList.contains('motion') && !reduced.matches) {
   init();
 }
 
-function init() {
+/** Arbeit auf mehrere kurze Tasks verteilen, damit der Hauptthread reaktionsfähig bleibt */
+function pause() {
+  return new Promise<void>((r) => setTimeout(r, 0));
+}
+
+async function init() {
   /* ── Weiches Scrollen ─────────────────────────────── */
   const finePointer = window.matchMedia('(pointer: fine)').matches;
   const lenis = new Lenis({
@@ -30,25 +36,33 @@ function init() {
     if (open) lenis.stop();
     else lenis.start();
   });
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
+  /* ── Handwerk: Bauablauf zuerst (gepinnt, beeinflusst alle späteren Positionen) ── */
+  bauSequenz(lenis);
+  await pause();
+  fokusRaeume();
+  laser();
+  massband();
+  await pause();
 
   /* ── Überschriften: Wort für Wort ─────────────────── */
+  // IntersectionObserver statt je eines ScrollTriggers: keine Layout-Messung pro Überschrift beim Start
+  const tween = { y: 0, duration: 1.15, ease: 'expo.out', stagger: 0.055 };
+  const io = new IntersectionObserver(
+    (entries) =>
+      entries.forEach((en) => {
+        if (!en.isIntersecting) return;
+        io.unobserve(en.target);
+        gsap.to(en.target.querySelectorAll('.sw > span'), tween);
+      }),
+    { rootMargin: '0px 0px -12% 0px' },
+  );
   document.querySelectorAll<HTMLElement>('[data-split]').forEach((el) => {
-    const words = el.querySelectorAll('.sw > span');
-    const tween = {
-      y: 0,
-      duration: 1.15,
-      ease: 'expo.out',
-      stagger: 0.055,
-    };
-    if (el.dataset.split === 'load') {
-      gsap.to(words, { ...tween, yPercent: 0, delay: 0.15 });
-    } else {
-      gsap.to(words, {
-        ...tween,
-        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-      });
-    }
+    if (el.dataset.split === 'load') gsap.to(el.querySelectorAll('.sw > span'), { ...tween, delay: 0.15 });
+    else io.observe(el);
   });
+  await pause();
 
   /* ── Einblenden ───────────────────────────────────── */
   ScrollTrigger.batch('[data-reveal]', {
@@ -82,6 +96,8 @@ function init() {
       );
     }
   });
+
+  await pause();
 
   /* ── Linien zeichnen sich selbst ──────────────────── */
   const drawables = (svg: Element) =>
@@ -120,9 +136,8 @@ function init() {
     });
   });
 
-  /* ── Hero der Startseite ──────────────────────────── */
-  const hero = document.querySelector<HTMLElement>('[data-hero]');
-  if (hero) heroIntro(hero);
+  /* ── Einblenden im ersten Bildschirm ─────────────── */
+  gsap.to('[data-hero-fade]', { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.08, delay: 0.5 });
 
   /* ── Parallax ─────────────────────────────────────── */
   document.querySelectorAll<HTMLElement>('[data-parallax]').forEach((el) => {
@@ -159,6 +174,8 @@ function init() {
     );
   });
 
+  await pause();
+
   /* ── Horizontal gepinnter Abschnitt (Werte) ───────── */
   const mm = gsap.matchMedia();
   mm.add('(min-width: 900px)', () => {
@@ -185,6 +202,8 @@ function init() {
       });
     });
   });
+
+  await pause();
 
   /* ── Laufband ─────────────────────────────────────── */
   document.querySelectorAll<HTMLElement>('[data-marquee]').forEach((el) => {
@@ -268,6 +287,8 @@ function init() {
     });
   }
 
+  werkzeuge();
+
   // Nach dem Laden von Schriften/Bildern Positionen neu berechnen
   document.fonts?.ready.then(() => ScrollTrigger.refresh());
   window.addEventListener('load', () => ScrollTrigger.refresh());
@@ -283,49 +304,4 @@ function init() {
       if (n.closest('svg')) n.style.strokeDashoffset = '0';
     });
   });
-}
-
-function heroIntro(hero: HTMLElement) {
-  const mark = hero.querySelector<SVGSVGElement>('[data-logomark]');
-  const tl = gsap.timeline({ delay: 0.2 });
-
-  if (mark) {
-    const polys = [...mark.querySelectorAll<SVGPolygonElement>('polygon')];
-    polys.forEach((p) => {
-      p.dataset.fill = p.getAttribute('fill') || '';
-      p.setAttribute('pathLength', '1');
-      p.style.fillOpacity = '0';
-      p.style.stroke = p.dataset.side === 'l' ? '#6FAAD6' : '#1A63B0';
-      p.style.strokeWidth = '1.5';
-      p.style.strokeDasharray = '1 1';
-      p.style.strokeDashoffset = '1';
-      p.style.vectorEffect = 'non-scaling-stroke';
-    });
-    // vom äußeren zum inneren Dach
-    const order = (i: number) => polys.filter((p) => p.dataset.roof === String(i));
-    tl.to(order(0), { strokeDashoffset: 0, duration: 1.3, ease: 'power2.inOut' }, 0)
-      .to(order(1), { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut' }, 0.25)
-      .to(order(2), { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' }, 0.5)
-      .to(polys, { fillOpacity: 1, duration: 1, ease: 'power2.out', stagger: 0.08 }, 1.2)
-      .to(polys, { strokeWidth: 0, duration: 0.6 }, 1.8);
-  }
-
-  const lines = hero.querySelectorAll<SVGGeometryElement>('[data-hero-line]');
-  lines.forEach((n) => {
-    n.setAttribute('pathLength', '1');
-    n.style.strokeDasharray = '1 1';
-    n.style.strokeDashoffset = '1';
-  });
-  tl.to(lines, { strokeDashoffset: 0, duration: 1.2, ease: 'power3.inOut', stagger: 0.1 }, 0.6);
-  tl.to(hero.querySelectorAll('[data-hero-fade]'), { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', stagger: 0.08 }, 0.9);
-
-  // Hero-Zeichen leicht verschieben beim Scrollen
-  const art = hero.querySelector<HTMLElement>('[data-hero-art]');
-  if (art) {
-    gsap.to(art, {
-      yPercent: 12,
-      ease: 'none',
-      scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true },
-    });
-  }
 }

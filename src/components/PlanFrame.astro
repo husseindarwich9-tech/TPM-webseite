@@ -1,6 +1,6 @@
 ---
 // Werkzeichnung mit Achsraster, Maßketten und Plankopf – das wiederkehrende Bildmotiv der Seite.
-import TradeDrawing from './TradeDrawing.astro';
+import BauRaum from './BauRaum.astro';
 import LogoMark from './LogoMark.astro';
 
 interface Props {
@@ -20,7 +20,7 @@ const { slug, titel, nr, class: klasse, dark = false } = Astro.props;
       <path d="M12 7 H88 M12 5 V9 M50 5 V9 M88 5 V9" />
       <path d="M93 14 V86 M91 14 H95 M91 86 H95" />
     </svg>
-    <TradeDrawing slug={slug} class="plan__drawing" />
+    <BauRaum focus={slug} class="plan__drawing" title={`Illustration: ${titel} im sanierten Raum`} />
     <span class="crosshair c1" aria-hidden="true"></span>
     <span class="crosshair c2" aria-hidden="true"></span>
     <span class="crosshair c3" aria-hidden="true"></span>
@@ -53,6 +53,7 @@ const { slug, titel, nr, class: klasse, dark = false } = Astro.props;
   }
   .plan__sheet {
     position: relative;
+    overflow: hidden;
     aspect-ratio: 1 / 1;
     display: grid;
     place-items: center;
@@ -63,7 +64,7 @@ const { slug, titel, nr, class: klasse, dark = false } = Astro.props;
     background-position: center;
   }
   .plan__drawing {
-    width: 64%;
+    width: 86%;
     height: auto;
   }
   .plan__dims {

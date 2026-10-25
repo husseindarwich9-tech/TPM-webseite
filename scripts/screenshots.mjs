@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { CHROME } from './chrome.mjs';
 
-const BASE = process.argv[2] || 'http://localhost:4321';
+const BASE = process.argv[2] || 'http://127.0.0.1:4321';
 const FILTER = process.argv[3] || '';
 const OUT = path.resolve('docs/screenshots');
 const EXEC = CHROME;
@@ -39,7 +39,7 @@ for (const w of widths) {
     const name = (p === '/' ? 'start' : p.replace(/^\/|\/$/g, '').replace(/\//g, '_')) + `-${w}.png`;
     // Statt fullPage: Fenster auf volle Seitenhöhe setzen (Hero behält die ursprüngliche Bildschirmhöhe)
     const vh = page.viewportSize().height;
-    await page.addStyleTag({ content: `.hero{min-height:${vh}px!important}` });
+    await page.addStyleTag({ content: `.hero{min-height:${vh}px!important}.bau__inner{min-height:${vh - 72}px!important}` });
     const docH = await page.evaluate(() => document.documentElement.scrollHeight);
     await page.setViewportSize({ width: w, height: docH });
     await page.waitForTimeout(400);
