@@ -14,7 +14,8 @@
     "screenshots": "node scripts/screenshots.mjs && node scripts/anfrage-shots.mjs && node scripts/animation-shots.mjs",
     "lighthouse": "node scripts/lighthouse.mjs",
     "icons": "node scripts/generate-icons.mjs",
-    "vorschau": "astro build && node scripts/vorschau.mjs && node scripts/vorschau-einzeln.mjs"
+    "vorschau": "astro build && node scripts/vorschau.mjs && node scripts/vorschau-einzeln.mjs",
+    "vorschau:pdf": "node scripts/vorschau-pdf.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

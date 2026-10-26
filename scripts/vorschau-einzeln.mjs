@@ -90,7 +90,8 @@ const router = `<script>
   window.__tpmSuche = ziel.indexOf('?') > -1 ? ziel.slice(ziel.indexOf('?')) : '';
   var t = document.querySelector('template[data-route="' + pfad + '"]') || document.querySelector('template[data-route="/404/"]');
   var main = document.getElementById('inhalt');
-  main.appendChild(t.content.cloneNode(true));
+  // Die Startseite steht bereits im Dokument (sichtbar auch ohne JavaScript); andere Seiten ersetzen sie
+  if (pfad !== '/' && t) { main.innerHTML = ''; main.appendChild(t.content.cloneNode(true)); }
   document.title = t.getAttribute('data-titel');
   document.querySelectorAll('header a[aria-current]').forEach(function (a) { a.removeAttribute('aria-current'); });
   document.querySelectorAll('header a[href^="#seite:"]').forEach(function (a) {
@@ -112,7 +113,8 @@ const router = `<script>
 </script>`;
 
 // Hinweis: Ersetzungen immer als Funktion – sonst würden "$"-Zeichen im Code als Ersetzungsmuster gelesen
-shell = shell.replace(/<main id="inhalt" tabindex="-1">[\s\S]*?<\/main>/, () => `<main id="inhalt" tabindex="-1"></main>\n${templates}\n${router}`);
+const start = seiten.find((x) => x.route === '/');
+shell = shell.replace(/<main id="inhalt" tabindex="-1">[\s\S]*?<\/main>/, () => `<main id="inhalt" tabindex="-1">${start.inhalt}</main>\n${templates}\n${router}`);
 shell = linksUmschreiben(shell);
 
 // Skripte einbetten (Abfrageparameter des Assistenten kommen aus dem Router)
