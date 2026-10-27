@@ -6,7 +6,6 @@ import BauSequenz from '../components/BauSequenz.astro';
 import TradeDrawing from '../components/TradeDrawing.astro';
 import ServiceIndex from '../components/ServiceIndex.astro';
 import Quotes from '../components/Quotes.astro';
-import Marquee from '../components/Marquee.astro';
 import { Picture } from 'astro:assets';
 import { firma } from '../data/firma';
 import { bild } from '../data/bilder';
@@ -49,7 +48,11 @@ const ablauf = [
     <div class="wrap clients__head">
       <h2 id="clients-title" class="label">Auftraggeber (Auswahl)</h2>
     </div>
-    <Marquee items={[...firma.auftraggeber]} />
+    <div class="wrap">
+      <ul role="list" class="clients__list">
+        {firma.auftraggeber.map((n) => <li>{n}</li>)}
+      </ul>
+    </div>
     <div class="wrap">
       <ul role="list" class="facts">
         <li><span class="mono">Gegründet</span>{firma.gruendung} in Berlin</li>
@@ -72,9 +75,7 @@ const ablauf = [
         </ul>
       </div>
       <div>
-        <p class="intro__text" data-scrub-words>
-          {intro.split(' ').map((w) => <span class="wd">{w} </span>)}
-        </p>
+        <p class="intro__text" data-reveal>{intro}</p>
         <div class="intro__links" data-reveal>
           <a href="/ueber-uns/" class="arrow-link">Mehr über TPM <Icon name="arrow" /></a>
         </div>
@@ -155,77 +156,22 @@ const ablauf = [
     </div>
   </section>
 
-  <!-- ═════════ WERTE (horizontal) ═════════ -->
-  <section class="values on-blue" data-hscroll aria-labelledby="values-title">
-    <div class="values__track" data-hscroll-track>
-      <div class="values__intro">
-        <p class="label">Wofür wir stehen</p>
-        <h2 id="values-title" class="h2">Drei Werte, an denen Sie uns messen können.</h2>
-        <p class="values__hint mono" aria-hidden="true">Weiterscrollen <Icon name="arrow" /></p>
-      </div>
-      {firma.werte.map((w, i) => (
-        <article class="value">
-          <span class="value__nr mono">0{i + 1} / 03</span>
-          <h3 class="value__title">{w.titel}</h3>
-          {'zusatz' in w && <p class="value__add">{w.zusatz}</p>}
-          <p class="value__text">{w.text}</p>
-          <div class="value__tool" aria-hidden="true">
-            {i === 0 && (
-              <>
-                <svg class="waage" viewBox="0 0 260 64" data-waage>
-                  <rect x="2" y="12" width="256" height="40" rx="4" fill="#f3f1ec" stroke="#0a1626" stroke-width="1.5" />
-                  <rect x="2" y="12" width="22" height="40" rx="4" fill="#0a1626" />
-                  <rect x="236" y="12" width="22" height="40" rx="4" fill="#0a1626" />
-                  <path d={Array.from({ length: 26 }, (_, k) => `M${32 + k * 8} 52 V${k % 5 === 0 ? 44 : 48}`).join(' ')} stroke="#0a1626" stroke-width="1" />
-                  <rect x="96" y="19" width="68" height="22" rx="11" fill="#bfe0f5" stroke="#0a1626" stroke-width="1.3" />
-                  <ellipse class="waage__blase" cx="130" cy="30" rx="9" ry="6.5" fill="#ffffff" stroke="#1a63b0" stroke-width="1.2" />
-                  <path d="M118 19 V41 M142 19 V41" stroke="#0a1626" stroke-width="1.3" />
-                </svg>
-                <p class="value__lot mono is-lot" data-lot>Im Lot</p>
-              </>
-            )}
-            {i === 1 && (
-              <svg class="lagen" viewBox="0 0 280 190" data-lagen>
-                {[0, 1, 2].map((k) => (
-                  <g class="lage">
-                    <rect x="40" y="50" width="170" height="120" fill="rgba(243,241,236,0.12)" stroke="rgba(243,241,236,0.75)" stroke-width="1" />
-                    {k === 0 && <path d="M58 70 H190 V150 H58 Z M58 112 H120 M150 70 V112" fill="none" stroke="#f3f1ec" stroke-width="1.6" />}
-                    {k === 1 && <path d="M58 160 H190 M58 156 V164 M124 156 V164 M190 156 V164 M200 70 V150 M196 70 H204 M196 150 H204" fill="none" stroke="#bfe0f5" stroke-width="1" />}
-                    {k === 2 && (
-                      <g fill="none" stroke="#f3f1ec" stroke-width="1.2">
-                        <circle cx="90" cy="92" r="7" /><path d="M85 87 L95 97 M95 87 L85 97" />
-                        <circle cx="160" cy="132" r="5" /><path d="M90 99 V128 H155" stroke-dasharray="3 3" />
-                      </g>
-                    )}
-                  </g>
-                ))}
-              </svg>
-            )}
-            {i === 2 && (
-              <svg class="schraube" viewBox="0 0 120 170" data-schraube>
-                <defs>
-                  <clipPath id="schaft-clip"><rect x="51" y="40" width="18" height="74" /></clipPath>
-                </defs>
-                <g class="schraube__teil">
-                  <path d="M60 114 L52 114 L60 132 L68 114 Z" fill="#c8d0d8" stroke="#0a1626" stroke-width="1.2" stroke-linejoin="round" />
-                  <rect x="52" y="40" width="16" height="74" fill="#c8d0d8" stroke="#0a1626" stroke-width="1.2" />
-                  <g clip-path="url(#schaft-clip)">
-                    <g class="schraube__gewinde">
-                      <path d={Array.from({ length: 40 }, (_, k) => `M50 ${30 + k * 7} L70 ${24 + k * 7}`).join(' ')} stroke="#0a1626" stroke-width="1.2" />
-                    </g>
-                  </g>
-                  <path d="M34 26 H86 L80 40 H40 Z" fill="#e3e8ec" stroke="#0a1626" stroke-width="1.2" stroke-linejoin="round" />
-                  <rect x="57" y="26" width="6" height="5" fill="#0a1626" />
-                </g>
-                <rect x="6" y="96" width="108" height="56" rx="2" fill="#c99e6c" stroke="#0a1626" stroke-width="1.2" />
-                <path d="M12 108 C40 102 70 114 108 106 M12 122 C46 116 76 128 108 120 M12 138 C38 132 72 144 108 136" fill="none" stroke="#9a7148" stroke-width="1.2" />
-              </svg>
-            )}
-          </div>
-        </article>
-      ))}
+  <!-- ═════════ WERTE ═════════ -->
+  <section class="section values on-blue" aria-labelledby="values-title">
+    <div class="wrap">
+      <p class="label">Wofür wir stehen</p>
+      <h2 id="values-title" class="h2 values__title" data-reveal>Drei Werte, an denen Sie uns messen können.</h2>
+      <ol role="list" class="values__list">
+        {firma.werte.map((w, i) => (
+          <li class="value" data-reveal>
+            <span class="value__nr mono">0{i + 1}</span>
+            <h3 class="value__title">{w.titel}</h3>
+            {'zusatz' in w && <p class="value__add">{w.zusatz}</p>}
+            <p class="value__text">{w.text}</p>
+          </li>
+        ))}
+      </ol>
     </div>
-    <div class="values__progress" aria-hidden="true"><span data-hscroll-progress></span></div>
   </section>
 
   <!-- ═════════ ABLAUF ═════════ -->
@@ -240,11 +186,10 @@ const ablauf = [
         </p>
         <a href="/anfrage/" class="btn process__cta" data-reveal>Schritt 1 starten <Icon name="arrow" /></a>
       </div>
-      <div class="steps-wrap" data-progress>
+      <div class="steps-wrap">
       <ol role="list" class="steps">
         {ablauf.map((s, i) => (
-          <li class="step" data-step>
-            <span class="rule" aria-hidden="true"><span class="rule__num">{(i + 1) * 20}</span></span>
+          <li class="step">
             <span class="step__nr mono">0{i + 1}</span>
             <div>
               <h3 class="h3">{s.titel}</h3>
@@ -260,38 +205,20 @@ const ablauf = [
   <!-- ═════════ KUNDENSTIMMEN ═════════ -->
   <Quotes />
 
-  <!-- ═════════ PARTNER ═════════ -->
-  <section class="section partners" aria-labelledby="partners-title">
-    <div class="wrap partners__grid">
-      <div>
-        <p class="label">Netzwerk</p>
-        <Split as="h2" id="partners-title" class="h2" text="Starke Partner|im *Rücken.*" />
-        <p class="muted partners__lead" data-reveal>
-          Wir arbeiten mit etablierten Fachhändlern und Herstellern zusammen und sind in den Verbänden des
-          Handwerks organisiert.
-        </p>
-        <a href="/partner/" class="arrow-link" data-reveal>Alle Partner <Icon name="arrow" /></a>
-      </div>
-      <div class="partners__lists">
-        <div data-reveal>
-          <h3 class="mono partners__sub">Zulieferer (Auswahl)</h3>
-          <ul role="list" class="namelist">
-            {firma.zulieferer.map((z) => <li>{z}</li>)}
-          </ul>
-        </div>
-        <div data-reveal>
-          <h3 class="mono partners__sub">Mitglied</h3>
-          <ul role="list" class="namelist namelist--strong">
-            {firma.mitgliedschaften.map((m) => <li>{m}</li>)}
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
 </Base>
 
 <style>
   /* ── Auftraggeber ── */
+  .clients__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 2.25rem;
+    margin: 0;
+    font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+    font-weight: 620;
+    font-stretch: 108%;
+    color: rgba(243, 241, 236, 0.9);
+  }
   .clients {
     padding-block: clamp(3rem, 6vw, 5rem);
     border-top: 1px solid var(--line-light);
@@ -367,7 +294,7 @@ const ablauf = [
     color: var(--blue);
   }
   .intro__text {
-    font-size: clamp(1.55rem, 3.3vw, 3rem);
+    font-size: clamp(1.3rem, 2.3vw, 2.05rem);
     line-height: 1.18;
     font-weight: 560;
     font-stretch: 106%;
@@ -492,179 +419,52 @@ const ablauf = [
   }
 
   /* ── Werte ── */
-  .values {
-    position: relative;
-    overflow: hidden;
+  .values__title {
+    margin-top: 1.25rem;
+    max-width: 22ch;
   }
-  .values__track {
+  .values__list {
+    margin: clamp(2.5rem, 5vw, 4rem) 0 0;
     display: grid;
     gap: 0;
-  }
-  .values__intro,
-  .value {
-    padding: clamp(4rem, 9vw, 6rem) var(--gutter);
-  }
-  .values__intro .h2 {
-    margin-top: 1.25rem;
-    max-width: 14ch;
-  }
-  .values__intro .label {
-    color: var(--paper);
-  }
-  .values__hint {
-    display: none;
+    border-top: 1px solid rgba(243, 241, 236, 0.3);
   }
   .value {
-    border-top: 1px solid rgba(243, 241, 236, 0.22);
     display: grid;
-    align-content: center;
-    gap: 1rem;
+    gap: 0.6rem;
+    align-content: start;
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(243, 241, 236, 0.3);
   }
   .value__nr {
     color: var(--paper);
   }
   .value__title {
-    font-size: clamp(2.2rem, 10.5vw, 10rem);
-    line-height: 0.95;
-    font-weight: 800;
-    font-stretch: 100%;
-    letter-spacing: -0.04em;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1;
+    font-weight: 760;
+    font-stretch: 110%;
+    letter-spacing: -0.025em;
   }
   .value__add {
-    font-size: clamp(1.15rem, 2vw, 1.6rem);
-    font-weight: 560;
-    font-stretch: 110%;
+    font-weight: 600;
     color: var(--paper);
-    opacity: 1;
-  }
-  .value__tool {
-    margin-top: 1.25rem;
-    display: grid;
-    gap: 0.6rem;
-    justify-items: start;
-  }
-  .waage {
-    width: min(260px, 70vw);
-  }
-  .lagen {
-    width: min(260px, 70vw);
-  }
-  .schraube {
-    width: 96px;
-  }
-  .value__lot {
-    color: var(--paper);
-    opacity: 0.45;
-    transition: opacity 0.3s;
-  }
-  .value__lot:global(.is-lot) {
-    opacity: 1;
-  }
-  .value__lot::before {
-    content: '';
-    display: inline-block;
-    width: 0.5rem;
-    height: 0.5rem;
-    margin-right: 0.5rem;
-    border-radius: 50%;
-    background: #9be29b;
-    vertical-align: middle;
   }
   .value__text {
-    max-width: 44ch;
-    font-size: 1.1rem;
-    color: rgba(243, 241, 236, 0.9);
+    max-width: 40ch;
+    color: rgba(243, 241, 236, 0.92);
   }
-  .values__progress {
-    display: none;
-  }
-  /* Horizontal nur mit aktiven Animationen; sonst stehen die Werte untereinander */
   @media (min-width: 900px) {
-    .value__title {
-      font-size: clamp(4rem, 10vw, 11rem);
+    .values__list {
+      grid-template-columns: repeat(3, 1fr);
     }
-    :global(html.motion-ready) .values {
-      height: 100vh;
+    .value {
+      padding: 2.25rem 2rem 2.25rem 0;
+      border-bottom: 0;
     }
-    :global(html.motion-ready) .values__track {
-      display: flex;
-      height: 100%;
-      width: max-content;
-      align-items: stretch;
-    }
-    :global(html.motion-ready) .values__intro {
-      width: 42vw;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding-left: max(var(--gutter), calc((100vw - var(--max)) / 2 + var(--gutter)));
-    }
-    :global(html.motion-ready) .values__hint {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-top: 3rem;
-      color: rgba(243, 241, 236, 0.8);
-    }
-    :global(html.motion-ready) .value {
-      width: 78vw;
-      border-top: 0;
-      border-left: 1px solid rgba(243, 241, 236, 0.22);
-      padding-inline: 5vw;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      grid-template-areas:
-        'nr nr'
-        'title title'
-        'add tool'
-        'text tool';
-      column-gap: 4vw;
-      align-content: center;
-    }
-    :global(html.motion-ready) .value__nr {
-      grid-area: nr;
-    }
-    :global(html.motion-ready) .value__title {
-      grid-area: title;
-      font-size: clamp(4rem, 6.8vw, 8.5rem);
-    }
-    :global(html.motion-ready) .value__add {
-      grid-area: add;
-      align-self: end;
-    }
-    :global(html.motion-ready) .value__text {
-      grid-area: text;
-      align-self: start;
-    }
-    :global(html.motion-ready) .value__tool {
-      grid-area: tool;
-      margin-top: 0;
-      align-self: center;
-      justify-items: center;
-    }
-    :global(html.motion-ready) .waage {
-      width: min(440px, 100%);
-    }
-    :global(html.motion-ready) .lagen {
-      width: min(400px, 100%);
-    }
-    :global(html.motion-ready) .schraube {
-      width: 150px;
-    }
-    :global(html.motion-ready) .values__progress {
-      display: block;
-      position: absolute;
-      left: var(--gutter);
-      right: var(--gutter);
-      bottom: 2.5rem;
-      height: 1px;
-      background: rgba(243, 241, 236, 0.25);
-    }
-    :global(html.motion-ready) .values__progress span {
-      display: block;
-      height: 100%;
-      background: var(--paper);
-      transform: scaleX(0);
-      transform-origin: left;
+    .value + .value {
+      padding-left: 2rem;
+      border-left: 1px solid rgba(243, 241, 236, 0.3);
     }
   }
 
@@ -692,39 +492,14 @@ const ablauf = [
     padding: 0;
     display: grid;
   }
-  /* Zollstock: klappt sich Schritt für Schritt auf */
-  .rule {
+  .steps::before {
+    content: '';
     position: absolute;
-    z-index: 0;
-    left: calc(1.25rem - 11px);
+    left: 1.25rem;
     top: 2.75rem;
-    width: 22px;
-    height: 100%;
-    border-radius: 2px;
-    background:
-      repeating-linear-gradient(to bottom, rgba(243, 241, 236, 0.85) 0 1px, transparent 1px 8px) left top / 32% 100% no-repeat,
-      repeating-linear-gradient(to bottom, rgba(243, 241, 236, 0.95) 0 1px, transparent 1px 40px) left top / 62% 100% no-repeat,
-      var(--blue);
-    box-shadow: 0 6px 14px -8px rgba(10, 22, 38, 0.6);
-    transform-origin: 50% 0;
-    transform: rotate(0deg);
-    transition: transform 0.9s cubic-bezier(0.3, 1.35, 0.5, 1);
-  }
-  .step:last-child .rule {
-    height: calc(100% - 4.75rem);
-  }
-  .rule__num {
-    position: absolute;
-    right: 3px;
-    bottom: 8px;
-    font-family: var(--font-mono);
-    font-size: 0.55rem;
-    color: var(--paper);
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-  }
-  :global(html.motion) .step:not(.is-active) .rule {
-    transform: rotate(178deg);
+    bottom: 3rem;
+    width: 1px;
+    background: var(--line-strong);
   }
   .step {
     position: relative;
@@ -749,8 +524,7 @@ const ablauf = [
       color 0.4s var(--ease),
       border-color 0.4s var(--ease);
   }
-  html:not(.motion) .step__nr,
-  .step.is-active .step__nr {
+  .step__nr {
     background: var(--blue);
     border-color: var(--blue);
     color: var(--paper);
@@ -773,52 +547,4 @@ const ablauf = [
     }
   }
 
-  /* ── Partner ── */
-  .partners {
-    border-top: 1px solid var(--line);
-  }
-  .partners__grid {
-    display: grid;
-    gap: 3rem;
-  }
-  .partners__grid .h2 {
-    margin-top: 1.25rem;
-  }
-  .partners__lead {
-    margin: 1.5rem 0 2rem;
-    max-width: 42ch;
-  }
-  .partners__lists {
-    display: grid;
-    gap: 2.5rem;
-  }
-  .partners__sub {
-    color: var(--muted);
-    margin-bottom: 1rem;
-  }
-  .namelist {
-    margin: 0;
-    border-top: 1px solid var(--line);
-  }
-  .namelist li {
-    padding: 0.9rem 0;
-    border-bottom: 1px solid var(--line);
-    font-size: clamp(1.15rem, 1.8vw, 1.5rem);
-    font-weight: 600;
-    font-stretch: 112%;
-    letter-spacing: -0.01em;
-  }
-  .namelist--strong li {
-    color: var(--blue);
-  }
-  @media (min-width: 1000px) {
-    .partners__grid {
-      grid-template-columns: 1fr 1.3fr;
-      gap: 6rem;
-    }
-    .partners__lists {
-      grid-template-columns: 1.2fr 1fr;
-      gap: 3rem;
-    }
-  }
 </style>

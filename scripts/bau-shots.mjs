@@ -11,7 +11,7 @@ for (const [w, h, tag] of [[1440, 900, '1440'], [390, 844, '390']]) {
   await page.goto(BASE + '/', { waitUntil: 'networkidle' });
   await page.waitForTimeout(2200);
   const stops = [0, 0.09, 0.17, 0.25, 0.33, 0.42, 0.5, 0.58, 0.66, 0.74, 0.82, 0.9, 1.0];
-  const total = h * 5.6;
+  const total = h * 3.8;
   for (const [i, f] of stops.entries()) {
     await page.evaluate((y) => window.scrollTo(0, y), Math.round(f * total));
     await page.waitForTimeout(1300);

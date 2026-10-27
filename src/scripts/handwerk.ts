@@ -56,7 +56,7 @@ export function bauSequenz(lenis: Lenis) {
   ScrollTrigger.create({
     trigger: sec,
     start: 'top top',
-    end: () => `+=${Math.round(window.innerHeight * 5.6)}`,
+    end: () => `+=${Math.round(window.innerHeight * 3.8)}`,
     pin: true,
     scrub: 0.6,
     animation: master,
@@ -85,111 +85,5 @@ export function fokusRaeume() {
         onToggle: (self) => (self.isActive ? f.schleife.play() : f.schleife.pause()),
       });
     });
-  });
-}
-
-/* ── Kreuzlinienlaser als Mauszeiger-Begleiter ─────────────────── */
-export function laser() {
-  if (!window.matchMedia('(pointer: fine)').matches) return;
-  document.querySelectorAll<HTMLElement>('[data-laser]').forEach((sec) => {
-    const el = document.createElement('div');
-    el.className = 'laser';
-    el.setAttribute('aria-hidden', 'true');
-    el.innerHTML =
-      '<span class="laser__h"></span><span class="laser__v"></span><span class="laser__dot"></span><span class="laser__tag">± 0,0 mm</span>';
-    sec.appendChild(el);
-    const [h, v, dot, tag] = [...el.children] as HTMLElement[];
-    const hy = gsap.quickTo(h, 'y', { duration: 0.35, ease: 'power3' });
-    const vx = gsap.quickTo(v, 'x', { duration: 0.35, ease: 'power3' });
-    const dx = gsap.quickTo([dot, tag], 'x', { duration: 0.35, ease: 'power3' });
-    const dy = gsap.quickTo([dot, tag], 'y', { duration: 0.35, ease: 'power3' });
-    sec.addEventListener('mousemove', (e) => {
-      const r = sec.getBoundingClientRect();
-      const x = e.clientX - r.left;
-      const y = e.clientY - r.top;
-      hy(y);
-      vx(x);
-      dx(x);
-      dy(y);
-      el.classList.add('is-on');
-    });
-    sec.addEventListener('mouseleave', () => el.classList.remove('is-on'));
-  });
-}
-
-/* ── Maßband: misst, wie weit Sie gescrollt haben ──────────────── */
-export function massband() {
-  const el = document.querySelector<HTMLElement>('[data-massband]');
-  if (!el) return;
-  const band = el.querySelector<HTMLElement>('.massband__band')!;
-  const haken = el.querySelector<HTMLElement>('.massband__haken')!;
-  const wert = el.querySelector<HTMLElement>('.massband__wert')!;
-  const fmt = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  let letzte = -1;
-  const tick = () => {
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-    if (Math.abs(p - letzte) < 0.0005) return;
-    letzte = p;
-    const hoehe = el.clientHeight;
-    band.style.clipPath = `inset(0 0 ${(1 - p) * 100}% 0)`;
-    haken.style.transform = `translate3d(0, ${p * hoehe}px, 0)`;
-    // 40 px Band = 1 cm: der Wert zeigt die gescrollte Strecke in Metern
-    wert.textContent = `${fmt.format(window.scrollY / 4000)} m`;
-  };
-  gsap.ticker.add(tick);
-  el.classList.add('is-ready');
-}
-
-/* ── Werte: Wasserwaage, Transparentpapier, Schraube ───────────── */
-export function werkzeuge() {
-  // Wasserwaage: Die Libelle schwingt mit der Scrollgeschwindigkeit und kommt ins Lot.
-  document.querySelectorAll<SVGElement>('[data-waage]').forEach((waage) => {
-    const blase = waage.querySelector<SVGElement>('.waage__blase');
-    const lot = waage.closest('.value')?.querySelector<HTMLElement>('[data-lot]');
-    if (!blase) return;
-    const bx = gsap.quickTo(blase, 'x', { duration: 0.9, ease: 'elastic.out(1, 0.35)' });
-    let ruhe: gsap.core.Tween | null = null;
-    ScrollTrigger.create({
-      trigger: waage,
-      start: 'top bottom',
-      end: 'bottom top',
-      onUpdate: (self) => {
-        const v = gsap.utils.clamp(-22, 22, self.getVelocity() / 90);
-        bx(v);
-        lot?.classList.toggle('is-lot', Math.abs(v) < 3);
-        ruhe?.kill();
-        ruhe = gsap.delayedCall(0.18, () => {
-          bx(0);
-          lot?.classList.add('is-lot');
-        });
-      },
-    });
-  });
-
-  // Transparentpapier: Planlagen fächern sich auf
-  document.querySelectorAll<SVGElement>('[data-lagen]').forEach((lagen) => {
-    const blaetter = lagen.querySelectorAll('.lage');
-    gsap.fromTo(
-      blaetter,
-      { x: 0, y: 0 },
-      {
-        x: (i) => i * 26,
-        y: (i) => i * -18,
-        ease: 'none',
-        scrollTrigger: { trigger: lagen.closest('section') || lagen, start: 'top bottom', end: 'bottom top', scrub: 0.6 },
-      },
-    );
-  });
-
-  // Schraube: dreht sich beim Scrollen ins Material
-  document.querySelectorAll<SVGElement>('[data-schraube]').forEach((s) => {
-    const teil = s.querySelector('.schraube__teil');
-    const gewinde = s.querySelector('.schraube__gewinde');
-    const trigger = s.closest('section') || s;
-    const st = { trigger, start: 'top bottom', end: 'bottom top', scrub: 0.5 };
-    // Gewinde wandert nach oben (wirkt wie Drehen), die Schraube sinkt ins Holz
-    gsap.fromTo(gewinde, { y: 0 }, { y: -140, ease: 'none', scrollTrigger: st });
-    gsap.fromTo(teil, { y: -6 }, { y: 44, ease: 'none', scrollTrigger: { ...st } });
   });
 }

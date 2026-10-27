@@ -16,7 +16,7 @@ interface Props {
 const { blatt, kicker, title, lead, crumbs = [], compact = false, size = 'display' } = Astro.props;
 const hasAside = Astro.slots.has('aside');
 ---
-<section class:list={['page-hero on-ink raster', { 'page-hero--compact': compact, 'page-hero--aside': hasAside }]} data-laser>
+<section class:list={['page-hero on-ink raster', { 'page-hero--compact': compact, 'page-hero--aside': hasAside }]}>
   <div class="axis axis--top" aria-hidden="true">
     <span>A</span><span>B</span><span>C</span><span>D</span><span>E</span>
   </div>

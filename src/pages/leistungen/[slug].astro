@@ -51,7 +51,7 @@ const schema = [
     size="h1"
   >
     <div class="hero-ctas" data-reveal>
-      <a href={`/anfrage/?leistung=${l.slug}`} class="btn" data-magnetic>Anfrage für {l.titel} <Icon name="arrow" /></a>
+      <a href={`/anfrage/?leistung=${l.slug}`} class="btn">Anfrage für {l.titel} <Icon name="arrow" /></a>
       <a href={firma.telefonHref} class="btn btn--ghost"><Icon name="phone" /> {firma.telefon}</a>
     </div>
     <PlanFrame slot="aside" slug={l.slug} titel={l.titel} nr={l.nr} dark />

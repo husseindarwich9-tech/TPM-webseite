@@ -56,3 +56,15 @@ Rückmeldung: Die Seite soll einzigartiger werden, mit Animationen, die zum Hand
 4. **Technik:** Die Raum-Illustration wird aus einem einzigen Koordinatenmodell berechnet (`src/components/BauRaum.astro`),
    die Bewegungen je Gewerk liegen in `src/scripts/bauraum.ts`. Die Animationen bauen sich Gewerk für Gewerk in kurzen
    Abschnitten auf, damit das Handy nicht blockiert. Bei reduzierter Bewegung zeigt die Seite den fertigen Raum.
+
+## Version 3: gesunde Mitte
+
+Rückmeldung: gut, aber zu viele Animationen; die Seite soll übersichtlicher und angenehmer werden.
+
+- **Bleibt:** der Bauablauf im Raum auf der Startseite (jetzt kürzer: rund 4 statt 6 Bildschirmhöhen), die Gewerk-Schleifen
+  auf den Leistungsseiten, ruhiges Einblenden der Inhalte, weiches Scrollen.
+- **Entfernt:** Maßband, Kreuzlinienlaser, magnetische Buttons, Parallax, Wort-für-Wort-Überschriften (außer im Hero),
+  der sich „einschreibende“ Text, Maus-Vorschau im Leistungsverzeichnis, horizontal gepinnter Werte-Abschnitt mit
+  Werkzeugen, Zollstock, Laufband.
+- **Übersichtlicher:** Werte als drei ruhige Spalten, Auftraggeber als schlichte Namensliste, Partner-Abschnitt von der
+  Startseite auf die Partnerseite verlagert, kleinere Überschriften, kompaktere Abstände.

@@ -47,16 +47,6 @@ const gruppen: { titel?: string; text?: string; nr?: string; items: Leistung[] }
     </div>
   ))}
 
-  <div class="preview" data-preview aria-hidden="true">
-    {leistungen.map((l) => (
-      <div class="preview__item" data-preview-item={l.slug}>
-        <TradeDrawing slug={l.slug} animate={false} />
-        <span class="preview__label mono">
-          {l.nr} · {l.titel}
-        </span>
-      </div>
-    ))}
-  </div>
 </div>
 
 <style>
@@ -123,7 +113,7 @@ const gruppen: { titel?: string; text?: string; nr?: string; items: Leistung[] }
   }
   .row__title {
     hyphens: manual;
-    font-size: clamp(1.25rem, 3.4vw, 3.1rem);
+    font-size: clamp(1.2rem, 2.6vw, 2.3rem);
     font-weight: 720;
     font-stretch: 114%;
     letter-spacing: -0.025em;
