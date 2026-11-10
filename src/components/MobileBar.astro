@@ -1,0 +1,73 @@
+---
+import Icon from './Icon.astro';
+import { firma } from '../data/firma';
+---
+<nav class="mobile-bar" aria-label="Schnellkontakt">
+  <a href={firma.telefonHref} class="mb-item">
+    <Icon name="phone" />
+    <span>Anrufen</span>
+  </a>
+  <a href={firma.emailHref} class="mb-item">
+    <Icon name="mail" />
+    <span>E-Mail</span>
+  </a>
+  <a href="/anfrage/" class="mb-item mb-item--primary">
+    <Icon name="form" />
+    <span>Anfrage</span>
+  </a>
+</nav>
+
+<style>
+  .mobile-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 90;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.25fr;
+    background: var(--ink);
+    border-top: 1px solid var(--line-light);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .mb-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    min-height: 4.25rem;
+    color: var(--paper);
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 560;
+    letter-spacing: 0.02em;
+    -webkit-tap-highlight-color: transparent;
+    transition: background-color 0.2s;
+  }
+  .mb-item + .mb-item {
+    border-left: 1px solid var(--line-light);
+  }
+  .mb-item :global(.icon) {
+    width: 1.35rem;
+    height: 1.35rem;
+    color: var(--sky);
+  }
+  .mb-item:active {
+    background: var(--ink-3);
+  }
+  .mb-item--primary {
+    background: var(--blue);
+  }
+  .mb-item--primary :global(.icon) {
+    color: var(--paper);
+  }
+  .mb-item--primary:active {
+    background: var(--blue-deep);
+  }
+  @media (min-width: 900px) {
+    .mobile-bar {
+      display: none;
+    }
+  }
+</style>

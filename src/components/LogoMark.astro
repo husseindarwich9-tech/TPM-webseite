@@ -1,0 +1,25 @@
+---
+// Bildzeichen der TPM Bau GmbH: drei ineinanderliegende Dächer, links hell, rechts dunkel.
+// Nachgebaut nach der Originaldatei des Logos (symmetrisch um die Mittelachse).
+interface Props {
+  class?: string;
+  /** Linien-Variante für die Konstruktions-Animation */
+  draw?: boolean;
+  title?: string;
+}
+const { class: klasse, draw = false, title } = Astro.props;
+const hell = ['300,0 300,166 0,620', '300,312 300,434 0,620', '300,537 300,620 0,620'];
+const dunkel = ['300,0 600,620 300,166', '300,312 600,620 300,434', '300,537 600,620 300,620'];
+---
+<svg
+  class:list={['logomark', klasse]}
+  viewBox="0 0 600 620"
+  xmlns="http://www.w3.org/2000/svg"
+  role={title ? 'img' : undefined}
+  aria-hidden={title ? undefined : 'true'}
+  aria-label={title}
+  data-logomark={draw ? '' : undefined}
+>
+  {hell.map((p, i) => <polygon points={p} fill="#99C3ED" data-roof={i} data-side="l" />)}
+  {dunkel.map((p, i) => <polygon points={p} fill="#1B6DC1" data-roof={i} data-side="r" />)}
+</svg>

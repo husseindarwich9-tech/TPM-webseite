@@ -1,0 +1,90 @@
+# Designidee – TPM Bau GmbH
+
+## Ausgangslage
+
+Die alte Seite https://www.tpm-bau.de konnte ich aus der Arbeitsumgebung nicht aufrufen: Die Netzwerk-Richtlinie
+sperrt die Domain, ebenso Unsplash und Pexels. Die Idee stützt sich deshalb auf das Briefing, das Logo und die
+Firmendaten. Ein Abgleich mit der alten Seite steht in `docs/OFFENE-PUNKTE.md`.
+
+## Die Idee: „Der Bauplan wird lebendig“
+
+1. **TPM heißt „Technical Project Management“, und so sieht die Seite auch aus:** wie ein präziser technischer
+   Plan, der beim Scrollen entsteht. Achsraster mit Achsbeschriftungen (A, B, C / 1, 2, 3), Maßketten, Schnittmarken
+   und ein Plankopf wie auf einer Werkzeichnung bilden das wiederkehrende visuelle System.
+2. **Das Logo ist das Motiv.** Die drei geknickten „Dächer“ werden im Hero großformatig als Konstruktionslinien
+   gezeichnet und füllen sich dann in Hell- und Dunkelblau. Die Dachkante (der Knick) taucht als Trennlinie,
+   Pfeilform und Bildausschnitt auf der ganzen Seite wieder auf.
+3. **Zwei Flächen, zwei Blautöne:** ein tiefes Tinten-Navy (#0A1626) für die großen Bühnen und ein warmes
+   Planpapier-Weiß (#F3F1EC) für die Inhaltsbereiche. Akzente nur in den beiden Markenblaus #1A63B0 und #6FAAD6:
+   keine beliebigen Verläufe, kein Neon.
+4. **Typografie mit Haltung:** Archivo als variable Schrift. Überschriften sind breit laufend (Expanded, fett) und
+   wirken wie Beschriftungen auf Bauschildern. Fließtext steht in normaler Breite. Dazu IBM Plex Mono für
+   Plan-Annotationen („Blatt 03 · Malerarbeiten“). Montserrat Medium nur im Logo-Schriftzug, wie im Original.
+5. **Leistungen als Verzeichnis statt Kartenraster:** Die zwölf Gewerke stehen als großes, nummeriertes Planverzeichnis
+   (01–12). Fährt man auf dem Desktop über einen Eintrag, folgt eine kleine Werkzeichnung des Gewerks dem Mauszeiger.
+   Auf der Übersichtsseite sind sie nach Bauphasen geordnet (Vorbereiten → Ausbauen → Installieren → Gestalten →
+   Instand halten). So wird „alle Gewerke aus einer Hand“ als Ablauf sichtbar und nicht nur behauptet.
+6. **Eigene Strichzeichnungen statt Stockfotos:** Jedes Gewerk hat eine eigene Linienzeichnung im Planstil, die sich
+   beim Erscheinen selbst zeichnet. Echte Fotos (zuerst `startfoto.jpg`) werden über eine zentrale Bildliste
+   eingebunden und erscheinen automatisch, sobald die Datei im Ordner liegt. Stockfotos werden nie als
+   TPM-Projekte ausgegeben.
+7. **Bewegung mit Zweck:** GSAP mit ScrollTrigger und Lenis für weiches Scrollen. Wort-für-Wort-Reveals der
+   Überschriften, sich zeichnende Linien, ein gepinnter horizontaler Abschnitt für die drei Werte und eine
+   Ablauf-Linie, die mit dem Scrollen wächst. Seitenwechsel mit nativen View Transitions. Bei
+   `prefers-reduced-motion` ist alles sofort sichtbar und statisch.
+8. **Anfragen zuerst:** Auf jeder Seite ist der Weg zur Anfrage höchstens einen Klick entfernt. Der Anfrage-Assistent
+   führt in sechs kurzen Schritten durch. Auf dem Handy bleibt unten eine feste Leiste mit Anrufen / E-Mail / Anfrage.
+9. **Technik:** Astro erzeugt rein statische Seiten für den eigenen Hetzner-Server. Schriften und Bibliotheken liegen
+   lokal, es gibt keine Cookies, keine externen Dienste und keine eingebettete Karte.
+
+## Version 2: „Ein Raum, zwölf Gewerke“
+
+Rückmeldung: Die Seite soll einzigartiger werden, mit Animationen, die zum Handwerk passen. Die Antwort darauf:
+
+1. **Der Hero ist eine Baustelle.** Auf der Startseite steht ein isometrischer Altbau-Raum: Kartons, alte Fliesen,
+   vergilbte Tapete. Beim Scrollen wird er Gewerk für Gewerk saniert. Die Kartons verschwinden, Tapete und Fliesen
+   fallen, Leitungen zeichnen sich in die Wand, Ständerwerk und Platten wachsen, eine Kelle zieht den Putz, ein
+   Farbroller streicht die Wände. Danach legen sich Fliesen und Dielen, Tür und Fenster werden eingesetzt, Küche und
+   Licht gehen an. Zum Schluss wird ein schiefes Bild gerade gerückt und der Raum „übergeben“. Zu jedem Schritt erscheinen
+   Gewerk, Leistungsnummer und ein Satz dazu. So wird „alle Gewerke aus einer Hand“ erlebbar statt behauptet.
+2. **Jede Leistungsseite zeigt ihr Gewerk bei der Arbeit:** derselbe Raum im Zustand kurz davor, und nur dieses
+   Gewerk läuft in Schleife.
+3. **Werkzeuge als Interaktion:** ein Maßband am rechten Rand misst die gescrollte Strecke, ein Kreuzlinienlaser folgt
+   der Maus über den Bühnen, im Ablauf klappt sich ein Zollstock Glied für Glied auf, die Wasserwaage bei „Präzision“
+   schwingt mit der Scrollgeschwindigkeit und kommt ins Lot. Transparentpapier-Planlagen fächern sich auf, eine Schraube
+   dreht sich ins Holz.
+4. **Technik:** Die Raum-Illustration wird aus einem einzigen Koordinatenmodell berechnet (`src/components/BauRaum.astro`),
+   die Bewegungen je Gewerk liegen in `src/scripts/bauraum.ts`. Die Animationen bauen sich Gewerk für Gewerk in kurzen
+   Abschnitten auf, damit das Handy nicht blockiert. Bei reduzierter Bewegung zeigt die Seite den fertigen Raum.
+
+## Version 3: gesunde Mitte
+
+Rückmeldung: gut, aber zu viele Animationen; die Seite soll übersichtlicher und angenehmer werden.
+
+- **Bleibt:** der Bauablauf im Raum auf der Startseite (jetzt kürzer: rund 4 statt 6 Bildschirmhöhen), die Gewerk-Schleifen
+  auf den Leistungsseiten, ruhiges Einblenden der Inhalte, weiches Scrollen.
+- **Entfernt:** Maßband, Kreuzlinienlaser, magnetische Buttons, Parallax, Wort-für-Wort-Überschriften (außer im Hero),
+  der sich „einschreibende“ Text, Maus-Vorschau im Leistungsverzeichnis, horizontal gepinnter Werte-Abschnitt mit
+  Werkzeugen, Zollstock, Laufband.
+- **Übersichtlicher:** Werte als drei ruhige Spalten, Auftraggeber als schlichte Namensliste, Partner-Abschnitt von der
+  Startseite auf die Partnerseite verlagert, kleinere Überschriften, kompaktere Abstände.
+
+## Version 4: zuverlässig und schnell, mit React Bits
+
+Auftrag: eine neue Fassung mit GSAP, Lenis und React Bits. Aus den Rückmeldungen beim Testen wurde daraus vor allem
+eine Fassung, die auf jedem Gerät ruhig und verlässlich läuft.
+
+- **Startseite neu:** Bauplan-Raster in Perspektive (reines CSS, steht still), Überschrift, wechselndes Gewerk-Schild,
+  vier Kennzahlen. Darunter Auftraggeber-Laufband, zwölf Gewerke als Kacheln mit Symbolen, zwei Zielgruppen-Karten mit
+  Lichtschein, drei Werte, der Ablauf als sich stapelnde Karten, Kundenstimmen.
+- **Die lange Scroll-Sequenz „Ein Raum, zwölf Gewerke“ ist von der Startseite entfernt.** Der Raum bleibt auf den
+  Leistungsseiten: Jede zeigt ihr Gewerk bei der Arbeit.
+- **Kein Einblenden beim Scrollen mehr.** Verzögert erscheinende Inhalte wirkten beim Testen wie Hängen, vor allem
+  beim schnellen Wischen und beim Hochscrollen. Inhalte sind jetzt sofort da.
+- **Erster Bildschirm ohne Skripte animiert** (CSS): kein Warten bei langsamem Netz, kein Ausfall, wenn ein Skript
+  nicht lädt.
+- **Für das Handy geprüft:** Touch, fünf Bildschirmgrößen, Menü auch nach dem Scrollen, Drehen, gedrosselte
+  Rechenleistung. Effekte, die nur mit Maus Sinn ergeben, werden auf Touch-Geräten nicht geladen.
+- **Ausbildung:** nur Elektroniker/-in (Energie- und Gebäudetechnik), weil nur dort ein Meister im Betrieb ist.
+- **Logo:** nach der gelieferten Datei neu gezeichnet.
+

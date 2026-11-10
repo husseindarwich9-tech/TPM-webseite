@@ -1,0 +1,116 @@
+---
+// Gibt ein Foto aus der zentralen Bildliste aus (src/data/bilder.ts).
+// Fehlt die Datei, erscheint eine gezeichnete Platzhalter-Fläche mit Hinweis.
+import { Picture } from 'astro:assets';
+import { bild, type BildSlot } from '../data/bilder';
+import LogoMark from './LogoMark.astro';
+
+interface Props {
+  slot: BildSlot;
+  class?: string;
+  sizes?: string;
+  /** Seitenverhältnis des Platzhalters, z. B. "4 / 5" */
+  ratio?: string;
+  loading?: 'lazy' | 'eager';
+  /** Platzhalter anzeigen, wenn das Foto fehlt (sonst wird nichts ausgegeben) */
+  placeholder?: boolean;
+}
+const {
+  slot,
+  class: klasse,
+  sizes = '(min-width: 1000px) 50vw, 100vw',
+  ratio = '4 / 5',
+  loading = 'lazy',
+  placeholder = true,
+} = Astro.props;
+const b = bild(slot);
+---
+{b.src ? (
+  <figure class:list={['bild', klasse]} data-reveal-clip>
+    <Picture
+      src={b.src}
+      alt={b.alt}
+      formats={['avif', 'webp']}
+      widths={[480, 800, 1200, 1600].filter((w) => w <= b.src!.width)}
+      sizes={sizes}
+      loading={loading}
+      fetchpriority={loading === 'eager' ? 'high' : undefined}
+      decoding="async"
+    />
+  </figure>
+) : placeholder ? (
+  <figure class:list={['bild bild--leer', klasse]} style={`aspect-ratio:${ratio}`} data-reveal-clip>
+    <svg class="bild__lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 0 L100 100 M100 0 L0 100" />
+    </svg>
+    <LogoMark class="bild__mark" />
+    <figcaption class="bild__caption">
+      <span class="placeholder-text">[PLATZHALTER: Foto]</span>
+      <span class="bild__motiv">{b.motiv}</span>
+    </figcaption>
+  </figure>
+) : null}
+
+<style>
+  .bild {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    background: var(--paper-2);
+  }
+  .bild :global(img) {
+    width: 100%;
+    height: auto;
+  }
+  .bild--leer {
+    display: grid;
+    place-items: center;
+    background:
+      linear-gradient(to right, rgba(26, 99, 176, 0.12) 1px, transparent 1px) 0 0 / 2rem 2rem,
+      linear-gradient(to bottom, rgba(26, 99, 176, 0.12) 1px, transparent 1px) 0 0 / 2rem 2rem,
+      var(--paper-2);
+    border: 1px solid var(--line);
+  }
+  .on-ink .bild--leer {
+    background:
+      linear-gradient(to right, var(--line-light) 1px, transparent 1px) 0 0 / 2rem 2rem,
+      linear-gradient(to bottom, var(--line-light) 1px, transparent 1px) 0 0 / 2rem 2rem,
+      var(--ink-2);
+  }
+  .bild__lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .bild__lines path {
+    stroke: var(--line-strong);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+    fill: none;
+  }
+  .bild__mark {
+    position: relative;
+    width: 28%;
+    max-width: 9rem;
+    opacity: 0.9;
+  }
+  .bild__caption {
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    display: grid;
+    gap: 0.4rem;
+    justify-items: start;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .bild__motiv {
+    background: var(--paper);
+    padding: 0.2rem 0.5rem;
+  }
+  .on-ink .bild__motiv {
+    background: var(--ink);
+  }
+</style>

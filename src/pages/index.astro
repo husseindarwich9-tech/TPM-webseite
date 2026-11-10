@@ -1,0 +1,763 @@
+---
+import Base from '../layouts/Base.astro';
+import Split from '../components/Split.astro';
+import Icon from '../components/Icon.astro';
+import TradeDrawing from '../components/TradeDrawing.astro';
+import RotatingText from '../react-bits/RotatingText';
+import Magnet from '../react-bits/Magnet';
+import PlanRaster from '../components/PlanRaster.astro';
+import GewerkeGrid from '../components/GewerkeGrid.astro';
+import SpotlightCard from '../react-bits/SpotlightCard';
+import AuftraggeberLoop from '../components/react/AuftraggeberLoop';
+import AblaufStack from '../components/react/AblaufStack';
+import { leistungen } from '../data/leistungen';
+import Quotes from '../components/Quotes.astro';
+import { Picture } from 'astro:assets';
+import { firma } from '../data/firma';
+import { bild } from '../data/bilder';
+
+const foto = bild('startfoto');
+// Farben der Lichtschein-Karten (CSS-Variablen der React-Bits-Komponente)
+const kartenStil = {
+  '--spotlight-card-surface': '#0f2036',
+  '--spotlight-card-border': 'rgba(243, 241, 236, 0.14)',
+} as Record<string, string>;
+const gewerke = leistungen.map((l) => l.titel.replace(', ', ' · '));
+const intro =
+  'TPM steht für Technical Project Management. Wir verbinden Handwerk mit Projektsteuerung: Ein Team aus Fachkräften, Bauleitern und Projektmanagern übernimmt alle Gewerke Ihres Vorhabens, von der ersten Abstimmung bis zur sauberen Übergabe.';
+
+const ablauf = [
+  {
+    titel: 'Anfrage',
+    text: 'Sie beschreiben Ihr Vorhaben über den Anfrage-Assistenten, per E-Mail oder am Telefon. Fotos helfen beim Einschätzen.',
+  },
+  {
+    titel: 'Abstimmung',
+    text: 'Wir klären offene Fragen, schauen uns die Situation an und stimmen Umfang, Ablauf und Termine mit Ihnen ab.',
+  },
+  {
+    titel: 'Angebot',
+    text: 'Sie erhalten ein nachvollziehbares Angebot für Ihr konkretes Vorhaben.',
+  },
+  {
+    titel: 'Umsetzung',
+    text: 'Unser Team führt die Arbeiten aus und koordiniert alle beteiligten Gewerke. Sie haben einen festen Ansprechpartner.',
+  },
+  {
+    titel: 'Abnahme',
+    text: 'Gemeinsame Abnahme und eine saubere Übergabe der Baustelle.',
+  },
+];
+---
+<Base
+  title="TPM Bau GmbH Berlin – Innenausbau & alle Gewerke aus einer Hand"
+  description="TPM Bau GmbH aus Berlin: Innenausbau, Trockenbau, Maler-, Fliesen- und Bodenarbeiten, Elektro und Sanitär. Alle Gewerke aus einer Hand, für Privat und Gewerbe."
+>
+  <!-- ═════════ HERO ═════════ -->
+  <section class="hero on-ink" aria-labelledby="hero-title">
+    <div class="hero__grid" aria-hidden="true">
+      <PlanRaster perspektive />
+    </div>
+    <div class="wrap hero__inner">
+      <p class="hero__sheet mono" data-hero-fade style="--i:0">
+        <span>Blatt 01</span> · Technical Project Management · Berlin
+      </p>
+      <Split
+        as="h1"
+        id="hero-title"
+        class="hero__title"
+        text="Bauen mit Leidenschaft.|*Handeln mit Verantwortung.*"
+        trigger="load"
+      />
+      <div class="hero__trades" data-hero-fade style="--i:2">
+        <span class="hero__trades-label">Alle Gewerke aus einer Hand:</span>
+        <span class="hero__slot">
+          <RotatingText
+            client:idle
+            texts={gewerke}
+            mainClassName="hero__rotate"
+            splitBy="words"
+            staggerDuration={0.03}
+            rotationInterval={2400}
+            effect="slide"
+          />
+        </span>
+      </div>
+      <p class="hero__lead" data-hero-fade style="--i:3">
+        Innenausbau, Sanierung und Instandhaltung in Berlin, für Privatkunden, Gewerbe und Hausverwaltungen.
+        Ein Team, ein Ansprechpartner, von der Abstimmung bis zur Übergabe.
+      </p>
+      <div class="hero__cta" data-hero-fade style="--i:4">
+        <Magnet client:media="(hover: hover) and (pointer: fine)" padding={60} magnetStrength={6} maxOffset={10}>
+          <a href="/anfrage/" class="btn btn--lg">Anfrage starten <Icon name="arrow" /></a>
+        </Magnet>
+        <a href="/leistungen/" class="btn btn--ghost btn--lg">Leistungen ansehen</a>
+      </div>
+    </div>
+    <div class="wrap">
+      <ul role="list" class="hero__facts" data-hero-fade style="--i:5">
+        <li>
+          <span class="hero__num">12</span>
+          <span class="mono">Gewerke</span>
+        </li>
+        <li>
+          <span class="hero__num">1</span>
+          <span class="mono">Ansprechpartner</span>
+        </li>
+        <li>
+          <span class="hero__num">{firma.gruendung}</span>
+          <span class="mono">Gegründet in Berlin</span>
+        </li>
+        <li>
+          <span class="hero__num hero__num--text">HWK · BG BAU</span>
+          <span class="mono">Mitglied</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═════════ AUFTRAGGEBER ═════════ -->
+  <section class="clients on-ink" aria-labelledby="clients-title">
+    <div class="wrap clients__head">
+      <h2 id="clients-title" class="label">Auftraggeber (Auswahl)</h2>
+    </div>
+    <div class="clients__loop">
+      <AuftraggeberLoop client:visible namen={firma.auftraggeber} />
+    </div>
+    <noscript>
+      <div class="wrap">
+        <ul role="list" class="clients__list">
+          {firma.auftraggeber.map((n) => <li>{n}</li>)}
+        </ul>
+      </div>
+    </noscript>
+  </section>
+
+  <!-- ═════════ INTRO ═════════ -->
+  <section class="section intro" aria-labelledby="intro-title">
+    <div class="wrap intro__grid">
+      <div class="intro__side">
+        <h2 id="intro-title" class="label">Wer wir sind</h2>
+        <ul role="list" class="intro__roles" data-reveal>
+          {firma.team.map((r, i) => (
+            <li><span class="mono">0{i + 1}</span>{r}</li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <p class="intro__text" data-reveal>{intro}</p>
+        <div class="intro__links" data-reveal>
+          <a href="/ueber-uns/" class="arrow-link">Mehr über TPM <Icon name="arrow" /></a>
+        </div>
+      </div>
+    </div>
+    {foto.src && (
+      <div class="wrap">
+        <figure class="intro__foto" data-reveal-clip>
+          <Picture
+            src={foto.src}
+            alt={foto.alt}
+            formats={['avif', 'webp']}
+            widths={[480, 800, 1200, 1600].filter((w) => w <= foto.src!.width)}
+            sizes="(min-width: 1000px) 60vw, 100vw"
+          />
+          <figcaption class="mono">Team TPM · Berlin</figcaption>
+        </figure>
+      </div>
+    )}
+  </section>
+
+  <!-- ═════════ LEISTUNGEN ═════════ -->
+  <section class="section section--flush-top services" aria-labelledby="services-title">
+    <div class="wrap">
+      <div class="services__head">
+        <p class="label">Leistungen</p>
+        <Split as="h2" id="services-title" class="h2" text="Zwölf Gewerke.|*Ein Ansprechpartner.*" />
+        <p class="services__lead muted" data-reveal>
+          Einzeln beauftragt oder als Gesamtpaket: Wir stimmen die Gewerke aufeinander ab, damit Ihr Vorhaben ohne
+          Leerlauf und doppelte Wege vorankommt.
+        </p>
+      </div>
+    </div>
+    <div class="wrap">
+      <GewerkeGrid />
+    </div>
+    <div class="wrap services__more">
+      <a href="/leistungen/" class="arrow-link">Alle Leistungen nach Bauphasen <Icon name="arrow" /></a>
+    </div>
+  </section>
+
+  <!-- ═════════ ZIELGRUPPEN ═════════ -->
+  <section class="section audiences on-ink" aria-labelledby="aud-title">
+    <div class="wrap">
+      <p class="label">Für wen wir arbeiten</p>
+      <Split as="h2" id="aud-title" class="h2 audiences__title" text="Zwei Auftraggeber.|*Ein Anspruch.*" />
+      <div class="audiences__grid">
+        <SpotlightCard
+          client:media="(hover: hover) and (pointer: fine)"
+          className="aud"
+          spotlightColor="#6faad6"
+          intensity={0.22}
+          spotlightSize={320}
+          style={kartenStil}
+        >
+          <article>
+            <div class="aud__axis" aria-hidden="true">A</div>
+            <TradeDrawing slug="innenausbau" class="aud__drawing" />
+            <h3 class="h3">Privatkunden</h3>
+            <p class="muted">
+              Sie sanieren Ihre Wohnung, renovieren vor dem Einzug oder brauchen kurzfristig Hilfe bei einem Schaden.
+              Wir übernehmen die Arbeiten und koordinieren alle Gewerke, damit Sie sich nicht um jeden Handwerker
+              einzeln kümmern müssen.
+            </p>
+            <ul role="list" class="aud__list">
+              <li>Sanierung und Modernisierung</li>
+              <li>Renovierung vor Ein- oder Auszug</li>
+              <li>Badsanierung</li>
+              <li>Hilfe bei akuten Schäden</li>
+            </ul>
+            <a href="/anfrage/?kunde=privat" class="arrow-link">Anfrage als Privatkunde <Icon name="arrow" /></a>
+          </article>
+        </SpotlightCard>
+        <SpotlightCard
+          client:media="(hover: hover) and (pointer: fine)"
+          className="aud"
+          spotlightColor="#6faad6"
+          intensity={0.22}
+          spotlightSize={320}
+          style={kartenStil}
+        >
+          <article>
+            <div class="aud__axis" aria-hidden="true">B</div>
+            <TradeDrawing slug="trockenbau" class="aud__drawing" />
+            <h3 class="h3">Gewerbe &amp; Haus­verwaltungen</h3>
+            <p class="muted">
+              Sie betreuen Bestandsobjekte, bauen Gewerbeflächen aus oder brauchen einen verlässlichen Partner für
+              laufende Instandhaltung. Bauleiter und Projektmanager steuern die Arbeiten und halten Sie auf dem
+              Laufenden.
+            </p>
+            <ul role="list" class="aud__list">
+              <li>Ausbau von Büro-, Laden- und Gastronomieflächen</li>
+              <li>Instandsetzung bei Mieterwechsel</li>
+              <li>Laufende Kleinreparaturen</li>
+              <li>Rückbau und Entrümpelung</li>
+            </ul>
+            <a href="/gewerbe/" class="arrow-link">Mehr für Gewerbekunden <Icon name="arrow" /></a>
+          </article>
+        </SpotlightCard>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════ WERTE ═════════ -->
+  <section class="section values on-blue" aria-labelledby="values-title">
+    <div class="wrap">
+      <p class="label">Wofür wir stehen</p>
+      <h2 id="values-title" class="h2 values__title" data-reveal>Drei Werte, an denen Sie uns messen können.</h2>
+      <ol role="list" class="values__list">
+        {firma.werte.map((w, i) => (
+          <li class="value">
+            <span class="value__nr mono">0{i + 1}</span>
+            <h3 class="value__title">{w.titel}</h3>
+            {'zusatz' in w && <p class="value__add">{w.zusatz}</p>}
+            <p class="value__text">{w.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ═════════ ABLAUF ═════════ -->
+  <section class="section process" aria-labelledby="process-title">
+    <div class="wrap process__grid">
+      <div class="process__head">
+        <p class="label">Ablauf</p>
+        <Split as="h2" id="process-title" class="h2" text="Vom Erstkontakt|bis zur *Abnahme.*" />
+        <p class="muted process__lead" data-reveal>
+          So läuft ein Auftrag bei uns ab. Sie wissen bei jedem Schritt, was als Nächstes passiert und wer
+          zuständig ist.
+        </p>
+        <a href="/anfrage/" class="btn process__cta" data-reveal>Schritt 1 starten <Icon name="arrow" /></a>
+      </div>
+      <div class="process__stack">
+        <AblaufStack client:visible schritte={ablauf} />
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════ KUNDENSTIMMEN ═════════ -->
+  <Quotes />
+
+</Base>
+
+<style>
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: 100svh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding-top: calc(var(--header-h) + clamp(2.5rem, 7vh, 5rem));
+    padding-bottom: clamp(2rem, 4vw, 3rem);
+  }
+  .hero__grid {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    /* Raster läuft nach oben aus, Text bleibt gut lesbar */
+    mask-image: linear-gradient(to bottom, transparent 0%, transparent 62%, #000 88%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 62%, #000 88%);
+  }
+  .hero__grid::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse 55% 55% at 22% 48%, rgba(10, 22, 38, 0.85), rgba(10, 22, 38, 0) 75%);
+  }
+  .hero__inner {
+    /* Oben ausgerichtet statt zentriert: Ändert sich unten etwas (z. B. Schriftwechsel), springt der Text nicht */
+    align-self: start;
+    display: grid;
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+    justify-items: start;
+  }
+  .hero__sheet {
+    color: var(--muted-light);
+    font-size: var(--fs-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .hero__sheet span {
+    color: var(--sky);
+  }
+  .hero__title {
+    margin: 0;
+    font-size: clamp(2.3rem, 5.6vw, 5.6rem);
+    line-height: 0.98;
+    font-weight: 800;
+    font-stretch: 112%;
+    letter-spacing: -0.035em;
+  }
+  .hero__trades {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.75rem;
+    font-size: clamp(1.05rem, 1.7vw, 1.4rem);
+    font-weight: 600;
+    font-stretch: 106%;
+  }
+  /* Fester Platz für das wechselnde Gewerk: Beim Wechsel ist es kurz leer, ohne festen Platz
+     würde der Text darunter jedes Mal springen. Schmal: eigene Zeile, breit: alles in einer Zeile. */
+  .hero__slot {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.1em;
+    flex-basis: 100%;
+  }
+  @media (min-width: 700px) {
+    .hero__trades {
+      flex-wrap: nowrap;
+    }
+    .hero__slot {
+      flex-basis: auto;
+    }
+  }
+  .hero__trades-label {
+    color: var(--muted-light);
+    font-weight: 500;
+  }
+  .hero__trades :global(.hero__rotate) {
+    padding: 0.2em 0.55em;
+    background: var(--blue);
+    color: var(--paper);
+    overflow: hidden;
+    clip-path: polygon(0 0, calc(100% - 0.6em) 0, 100% 0.6em, 100% 100%, 0 100%);
+  }
+  .hero__lead {
+    max-width: 52ch;
+    font-size: var(--fs-lead);
+    line-height: 1.5;
+    color: rgba(243, 241, 236, 0.86);
+  }
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    margin-top: 0.5rem;
+  }
+  .hero__facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem 1.5rem;
+    margin: clamp(2.5rem, 6vh, 4rem) 0 0;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line-light-strong);
+  }
+  /* Alle Zahlen stehen auf einer Grundlinie, alle Beschriftungen in einer Zeile darunter */
+  .hero__facts li {
+    display: grid;
+    grid-template-rows: var(--fact-h) auto;
+    gap: 0.5rem;
+  }
+  .hero__facts {
+    --fact-h: clamp(1.8rem, 3.4vw, 2.8rem);
+  }
+  .hero__num {
+    display: flex;
+    align-items: flex-end;
+    height: var(--fact-h);
+    font-size: var(--fact-h);
+    font-weight: 760;
+    font-stretch: 112%;
+    line-height: 0.8;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .hero__num--text {
+    font-size: clamp(1.1rem, 2vw, 1.6rem);
+  }
+  .hero__facts .mono {
+    color: var(--sky);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  @media (min-width: 900px) {
+    .hero__facts {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* ── Auftraggeber ── */
+  .clients {
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+    border-top: 1px solid var(--line-light);
+  }
+  .clients__head {
+    margin-bottom: 1.5rem;
+  }
+  .clients__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 2.25rem;
+    margin: 0;
+    font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+    font-weight: 620;
+    font-stretch: 108%;
+    color: rgba(243, 241, 236, 0.9);
+  }
+  .clients__loop {
+    color: rgba(243, 241, 236, 0.9);
+  }
+  .clients__loop :global(.client-name) {
+    font-size: clamp(1.15rem, 2vw, 1.6rem);
+    font-weight: 650;
+    font-stretch: 110%;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    line-height: 34px;
+  }
+
+  .intro__foto {
+    margin: clamp(3rem, 6vw, 5rem) 0 0 auto;
+    width: fit-content;
+    max-width: 100%;
+    border: 1px solid var(--line-strong);
+    padding: 0.6rem;
+    background: var(--paper-2);
+    overflow: hidden;
+  }
+  .intro__foto :global(img) {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    max-height: 80svh;
+  }
+  .intro__foto figcaption {
+    margin-top: 0.6rem;
+    color: var(--muted);
+    font-size: 0.65rem;
+  }
+
+  /* ── Intro ── */
+  .intro__grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .intro__roles {
+    margin-top: 2rem;
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--line);
+  }
+  .intro__roles li {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--line);
+    font-weight: 600;
+    font-stretch: 110%;
+  }
+  .intro__roles .mono {
+    color: var(--blue);
+  }
+  .intro__text {
+    font-size: clamp(1.3rem, 2.3vw, 2.05rem);
+    line-height: 1.18;
+    font-weight: 560;
+    font-stretch: 106%;
+    letter-spacing: -0.02em;
+    text-wrap: pretty;
+  }
+  .intro__links {
+    margin-top: 2.5rem;
+  }
+  @media (min-width: 1000px) {
+    .intro__grid {
+      grid-template-columns: 1fr 2.6fr;
+      gap: 5rem;
+    }
+  }
+
+  /* ── Leistungen ── */
+  .section--flush-top {
+    padding-top: 0;
+  }
+  .services__head {
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: clamp(2.5rem, 5vw, 4.5rem);
+  }
+  .services__lead {
+    max-width: 46ch;
+  }
+  @media (min-width: 1000px) {
+    .services__head {
+      grid-template-columns: 1.6fr 1fr;
+      align-items: end;
+    }
+    .services__head .label {
+      grid-column: 1 / -1;
+    }
+  }
+
+
+  .services__more {
+    margin-top: 2rem;
+  }
+
+  /* ── Zielgruppen ── */
+  .audiences__title {
+    margin-top: 1.25rem;
+  }
+
+  .audiences__grid {
+    margin-top: clamp(3rem, 6vw, 5rem);
+    display: grid;
+    gap: 1.25rem;
+  }
+  .audiences__grid :global(.aud) {
+    border-radius: 0;
+    padding: clamp(1.75rem, 3.5vw, 3rem);
+  }
+  .aud article {
+    position: relative;
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+    height: 100%;
+  }
+  .aud__axis {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--line-light-strong);
+    border-radius: 50%;
+    font-family: var(--font-mono);
+    color: var(--sky);
+  }
+  .aud__drawing {
+    width: 7rem;
+    color: var(--paper);
+    --trade-bg: var(--ink-2);
+    --trade-sw: 1.6;
+    margin-bottom: 0.5rem;
+  }
+  .aud .muted {
+    max-width: 52ch;
+  }
+  .aud__list {
+    margin: 0.5rem 0 1rem;
+    display: grid;
+    gap: 0;
+  }
+  .aud__list li {
+    padding: 0.7rem 0 0.7rem 1.6rem;
+    border-top: 1px solid var(--line-light);
+    position: relative;
+  }
+  .aud__list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.25rem;
+    width: 0.8rem;
+    height: 1px;
+    background: var(--sky);
+  }
+  .aud .arrow-link {
+    justify-self: start;
+  }
+  @media (min-width: 900px) {
+    .audiences__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  /* ── Werte ── */
+  .values__title {
+    margin-top: 1.25rem;
+    max-width: 22ch;
+  }
+  .values__list {
+    margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+    display: grid;
+    gap: 0;
+    border-top: 1px solid rgba(243, 241, 236, 0.3);
+  }
+  .value {
+    display: grid;
+    gap: 0.6rem;
+    align-content: start;
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(243, 241, 236, 0.3);
+  }
+  .value__nr {
+    color: var(--paper);
+  }
+  .value__title {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    line-height: 1;
+    font-weight: 760;
+    font-stretch: 110%;
+    letter-spacing: -0.025em;
+  }
+  .value__add {
+    font-weight: 600;
+    color: var(--paper);
+  }
+  .value__text {
+    max-width: 40ch;
+    color: rgba(243, 241, 236, 0.92);
+  }
+  @media (min-width: 900px) {
+    .values__list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .value {
+      padding: 2.25rem 2rem 2.25rem 0;
+      border-bottom: 0;
+    }
+    .value + .value {
+      padding-left: 2rem;
+      border-left: 1px solid rgba(243, 241, 236, 0.3);
+    }
+  }
+
+  /* ── Ablauf ── */
+  .process__grid {
+    display: grid;
+    gap: 3rem;
+  }
+  .process__head .h2 {
+    margin-top: 1.25rem;
+  }
+  .process__lead {
+    margin-top: 1.5rem;
+    max-width: 40ch;
+  }
+  .process__cta {
+    margin-top: 2rem;
+  }
+  .process__stack {
+    position: relative;
+  }
+  @media (min-width: 1000px) {
+    .process__grid {
+      grid-template-columns: 1fr 1.25fr;
+      gap: 5rem;
+      align-items: start;
+    }
+    .process__head {
+      position: sticky;
+      top: calc(var(--header-h) + 3rem);
+    }
+  }
+  .process__stack :global(.scroll-stack__inner) {
+    padding-inline: 0;
+  }
+  .process__stack :global(.ablauf-card) {
+    height: auto;
+    min-height: clamp(15rem, 34vh, 19rem);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr auto;
+    gap: 1rem 1.75rem;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+    border-radius: 0;
+    box-shadow:
+      0 0 0 1px var(--line),
+      0 -10px 30px -18px rgba(10, 22, 38, 0.35),
+      0 24px 40px -28px rgba(10, 22, 38, 0.45);
+  }
+  .process__stack :global(.ablauf-card--a) {
+    background: #fff;
+    color: var(--ink);
+  }
+  .process__stack :global(.ablauf-card--b) {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .process__stack :global(.ablauf-card__nr) {
+    font-size: clamp(3rem, 6vw, 5rem);
+    font-weight: 800;
+    font-stretch: 115%;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--blue);
+  }
+  .process__stack :global(.ablauf-card--b .ablauf-card__nr) {
+    color: var(--sky);
+  }
+  .process__stack :global(.ablauf-card__title) {
+    margin: 0.2rem 0 0.6rem;
+    font-size: var(--fs-h3);
+    font-weight: 740;
+    font-stretch: 110%;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .process__stack :global(.ablauf-card__text) {
+    max-width: 44ch;
+    opacity: 0.82;
+  }
+  .process__stack :global(.ablauf-card__of) {
+    grid-column: 1 / -1;
+    justify-self: end;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.6;
+  }
+</style>
+

@@ -1,0 +1,215 @@
+---
+// Die zwölf Gewerke als Kacheln mit Symbol (Startseite).
+// Die Symbole stammen aus Lucide und werden beim Bauen als SVG ausgegeben (kein JavaScript im Browser).
+import {
+  Columns3,
+  DoorOpen,
+  Grid3x3,
+  Layers,
+  PaintRoller,
+  PencilRuler,
+  Pickaxe,
+  PlugZap,
+  Rows3,
+  ShowerHead,
+  Truck,
+  Wrench,
+} from 'lucide-react';
+import Icon from './Icon.astro';
+import { leistungen, titelUmbruch } from '../data/leistungen';
+
+const symbole = {
+  innenausbau: PencilRuler,
+  trockenbau: Columns3,
+  malerarbeiten: PaintRoller,
+  'putz-und-spachtelarbeiten': Layers,
+  bodenlegearbeiten: Rows3,
+  fliesenlegearbeiten: Grid3x3,
+  tischlerarbeiten: DoorOpen,
+  elektroinstallation: PlugZap,
+  'heizung-lueftung-sanitaer': ShowerHead,
+  'abriss-und-entsorgung': Pickaxe,
+  entruempelung: Truck,
+  kleinreparaturen: Wrench,
+} as const;
+
+const kacheln = [...leistungen]
+  .sort((a, b) => a.nr.localeCompare(b.nr))
+  .map((l) => ({ ...l, Symbol: symbole[l.slug as keyof typeof symbole] ?? Wrench }));
+---
+<!-- Kacheln sind sofort sichtbar: Einzeln eingeblendet wirkten sie beim Scrollen verzögert und „hängend“ -->
+<ul role="list" class="gewerke" data-gewerke>
+  {kacheln.map(({ slug, nr, titel, kurz, Symbol }) => (
+    <li>
+      <a href={`/leistungen/${slug}/`} class="gewerk">
+        <span class="gewerk__top">
+          <span class="gewerk__icon" aria-hidden="true">
+            <Symbol size={26} strokeWidth={1.6} />
+          </span>
+          <span class="gewerk__nr mono" aria-hidden="true">{nr}</span>
+        </span>
+        <span class="gewerk__titel">{titelUmbruch(titel)}</span>
+        <span class="gewerk__text">{kurz}</span>
+        <span class="gewerk__mehr" aria-hidden="true">Mehr <Icon name="arrow" /></span>
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .gewerke {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+  }
+  @media (min-width: 760px) {
+    .gewerke {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+  }
+  @media (min-width: 1100px) {
+    .gewerke {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .gewerke li {
+    display: flex;
+  }
+  .gewerk {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 0.6rem;
+    width: 100%;
+    padding: clamp(1rem, 2vw, 1.5rem);
+    background: #fff;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    text-decoration: none;
+    transition:
+      transform 0.45s var(--ease),
+      box-shadow 0.45s var(--ease),
+      border-color 0.3s;
+  }
+  .gewerk__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.4rem;
+  }
+  .gewerk__icon {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    background: rgba(26, 99, 176, 0.09);
+    color: var(--blue);
+    /* abgeschrägte Ecke wie im Logo und bei den Buttons */
+    clip-path: polygon(0 0, calc(100% - 0.7rem) 0, 100% 0.7rem, 100% 100%, 0 100%);
+    transition:
+      background-color 0.35s var(--ease),
+      color 0.35s var(--ease);
+  }
+  .gewerk__icon :global(svg) {
+    transition: transform 0.5s var(--ease);
+  }
+  .gewerk__nr {
+    color: var(--muted);
+    font-size: 0.7rem;
+  }
+  .gewerk__titel {
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    font-weight: 720;
+    font-stretch: 108%;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    hyphens: manual;
+  }
+  .gewerk__text {
+    color: var(--muted);
+    font-size: var(--fs-small);
+    line-height: 1.45;
+  }
+  .gewerk__mehr {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.4rem;
+    color: var(--blue);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .gewerk__mehr :global(svg) {
+    width: 1em;
+    transition: transform 0.35s var(--ease);
+  }
+  .gewerk:focus-visible {
+    transform: translateY(-4px);
+    border-color: var(--blue);
+    box-shadow: 0 18px 36px -24px rgba(10, 22, 38, 0.45);
+  }
+  .gewerk:focus-visible .gewerk__icon {
+    background: var(--blue);
+    color: var(--paper);
+  }
+  .gewerk:focus-visible .gewerk__icon :global(svg) {
+    transform: scale(1.1) rotate(-6deg);
+  }
+  /* Hover nur mit Maus: Auf dem Handy bliebe der Effekt nach dem Antippen sonst „hängen“ */
+  @media (hover: hover) and (pointer: fine) {
+    .gewerk:hover {
+      transform: translateY(-4px);
+      border-color: var(--blue);
+      box-shadow: 0 18px 36px -24px rgba(10, 22, 38, 0.45);
+    }
+    .gewerk:hover .gewerk__icon {
+      background: var(--blue);
+      color: var(--paper);
+    }
+    .gewerk:hover .gewerk__icon :global(svg) {
+      transform: scale(1.1) rotate(-6deg);
+    }
+    .gewerk:hover .gewerk__mehr :global(svg) {
+      transform: translateX(4px);
+    }
+  }
+  /* Auf schmalen Handys: Kurztext weglassen, damit die Kacheln kompakt bleiben */
+  @media (max-width: 420px) {
+    .gewerk__text {
+      display: none;
+    }
+    .gewerk__titel {
+      font-size: 0.98rem;
+    }
+  }
+  /* Während gescrollt wird, keine Hover-Effekte: sonst heben sich die Kacheln unter der stehenden Maus nacheinander an */
+  .gewerke.is-scrolling {
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gewerk,
+    .gewerk__icon :global(svg) {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Nur mit Maus: Auf dem Handy darf ein Antippen direkt nach dem Wischen nicht verloren gehen
+  const mitMaus = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (mitMaus) document.querySelectorAll<HTMLElement>('[data-gewerke]').forEach((grid) => {
+    let timer = 0;
+    window.addEventListener(
+      'scroll',
+      () => {
+        grid.classList.add('is-scrolling');
+        clearTimeout(timer);
+        timer = window.setTimeout(() => grid.classList.remove('is-scrolling'), 150);
+      },
+      { passive: true },
+    );
+  });
+</script>

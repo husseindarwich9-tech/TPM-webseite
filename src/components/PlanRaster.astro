@@ -1,0 +1,90 @@
+---
+// Bauplan-Raster als Hintergrund, auf der Startseite in Perspektive wie ein Boden.
+// Das Raster steht still; flach leuchtet es unter der Maus blau auf. Rein mit CSS, kaum Rechenlast.
+interface Props {
+  /** Raster in Perspektive wie ein Boden (Startseite) */
+  perspektive?: boolean;
+  class?: string;
+}
+const { perspektive = false, class: klasse } = Astro.props;
+---
+<div class:list={['plan-raster', { 'plan-raster--tilt': perspektive }, klasse]} data-plan-raster aria-hidden="true">
+  <div class="plan-raster__plane">
+    <span class="plan-raster__lines"></span>
+    <span class="plan-raster__glow"></span>
+  </div>
+</div>
+
+<style>
+  .plan-raster {
+    --cell: 64px;
+    --mx: -999px;
+    --my: -999px;
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    contain: strict;
+  }
+  .plan-raster__plane {
+    position: absolute;
+    inset: 0;
+  }
+  .plan-raster--tilt .plan-raster__plane {
+    inset: -220% -80% 0;
+    transform: perspective(700px) rotateX(58deg);
+    transform-origin: 50% 100%;
+  }
+  .plan-raster__lines,
+  .plan-raster__glow {
+    position: absolute;
+    inset: calc(var(--cell) * -1) 0 0;
+    background-image:
+      linear-gradient(to right, var(--raster-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--raster-line) 1px, transparent 1px);
+    background-size: var(--cell) var(--cell);
+  }
+  .plan-raster__lines {
+    --raster-line: rgba(111, 170, 214, 0.2);
+  }
+  .plan-raster--tilt .plan-raster__lines {
+    --raster-line: rgba(111, 170, 214, 0.32);
+  }
+  .plan-raster__glow {
+    --raster-line: rgba(111, 170, 214, 0.85);
+    background-color: rgba(26, 99, 176, 0.12);
+    -webkit-mask-image: radial-gradient(circle 180px at var(--mx) var(--my), #000, transparent 75%);
+    mask-image: radial-gradient(circle 180px at var(--mx) var(--my), #000, transparent 75%);
+  }
+  /* In Perspektive liegt die Maus nicht auf der Ebene: dort leuchtet das Raster nicht mit */
+  .plan-raster--tilt .plan-raster__glow {
+    display: none;
+  }
+</style>
+
+<script>
+  // Maus-Leuchten: nur auf Geräten mit Maus, nur während der Bereich sichtbar ist
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll<HTMLElement>('[data-plan-raster]:not(.plan-raster--tilt)').forEach((el) => {
+      const host = el.parentElement!;
+      let frame = 0;
+      let x = 0;
+      let y = 0;
+      host.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        x = e.clientX - r.left;
+        y = e.clientY - r.top + 64; // Ebene beginnt eine Rasterzelle oberhalb
+        if (!frame)
+          frame = requestAnimationFrame(() => {
+            frame = 0;
+            el.style.setProperty('--mx', `${x}px`);
+            el.style.setProperty('--my', `${y}px`);
+          });
+      });
+      host.addEventListener('pointerleave', () => {
+        el.style.setProperty('--mx', '-999px');
+        el.style.setProperty('--my', '-999px');
+      });
+    });
+  }
+</script>
