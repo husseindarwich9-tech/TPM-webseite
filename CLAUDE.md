@@ -17,6 +17,9 @@ npm run serve &               # gebaute Seite auf Port 4322
 npm run check:overflow -- http://localhost:4322
 npm run test:handy            # Handy-Test (alle Seiten, Menü, Wischen, Drehen, Zurück)
 npm run test:anfrage && npm run test:anfrage:handy
+npm run vorschau && npm run test:vorschau   # bei Änderungen an der Vorschau-Datei
+npm run test:livegang         # bei Änderungen an scripts/check-livegang.mjs oder deploy/nginx.conf
+npm audit                     # muss 0 Schwachstellen melden
 npm run check:livegang        # vor einer Veröffentlichung: muss ohne Hindernisse durchlaufen
 ```
 

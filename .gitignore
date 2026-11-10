@@ -7,5 +7,6 @@ dist/
 docs/lighthouse/*.html
 .DS_Store
 dist-test/
+dist-livegang-test/
 docs/lighthouse/*.json
 vorschau/

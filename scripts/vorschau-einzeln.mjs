@@ -166,6 +166,7 @@ const shell = `<!doctype html>
   #ueber__zu { font: inherit; color: #0a1626; background: #f3f1ec; border: 0; padding: 0.55rem 1rem; cursor: pointer; }
   #ueber__zu:focus-visible { outline: 3px solid #f3f1ec; outline-offset: 2px; }
   #ueber iframe { position: static; }
+  #ueber [data-waechter] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 </style>
 </head>
 <body>
@@ -173,8 +174,11 @@ const shell = `<!doctype html>
      weder auf diese Hülle noch auf andere Fenster zugreifen. -->
 <iframe id="seite" title="TPM Bau GmbH – Vorschau" sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
 <div id="ueber" role="dialog" aria-modal="true" aria-labelledby="ueber__titel" hidden>
+  <!-- Fokusfalle: Wer mit Tab/Umschalt+Tab das Fenster verlassen würde, landet an diesen Wächtern und wird zurückgeholt -->
+  <span tabindex="0" data-waechter="anfang"></span>
   <div id="ueber__leiste"><span id="ueber__titel">Zusätzliches Fenster</span><button type="button" id="ueber__zu">Schließen und zurück</button></div>
   <iframe id="ueber__rahmen" title="Zusätzliches Fenster" sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"></iframe>
+  <span tabindex="0" data-waechter="ende"></span>
 </div>
 <noscript><p>Die Vorschau braucht JavaScript.</p></noscript>
 <script id="tpm-daten" type="application/json">${daten}</script>
@@ -193,9 +197,11 @@ const shell = `<!doctype html>
   var ueber = document.getElementById('ueber');
   var ueberRahmen = document.getElementById('ueber__rahmen');
   var aktuell = null;
-  var positionen = {}; // zuletzt gesehene Scrollposition je Seite
-  var routen = {};
+  var positionen = Object.create(null); // zuletzt gesehene Scrollposition je Seite
+  // Ohne Prototyp: Sonst gälten Namen wie „constructor“ oder „__proto__“ als vorhandene Seiten
+  var routen = Object.create(null);
   D.seiten.forEach(function (s) { routen[s.route] = s; });
+  function bekannt(pfad) { return Object.prototype.hasOwnProperty.call(routen, pfad); }
 
   // Nur bekannte Seiten und nur die Abfrageparameter, die die Seite kennt (Anfrage-Vorbelegung).
   // Alles andere wird verworfen, bevor es irgendwo eingesetzt wird.
@@ -211,8 +217,10 @@ const shell = `<!doctype html>
     var pfad = q > -1 ? ziel.slice(0, q) : ziel;
     if (pfad === '') pfad = '/';
     pfad = pfad.replace(/\\/index\\.html$/, '/');
-    if (!routen[pfad] && routen[pfad + '/']) pfad = pfad + '/';
-    if (!routen[pfad]) { pfad = '/404/'; anker = ''; }
+    // Seiten beginnen immer mit „/“
+    if (pfad.charAt(0) !== '/') { pfad = '/404/'; anker = ''; }
+    if (!bekannt(pfad) && bekannt(pfad + '/')) pfad = pfad + '/';
+    if (!bekannt(pfad)) { pfad = '/404/'; anker = ''; }
     var suche = '';
     if (q > -1) {
       var p = new URLSearchParams(ziel.slice(q + 1)), raus = new URLSearchParams();
@@ -258,6 +266,17 @@ const shell = `<!doctype html>
     rahmen.focus();
   }
   document.getElementById('ueber__zu').addEventListener('click', schliesseUeber);
+  // Fokusfalle: Ende → zurück zum Schließen-Knopf, Anfang → in den Fensterinhalt
+  ueber.querySelectorAll('[data-waechter]').forEach(function (w) {
+    w.addEventListener('focus', function () {
+      if (w.getAttribute('data-waechter') === 'ende') document.getElementById('ueber__zu').focus();
+      else ueberRahmen.focus();
+    });
+  });
+  // Sicherheitsnetz: Fokus außerhalb des offenen Fensters (z. B. auf der Seite) sofort zurückholen
+  document.addEventListener('focusin', function (e) {
+    if (!ueber.hidden && !ueber.contains(e.target)) document.getElementById('ueber__zu').focus();
+  });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') schliesseUeber(); });
 
   function ausHash() {

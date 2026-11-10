@@ -14,6 +14,8 @@
     "test:anfrage": "node scripts/test-anfrage.mjs",
     "test:anfrage:handy": "HANDY=1 node scripts/test-anfrage.mjs",
     "test:handy": "node scripts/test-handy.mjs",
+    "test:vorschau": "node scripts/test-vorschau.mjs",
+    "test:livegang": "node scripts/test-livegang.mjs",
     "check:overflow": "node scripts/check-overflow.mjs",
     "lighthouse": "node scripts/lighthouse.mjs",
     "screenshots": "node scripts/screenshots.mjs && node scripts/anfrage-shots.mjs",
@@ -21,16 +23,16 @@
     "vorschau": "astro build && node scripts/vorschau-einzeln.mjs"
   },
   "dependencies": {
-    "@astrojs/react": "^4.4.2",
+    "@astrojs/react": "~7.1.0",
     "@astrojs/sitemap": "^3.7.4",
-    "astro": "^5.18.2",
+    "astro": "~7.4.1",
     "gsap": "^3.15.0",
     "lenis": "^1.3.27",
     "lucide-react": "^1.66.0",
     "motion": "^12.43.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "sharp": "^0.34.5"
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
@@ -39,5 +41,8 @@
     "lighthouse": "^13.5.0",
     "playwright": "^1.56.1",
     "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22.22.0"
   }
 }

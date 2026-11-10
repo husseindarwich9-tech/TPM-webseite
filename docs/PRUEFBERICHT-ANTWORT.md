@@ -30,3 +30,13 @@ Die Gegenprobe gegen die ursprüngliche Datei bestätigt die gemeldeten Lücken,
 | Hinweis zum E-Mail-Versand | Der Hinweis versprach, dass sich das E-Mail-Programm von selbst öffnet. Jetzt steht dort korrekt „über ‚Per E-Mail senden‘“, mit dem Zusatz, dass Fotos selbst angehängt werden müssen. Ohne Versandadresse gibt es keinen Knopf „Erneut senden“ mehr, der nie funktionieren könnte. | Anfrage-Test 58/58 (Desktop und Handy), mit zwei neuen Prüfungen dafür. |
 
 Stand gespeichert auf Branch `claude/website-gsap-lenis-react-bits-vu35ws`, Commit `5807ec4`.
+
+## Nachtrag 2
+
+| Befund | Ursache | Behebung | Nachprüfung |
+|---|---|---|---|
+| Fokus gelangt nach längerer Tab-Bedienung trotz `inert` hinter das Fenster | `inert` sperrt nur die Seite; wer mit Tab den Fensterinhalt verließ, landete außerhalb des Fensters (nach 42 Schritten). | Echte Fokusfalle: Wächter vor und hinter dem Fenster holen den Fokus zurück, dazu ein Sicherheitsnetz für jeden Fokus außerhalb. | 250× Tab und 250× Umschalt+Tab: Fokus immer im Fenster (`npm run test:vorschau`). |
+| Routen `constructor`, `__proto__` zeigen „undefined“ | Seitenliste war ein normales Objekt und erbte diese Namen. | Seitenliste ohne Prototyp, Abfrage nur eigener Einträge, Pfade müssen mit „/“ beginnen. | 7 solche Namen (mit und ohne „/“, mit Abfrageteil) → 404-Seite. |
+| CSP-Kontrolle im Livegang-Skript akzeptiert falsche Konfiguration | Es wurde nur geprüft, ob die Adresse irgendwo im ersten CSP-Eintrag vorkommt (auch in Kommentaren, anderen Direktiven, als Teil einer fremden Domain). Ohne Webhook-Angabe bei der Prüfung entfiel die Kontrolle ganz. | Neu geschrieben: Kommentare ignoriert, alle CSP-Einträge geprüft, CSP muss in `location /` stehen, Adresse muss exakt unter `connect-src` erlaubt sein (Ursprung, ggf. Pfad), keine Platzhalter, kein `'unsafe-eval'`. Die Webhook-Adresse muss bei der Prüfung bekannt sein und genau der im Build entsprechen. | 14 Fälle (`npm run test:livegang`): 12 falsche Konfigurationen abgelehnt, 2 richtige durchgelassen. |
+| npm meldet 5 betroffene Abhängigkeiten | Astro 5 (u. a. XSS in Server-Funktionen, Bildverarbeitung), sharp/libvips, esbuild (Entwicklungsserver), zod. Auf der statischen Seite nicht als ausnutzbar nachgewiesen. | Aktualisiert auf Astro 7.4.1, @astrojs/react 7.1.0, sharp 0.35.5. Node 22.22 oder neuer nötig (in `package.json` festgehalten). | `npm audit`: 0 Schwachstellen. Alle Prüfungen danach erneut grün (Typprüfung, Handy-Test 682, Anfrage-Test 58/58 Desktop und Handy, axe 0 Verstöße, nginx-Test 24/24, Lighthouse über alle 24 Seiten: Tempo 95–99, sonst je 100). |
+

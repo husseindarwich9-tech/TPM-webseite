@@ -21,7 +21,7 @@ npm run build               # fertige Seite nach dist/
 npm run preview             # gebaute Seite ansehen: http://localhost:4321
 ```
 
-Voraussetzung: Node.js 20 oder neuer.
+Voraussetzung: Node.js 22.22 oder neuer (Astro 7).
 
 **Vorschau ohne Server:** `npm run vorschau` erzeugt `vorschau/TPM-Bau-Vorschau.html`: die komplette Seite mit allen
 Unterseiten in **einer** Datei, mit eingebetteten Schriften, Stilen und Skripten. Sie lässt sich per Doppelklick im
@@ -88,6 +88,8 @@ Anfrage-Webhooks eintragen.
 | `npm run test:anfrage` | End-to-End-Test des Anfrage-Assistenten mit Mock-Webhook (54 Prüfungen inkl. Fehlerfällen) |
 | `npm run test:anfrage:handy` | Derselbe Test als Handy mit Touchscreen (Auswahl per Fingertipp) |
 | `npm run test:handy` | Handy-Test (`npm run serve` muss laufen): alle Seiten auf fünf Handygrößen, Menü (auch nach dem Scrollen), Leiste, Wischen bei gedrosselter CPU, Drehen, Hoch-/Runterwischen, „Zurück“ |
+| `npm run test:vorschau` | Test der Vorschau-Datei (nach `npm run vorschau`): eingeschleuster Code, fremde Nachrichten, Adressen, Datenschutzfenster (Fokus, Escape), Formularentwurf |
+| `npm run test:livegang` | Test der Livegang-Prüfung: Sie muss 12 falsche nginx- und Webhook-Konfigurationen ablehnen und richtige durchlassen |
 | `npm run check:overflow` | Prüft alle Seiten bei 320/375/768 px auf horizontales Überlaufen und JS-Fehler |
 | `npm run screenshots` | Screenshots aller Seiten und aller Assistenten-Schritte nach `docs/screenshots/` (Vorschau muss laufen) |
 | `npm run lighthouse` | Lighthouse (Handy-Profil) für die wichtigsten Seiten, mit gzip-Auslieferung wie in Produktion |
@@ -99,7 +101,7 @@ setzen.
 
 ## Technik
 
-- **Astro 5**, rein statische Ausgabe, `trailingSlash: always`, Sitemap über `@astrojs/sitemap`
+- **Astro 7**, rein statische Ausgabe, `trailingSlash: always`, Sitemap über `@astrojs/sitemap`
 - **React-Inseln** (`@astrojs/react`): Nur einzelne Bausteine sind React, der Rest ist statisches HTML.
   Aus React Bits (`src/react-bits/`, Lizenz liegt bei): `RotatingText` (wechselndes Gewerk), `LogoLoop`
   (Auftraggeber-Laufband), `SpotlightCard` (Lichtschein-Karten), `ScrollStack` (Ablauf-Karten), `Magnet` (Anfrage-Knopf).
