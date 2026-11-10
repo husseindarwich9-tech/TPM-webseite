@@ -9,6 +9,7 @@ Keine Cookies, kein Tracking, keine externen Dienste, Schriften lokal.
 - **Bildquellen und Lizenzen:** [`docs/BILDQUELLEN.md`](docs/BILDQUELLEN.md)
 - **Anfrage-Assistent und Webhook:** [`docs/ANFRAGE-WEBHOOK.md`](docs/ANFRAGE-WEBHOOK.md)
 - **Lighthouse-Ergebnisse:** [`docs/lighthouse/ERGEBNIS.md`](docs/lighthouse/ERGEBNIS.md)
+- **Prüfbericht zur Vorschau und Antwort:** [`docs/PRUEFBERICHT-ANTWORT.md`](docs/PRUEFBERICHT-ANTWORT.md)
 
 ## Schnellstart
 
