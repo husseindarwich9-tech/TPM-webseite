@@ -273,10 +273,23 @@ const shell = `<!doctype html>
       else ueberRahmen.focus();
     });
   });
+  // Tab vom Schließen-Knopf in den Fensterinhalt selbst setzen: Chrome verliert den Fokus beim Übergang in den
+  // abgeschotteten Rahmen sonst gelegentlich auf <body>
+  document.getElementById('ueber__zu').addEventListener('keydown', function (e) {
+    if (e.key === 'Tab' && !e.shiftKey && !e.altKey && !e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+      ueberRahmen.focus();
+    }
+  });
   // Sicherheitsnetz: Fokus außerhalb des offenen Fensters (z. B. auf der Seite) sofort zurückholen
+  function fokusZurueck() {
+    if (!ueber.hidden && !ueber.contains(document.activeElement)) document.getElementById('ueber__zu').focus();
+  }
   document.addEventListener('focusin', function (e) {
     if (!ueber.hidden && !ueber.contains(e.target)) document.getElementById('ueber__zu').focus();
   });
+  // Fällt der Fokus ganz heraus (auf <body>), gibt es kein focusin: deshalb auch beim Verlassen nachsehen
+  document.addEventListener('focusout', function () { setTimeout(fokusZurueck, 0); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') schliesseUeber(); });
 
   function ausHash() {
