@@ -83,7 +83,8 @@ eine Fassung, die auf jedem Gerät ruhig und verlässlich läuft.
   beim schnellen Wischen und beim Hochscrollen. Inhalte sind jetzt sofort da.
 - **Natives Scrollen.** Lenis (weiches Nachgleiten), die gestapelten Ablauf-Karten (React Bits: ScrollStack) und
   Bilder und Linien, die sich erst beim Hinscrollen aufdecken, sind entfernt: Beim Präsentieren wirkte das wie
-  Hängen. Das Auftraggeber-Laufband beschleunigt beim Scrollen nicht mehr.
+  Hängen. Das Auftraggeber-Laufband beschleunigt beim Scrollen nicht mehr. Die Ablauf-Karten bewegen sich wieder,
+  jetzt mit reinem CSS: Sie kippen beim Hereinkommen hoch und werden beim Hinausgehen kleiner, ohne festzuhängen.
 - **Erster Bildschirm ohne Skripte animiert** (CSS): kein Warten bei langsamem Netz, kein Ausfall, wenn ein Skript
   nicht lädt.
 - **Für das Handy geprüft:** Touch, fünf Bildschirmgrößen, Menü auch nach dem Scrollen, Drehen, gedrosselte

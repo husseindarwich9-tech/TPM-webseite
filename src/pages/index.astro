@@ -278,7 +278,7 @@ const ablauf = [
         </p>
         <a href="/anfrage/" class="btn process__cta" data-reveal>Schritt 1 starten <Icon name="arrow" /></a>
       </div>
-      <!-- Feste Liste statt gestapelter Karten: Nichts bleibt beim Scrollen stehen -->
+      <!-- Liste statt festhängender Karten: Bewegung nur per CSS (siehe ablauf-rein), nichts bleibt beim Scrollen stehen -->
       <ol class="process__stack">
         {ablauf.map((s, i) => (
           <li class={`ablauf-card ablauf-card--${i % 2 ? 'b' : 'a'}`}>
@@ -769,6 +769,62 @@ const ablauf = [
     text-transform: uppercase;
     letter-spacing: 0.08em;
     opacity: 0.6;
+  }
+
+  /* Ablauf-Bewegung beim Scrollen: reines CSS (scroll-driven animations), läuft im Grafikprozess neben dem Scrollen
+     her. Nichts bleibt stehen, nichts ist verborgen: Bewegt werden nur Lage und Größe, nie die Sichtbarkeit.
+     Die Karten kippen beim Hereinkommen hoch und rücken nach; beim Hinausgehen oben werden sie kleiner, wie ein Stapel.
+     Browser ohne Unterstützung (z. B. Firefox) und reduzierte Bewegung: feste Liste. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .process__stack {
+        perspective: 1400px;
+      }
+      .process__stack .ablauf-card {
+        transform-origin: 50% 0;
+        /* Einzelangaben statt Kurzschreibweise: Die Kurzschreibweise setzt animation-timeline zurück */
+        animation-name: ablauf-rein, ablauf-raus;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view(), view();
+        animation-range:
+          entry 0% cover 40%,
+          exit 0% exit 100%;
+      }
+      .process__stack .ablauf-card__nr {
+        animation-name: ablauf-nr;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: view();
+        animation-range: entry 20% cover 45%;
+      }
+    }
+  }
+  @keyframes ablauf-rein {
+    from {
+      translate: 0 4rem;
+      rotate: x 18deg;
+    }
+    to {
+      translate: 0 0;
+      rotate: x 0deg;
+    }
+  }
+  @keyframes ablauf-raus {
+    from {
+      scale: 1;
+    }
+    to {
+      scale: 0.9;
+    }
+  }
+  @keyframes ablauf-nr {
+    from {
+      translate: -1.5rem 0;
+    }
+    to {
+      translate: 0 0;
+    }
   }
 </style>
 

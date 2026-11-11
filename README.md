@@ -116,7 +116,8 @@ setzen.
 - **GSAP 3 + ScrollTrigger**: Raum-Animationen auf den Leistungsseiten.
 - **Natives Scrollen:** Kein weiches Nachgleiten (Lenis), keine gestapelten Karten und keine Bilder oder Linien,
   die sich erst beim Hinscrollen aufdecken. Das wirkte beim Präsentieren wie Hängen; die Seite scrollt jetzt so
-  direkt wie der Browser selbst.
+  direkt wie der Browser selbst. Die Ablauf-Karten der Startseite kippen beim Scrollen hoch und werden beim
+  Hinausgehen kleiner: reines CSS (scroll-driven animations), läuft neben dem Scrollen her und hält nichts an.
 - **Bewusst ohne Einblenden beim Scrollen:** Texte, Listen und Überschriften sind sofort sichtbar. Animiert ist nur
   der Seitenkopf, und zwar mit reinem CSS: Er startet mit dem ersten Bild der Seite, unabhängig vom Laden der Skripte.
 - **Ausfallsicher:** Lädt ein Skript nicht, bleibt alles lesbar und bedienbar. `prefers-reduced-motion`: alles
