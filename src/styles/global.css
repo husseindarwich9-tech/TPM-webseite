@@ -92,16 +92,6 @@ html {
   text-size-adjust: 100%;
   scroll-padding-top: calc(var(--header-h) + 1rem);
 }
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-stopped {
-  overflow: clip;
-}
 body {
   margin: 0;
   background: var(--paper);
@@ -576,16 +566,6 @@ html.motion .page-hero [data-reveal] {
     opacity: 1;
     transform: none;
   }
-}
-html.motion svg[data-draw] {
-  opacity: 0;
-}
-/* noch nicht „eingeschrieben“: Grau mit mind. 3:1 Kontrast (große Schrift, WCAG AA) */
-html.motion [data-scrub-words] .wd {
-  color: #7d8591;
-}
-html.motion [data-reveal-clip] {
-  clip-path: inset(0 0 100% 0);
 }
 /* Wort-Masken für Überschriften-Reveals */
 .sl {

@@ -37,5 +37,5 @@ ausgeben und nie Logos in Fotos montieren.
 
 | Komponente | Quelle | Lizenz |
 |---|---|---|
-| `RotatingText`, `LogoLoop`, `SpotlightCard`, `ScrollStack`, `Magnet` (`src/react-bits/`) | [React Bits](https://github.com/DavidHDev/react-bits) von David Haz, teils leicht angepasst | MIT mit Commons Clause (`src/react-bits/LICENSE.md`): Nutzung in der Webseite erlaubt, auch kommerziell; die Komponenten selbst dürfen nicht weiterverkauft werden |
-| GSAP, Lenis, Motion, React, Astro | npm-Pakete | jeweilige Open-Source-Lizenz der Pakete |
+| `RotatingText`, `LogoLoop`, `SpotlightCard`, `Magnet` (`src/react-bits/`) | [React Bits](https://github.com/DavidHDev/react-bits) von David Haz, teils leicht angepasst | MIT mit Commons Clause (`src/react-bits/LICENSE.md`): Nutzung in der Webseite erlaubt, auch kommerziell; die Komponenten selbst dürfen nicht weiterverkauft werden |
+| GSAP, Motion, React, Astro | npm-Pakete | jeweilige Open-Source-Lizenz der Pakete |

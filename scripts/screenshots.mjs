@@ -34,7 +34,7 @@ for (const w of widths) {
     await page.goto(BASE + p, { waitUntil: 'networkidle' });
     await page.waitForTimeout(500);
     // Für den Ganzseiten-Screenshot alle Animationen in den Endzustand bringen
-    await page.addStyleTag({ content: '[data-reveal],[data-hero-fade],.sw>span{opacity:1!important;transform:none!important} [data-reveal-clip]{clip-path:none!important} svg[data-draw]{opacity:1!important}' });
+    await page.addStyleTag({ content: '[data-reveal],[data-hero-fade],.sw>span{opacity:1!important;transform:none!important}' });
     await page.waitForTimeout(400);
     const name = (p === '/' ? 'start' : p.replace(/^\/|\/$/g, '').replace(/\//g, '_')) + `-${w}.png`;
     // Statt fullPage: Fenster auf volle Seitenhöhe setzen (Hero behält die ursprüngliche Bildschirmhöhe)

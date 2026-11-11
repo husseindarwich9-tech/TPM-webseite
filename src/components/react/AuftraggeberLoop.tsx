@@ -1,4 +1,5 @@
 // Auftraggeber als Laufband (React Bits: LogoLoop). Es gibt bewusst nur Namen, keine Logos.
+// Ohne Beschleunigung beim Scrollen: Das Band läuft gleichmäßig, egal wie schnell gescrollt wird.
 import LogoLoop from '../../react-bits/LogoLoop';
 
 interface Props {
@@ -17,7 +18,6 @@ export default function AuftraggeberLoop({ namen }: Props) {
       hoverSpeed={0}
       fadeOut
       fadeOutColor="#0a1626"
-      scrollBoost={0.4}
       ariaLabel="Auftraggeber als Laufband"
     />
   );

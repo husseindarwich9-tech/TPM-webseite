@@ -229,8 +229,11 @@ const SpotlightCard = ({
     wakeRef.current = wake;
 
     const onMove = (event: PointerEvent) => {
+      // Angepasst für TPM: Chrome meldet nach dem Scrollen Mausbewegungen ohne Bewegung; die lösen nichts aus
+      const gleich = event.clientX === pointer.x && event.clientY === pointer.y;
       pointer.x = event.clientX;
       pointer.y = event.clientY;
+      if (gleich && event.pointerType === 'mouse') return;
       pointer.active = true;
       if (state.presence > 0 || settingsRef.current.proximity > 0 || root.contains(event.target as Node | null)) wake();
     };
@@ -263,7 +266,12 @@ const SpotlightCard = ({
       wake();
     };
     const onScroll = () => {
-      if (pointer.active || state.presence > 0) wake();
+      if (!pointer.active && state.presence === 0) return;
+      pointer.active = false;
+      state.presence = 0;
+      light.style.opacity = '0';
+      edge.style.opacity = '0';
+      wake();
     };
 
     const observer = new IntersectionObserver(entries => {
@@ -274,7 +282,9 @@ const SpotlightCard = ({
     window.addEventListener('pointermove', onMove);
     window.addEventListener('pointerup', onUp);
     window.addEventListener('pointercancel', onUp);
-    window.addEventListener('scroll', onScroll, { capture: true, passive: true });
+    // Angepasst für TPM: Beim Scrollen geht der Lichtschein sofort aus und kommt erst mit der nächsten echten
+    // Mausbewegung wieder. Sonst müssten die Lichtebenen während des Scrollens in jedem Bild neu gezeichnet werden.
+    window.addEventListener('scroll', onScroll, { passive: true });
     document.addEventListener('pointerout', onOut);
     root.addEventListener('pointerdown', onDown);
     root.addEventListener('focusin', onFocusIn);
@@ -288,7 +298,7 @@ const SpotlightCard = ({
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
       window.removeEventListener('pointercancel', onUp);
-      window.removeEventListener('scroll', onScroll, { capture: true });
+      window.removeEventListener('scroll', onScroll);
       document.removeEventListener('pointerout', onOut);
       root.removeEventListener('pointerdown', onDown);
       root.removeEventListener('focusin', onFocusIn);

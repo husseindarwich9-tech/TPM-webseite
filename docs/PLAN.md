@@ -76,11 +76,14 @@ eine Fassung, die auf jedem Gerät ruhig und verlässlich läuft.
 
 - **Startseite neu:** Bauplan-Raster in Perspektive (reines CSS, steht still), Überschrift, wechselndes Gewerk-Schild,
   vier Kennzahlen. Darunter Auftraggeber-Laufband, zwölf Gewerke als Kacheln mit Symbolen, zwei Zielgruppen-Karten mit
-  Lichtschein, drei Werte, der Ablauf als sich stapelnde Karten, Kundenstimmen.
+  Lichtschein, drei Werte, der Ablauf als feste Liste, Kundenstimmen.
 - **Die lange Scroll-Sequenz „Ein Raum, zwölf Gewerke“ ist von der Startseite entfernt.** Der Raum bleibt auf den
   Leistungsseiten: Jede zeigt ihr Gewerk bei der Arbeit.
 - **Kein Einblenden beim Scrollen mehr.** Verzögert erscheinende Inhalte wirkten beim Testen wie Hängen, vor allem
   beim schnellen Wischen und beim Hochscrollen. Inhalte sind jetzt sofort da.
+- **Natives Scrollen.** Lenis (weiches Nachgleiten), die gestapelten Ablauf-Karten (React Bits: ScrollStack) und
+  Bilder und Linien, die sich erst beim Hinscrollen aufdecken, sind entfernt: Beim Präsentieren wirkte das wie
+  Hängen. Das Auftraggeber-Laufband beschleunigt beim Scrollen nicht mehr.
 - **Erster Bildschirm ohne Skripte animiert** (CSS): kein Warten bei langsamem Netz, kein Ausfall, wenn ein Skript
   nicht lädt.
 - **Für das Handy geprüft:** Touch, fünf Bildschirmgrößen, Menü auch nach dem Scrollen, Drehen, gedrosselte

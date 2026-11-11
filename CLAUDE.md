@@ -28,6 +28,8 @@ In der Cloud-Umgebung ist Chromium unter `/opt/pw-browsers/chromium` vorinstalli
 ## Wichtige Entscheidungen (nicht rückgängig machen ohne Rücksprache)
 
 - Kein Einblenden von Inhalten beim Scrollen: wirkte beim Testen wie Hängen. Erster Bildschirm nur per CSS animiert.
+- Natives Scrollen: kein Lenis, keine gestapelten oder festhängenden Karten, keine Effekte, die vom Scrollen abhängen
+  (wirkte beim Präsentieren wie Hängen).
 - Ausbildung nur Elektroniker/-in (nur im Elektrohandwerk ist ein Meister im Betrieb).
 - Logo nach der gelieferten Originaldatei (`src/components/LogoMark.astro`).
 - Vorschau-Datei (`scripts/vorschau-einzeln.mjs`): Seiten in abgeschottetem Rahmen (`sandbox` ohne

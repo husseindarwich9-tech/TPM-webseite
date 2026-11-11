@@ -20,6 +20,7 @@
     "lighthouse": "node scripts/lighthouse.mjs",
     "screenshots": "node scripts/screenshots.mjs && node scripts/anfrage-shots.mjs",
     "icons": "node scripts/generate-icons.mjs",
+    "paket:vorschau": "node scripts/paket-vorschau.mjs",
     "vorschau": "astro build && node scripts/vorschau-einzeln.mjs"
   },
   "dependencies": {
@@ -27,7 +28,6 @@
     "@astrojs/sitemap": "^3.7.4",
     "astro": "~7.4.1",
     "gsap": "^3.15.0",
-    "lenis": "^1.3.27",
     "lucide-react": "^1.66.0",
     "motion": "^12.43.0",
     "react": "^19.3.1",

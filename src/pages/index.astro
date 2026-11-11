@@ -9,7 +9,6 @@ import PlanRaster from '../components/PlanRaster.astro';
 import GewerkeGrid from '../components/GewerkeGrid.astro';
 import SpotlightCard from '../react-bits/SpotlightCard';
 import AuftraggeberLoop from '../components/react/AuftraggeberLoop';
-import AblaufStack from '../components/react/AblaufStack';
 import { leistungen } from '../data/leistungen';
 import Quotes from '../components/Quotes.astro';
 import { Picture } from 'astro:assets';
@@ -279,9 +278,19 @@ const ablauf = [
         </p>
         <a href="/anfrage/" class="btn process__cta" data-reveal>Schritt 1 starten <Icon name="arrow" /></a>
       </div>
-      <div class="process__stack">
-        <AblaufStack client:visible schritte={ablauf} />
-      </div>
+      <!-- Feste Liste statt gestapelter Karten: Nichts bleibt beim Scrollen stehen -->
+      <ol class="process__stack">
+        {ablauf.map((s, i) => (
+          <li class={`ablauf-card ablauf-card--${i % 2 ? 'b' : 'a'}`}>
+            <span class="ablauf-card__nr" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <div class="ablauf-card__body">
+              <h3 class="ablauf-card__title">{s.titel}</h3>
+              <p class="ablauf-card__text">{s.text}</p>
+            </div>
+            <span class="ablauf-card__of" aria-hidden="true">Schritt {i + 1} / {ablauf.length}</span>
+          </li>
+        ))}
+      </ol>
     </div>
   </section>
 
@@ -690,6 +699,11 @@ const ablauf = [
   }
   .process__stack {
     position: relative;
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
   @media (min-width: 1000px) {
     .process__grid {
@@ -702,12 +716,9 @@ const ablauf = [
       top: calc(var(--header-h) + 3rem);
     }
   }
-  .process__stack :global(.scroll-stack__inner) {
-    padding-inline: 0;
-  }
-  .process__stack :global(.ablauf-card) {
+  .process__stack .ablauf-card {
     height: auto;
-    min-height: clamp(15rem, 34vh, 19rem);
+    min-height: clamp(11rem, 24vh, 14rem);
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: 1fr auto;
@@ -719,15 +730,15 @@ const ablauf = [
       0 -10px 30px -18px rgba(10, 22, 38, 0.35),
       0 24px 40px -28px rgba(10, 22, 38, 0.45);
   }
-  .process__stack :global(.ablauf-card--a) {
+  .process__stack .ablauf-card--a {
     background: #fff;
     color: var(--ink);
   }
-  .process__stack :global(.ablauf-card--b) {
+  .process__stack .ablauf-card--b {
     background: var(--ink);
     color: var(--paper);
   }
-  .process__stack :global(.ablauf-card__nr) {
+  .process__stack .ablauf-card__nr {
     font-size: clamp(3rem, 6vw, 5rem);
     font-weight: 800;
     font-stretch: 115%;
@@ -735,10 +746,10 @@ const ablauf = [
     letter-spacing: -0.04em;
     color: var(--blue);
   }
-  .process__stack :global(.ablauf-card--b .ablauf-card__nr) {
+  .process__stack .ablauf-card--b .ablauf-card__nr {
     color: var(--sky);
   }
-  .process__stack :global(.ablauf-card__title) {
+  .process__stack .ablauf-card__title {
     margin: 0.2rem 0 0.6rem;
     font-size: var(--fs-h3);
     font-weight: 740;
@@ -746,11 +757,11 @@ const ablauf = [
     letter-spacing: -0.02em;
     line-height: 1.1;
   }
-  .process__stack :global(.ablauf-card__text) {
+  .process__stack .ablauf-card__text {
     max-width: 44ch;
     opacity: 0.82;
   }
-  .process__stack :global(.ablauf-card__of) {
+  .process__stack .ablauf-card__of {
     grid-column: 1 / -1;
     justify-self: end;
     font-family: var(--font-mono);

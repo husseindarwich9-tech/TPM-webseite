@@ -124,8 +124,7 @@ if (window.__tpmAnker) {
     setTimeout(function () {
       var el = document.getElementById(window.__tpmAnker);
       if (!el) return;
-      if (window.__lenis) window.__lenis.scrollTo(el, { immediate: true, force: true, offset: -80 });
-      else el.scrollIntoView();
+      el.scrollIntoView();
     }, 60);
   });
 }
@@ -137,9 +136,7 @@ document.addEventListener('keydown', function (e) {
 if (window.__tpmScrollZiel > 0) {
   window.addEventListener('load', function () {
     setTimeout(function () {
-      var y = window.__tpmScrollZiel;
-      if (window.__lenis) window.__lenis.scrollTo(y, { immediate: true, force: true });
-      else window.scrollTo(0, y);
+      window.scrollTo(0, window.__tpmScrollZiel);
     }, 60);
   });
 }

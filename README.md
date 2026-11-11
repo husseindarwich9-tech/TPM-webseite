@@ -1,7 +1,7 @@
 # TPM Bau GmbH – Webseite
 
 Neue Webseite der TPM Bau GmbH (Berlin), Version 4. Statisch generiert mit [Astro](https://astro.build), Animationen
-mit GSAP (ScrollTrigger), Lenis und einzelnen Komponenten aus [React Bits](https://github.com/DavidHDev/react-bits).
+mit GSAP (ScrollTrigger) und einzelnen Komponenten aus [React Bits](https://github.com/DavidHDev/react-bits).
 Keine Cookies, kein Tracking, keine externen Dienste, Schriften lokal.
 
 - **Designidee:** [`docs/PLAN.md`](docs/PLAN.md)
@@ -27,6 +27,11 @@ Voraussetzung: Node.js 22.22 oder neuer (Astro 7).
 Unterseiten in **einer** Datei, mit eingebetteten Schriften, Stilen und Skripten. Sie lässt sich per Doppelklick im
 Browser öffnen. Jede Seite wird darin als frisches Dokument in einen Rahmen geladen, „Zurück“ führt an die vorherige
 Stelle. Manche Handy-Apps zeigen HTML-Dateien nur als Text an; zum Testen auf dem Handy die Seite auf einen Server legen.
+
+**Vorschau im Internet (auch fürs Handy):** `npm run build && npm run paket:vorschau` erzeugt `vorschau/webseite/` und
+`vorschau/TPM-Bau-Webseite.zip`: den fertigen Build, für Suchmaschinen gesperrt (`robots.txt`, `noindex` in jeder
+Seite, `X-Robots-Tag`), mit `.htaccess` (Apache/LiteSpeed, z. B. Hostinger) und `_headers` (Netlify, Cloudflare Pages).
+Den Inhalt im Hauptverzeichnis einer (Sub-)Domain ablegen, z. B. `vorschau.tpm-bau.de`.
 
 ## Seiten
 
@@ -104,15 +109,18 @@ setzen.
 - **Astro 7**, rein statische Ausgabe, `trailingSlash: always`, Sitemap über `@astrojs/sitemap`
 - **React-Inseln** (`@astrojs/react`): Nur einzelne Bausteine sind React, der Rest ist statisches HTML.
   Aus React Bits (`src/react-bits/`, Lizenz liegt bei): `RotatingText` (wechselndes Gewerk), `LogoLoop`
-  (Auftraggeber-Laufband), `SpotlightCard` (Lichtschein-Karten), `ScrollStack` (Ablauf-Karten), `Magnet` (Anfrage-Knopf).
+  (Auftraggeber-Laufband), `SpotlightCard` (Lichtschein-Karten), `Magnet` (Anfrage-Knopf).
   `SpotlightCard` und `Magnet` werden nur auf Geräten mit Maus geladen (`client:media`).
 - **Raum-Illustration** (`src/components/BauRaum.astro`): Auf jeder Leistungsseite zeigt der isometrische Raum den
   Zustand vor dem Gewerk und spielt dieses Gewerk in Schleife (`src/scripts/bauraum.ts`, `src/scripts/handwerk.ts`).
-- **GSAP 3 + ScrollTrigger**: Raum-Animationen, sich zeichnende Linien. **Lenis** für weiches Scrollen.
+- **GSAP 3 + ScrollTrigger**: Raum-Animationen auf den Leistungsseiten.
+- **Natives Scrollen:** Kein weiches Nachgleiten (Lenis), keine gestapelten Karten und keine Bilder oder Linien,
+  die sich erst beim Hinscrollen aufdecken. Das wirkte beim Präsentieren wie Hängen; die Seite scrollt jetzt so
+  direkt wie der Browser selbst.
 - **Bewusst ohne Einblenden beim Scrollen:** Texte, Listen und Überschriften sind sofort sichtbar. Animiert ist nur
   der Seitenkopf, und zwar mit reinem CSS: Er startet mit dem ersten Bild der Seite, unabhängig vom Laden der Skripte.
 - **Ausfallsicher:** Lädt ein Skript nicht, bleibt alles lesbar und bedienbar. `prefers-reduced-motion`: alles
-  statisch (kein Lenis, keine Animationen). Ohne JavaScript ist die Seite ebenfalls vollständig lesbar.
+  statisch (keine Animationen). Ohne JavaScript ist die Seite ebenfalls vollständig lesbar.
 - **Icons der Gewerke:** [Lucide](https://lucide.dev) (ISC-Lizenz), beim Bauen als SVG ins HTML geschrieben.
 - **Native View Transitions** zwischen den Seiten (CSS, ohne Router)
 - **SEO:** Titel und Beschreibung je Seite, Canonical, Open Graph, schema.org (`GeneralContractor`, `Service`,
