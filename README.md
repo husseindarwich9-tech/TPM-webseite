@@ -40,7 +40,10 @@ Adresse nur noch „Vorschau abgelaufen“. Das Passwort wird bei jedem Aufruf n
 **Vorschau im Internet (auch fürs Handy):** `npm run build && npm run paket:vorschau` erzeugt `vorschau/webseite/` und
 `vorschau/TPM-Bau-Webseite.zip`: den fertigen Build, für Suchmaschinen gesperrt (`robots.txt`, `noindex` in jeder
 Seite, `X-Robots-Tag`), mit `.htaccess` (Apache/LiteSpeed, z. B. Hostinger) und `_headers` (Netlify, Cloudflare Pages).
-Den Inhalt im Hauptverzeichnis einer (Sub-)Domain ablegen, z. B. `vorschau.tpm-bau.de`.
+Den Inhalt im Hauptverzeichnis einer (Sub-)Domain ablegen, z. B. `vorschau.tpm-bau.de`. Mit
+`npm run paket:vorschau -- --bis JJJJ-MM-TT` leitet die `.htaccess` nach diesem Tag nur noch auf „Vorschau nicht mehr
+verfügbar“ (Apache/LiteSpeed). Passwortschutz bei Hostinger: hPanel → Erweitert → Verzeichnisse mit Passwort schützen
+(ergänzt die `.htaccess` um Basic Auth; mit Apache 2.4 getestet).
 
 ## Seiten
 
