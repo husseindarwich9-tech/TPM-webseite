@@ -37,6 +37,11 @@ den Hinweis „Entwurf“; es gibt keine Datei, mit der sich die Webseite betrei
 Passwort werden auf dem Server geprüft, bevor irgendeine Datei ausgeliefert wird; nach dem Datum antwortet die
 Adresse nur noch „Vorschau abgelaufen“. Das Passwort wird bei jedem Aufruf neu erzeugt und nie gespeichert.
 
+**Vorschau auf eigenem Server (z. B. Hetzner Cloud):** `deploy/vorschau-einrichten.sh` richtet auf Ubuntu/Debian nginx
+mit Benutzername/Passwort, Let's-Encrypt-Zertifikat und Ablaufdatum ein (ZIP aus `npm run paket:vorschau` nach `/root/`,
+dann `bash vorschau-einrichten.sh vorschau.domain.de BENUTZER JJJJ-MM-TT`). Bricht ohne Änderung ab, wenn Port 80/443
+schon belegt ist. Erneut ausführen verlängert das Datum und setzt das Passwort neu.
+
 **Vorschau im Internet (auch fürs Handy):** `npm run build && npm run paket:vorschau` erzeugt `vorschau/webseite/` und
 `vorschau/TPM-Bau-Webseite.zip`: den fertigen Build, für Suchmaschinen gesperrt (`robots.txt`, `noindex` in jeder
 Seite, `X-Robots-Tag`), mit `.htaccess` (Apache/LiteSpeed, z. B. Hostinger) und `_headers` (Netlify, Cloudflare Pages).
