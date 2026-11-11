@@ -32,6 +32,11 @@ Stelle. Manche Handy-Apps zeigen HTML-Dateien nur als Text an; zum Testen auf de
 mit Bildern der wichtigsten Seiten (Rechner und Handy) und zwei Videos vom Durchklicken (Rechner, Handy). Alles trägt
 den Hinweis „Entwurf“; es gibt keine Datei, mit der sich die Webseite betreiben ließe.
 
+**Passwortgeschützte Vorschau-Adresse:** `node scripts/vorschau-online.mjs --bis JJJJ-MM-TT --deploy` (nach
+`npm run paket:vorschau`) legt die Vorschau auf Cloudflare Pages (`tpm-bau-vorschau.pages.dev`). Benutzername und
+Passwort werden auf dem Server geprüft, bevor irgendeine Datei ausgeliefert wird; nach dem Datum antwortet die
+Adresse nur noch „Vorschau abgelaufen“. Das Passwort wird bei jedem Aufruf neu erzeugt und nie gespeichert.
+
 **Vorschau im Internet (auch fürs Handy):** `npm run build && npm run paket:vorschau` erzeugt `vorschau/webseite/` und
 `vorschau/TPM-Bau-Webseite.zip`: den fertigen Build, für Suchmaschinen gesperrt (`robots.txt`, `noindex` in jeder
 Seite, `X-Robots-Tag`), mit `.htaccess` (Apache/LiteSpeed, z. B. Hostinger) und `_headers` (Netlify, Cloudflare Pages).
