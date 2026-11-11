@@ -20,6 +20,7 @@
     "lighthouse": "node scripts/lighthouse.mjs",
     "screenshots": "node scripts/screenshots.mjs && node scripts/anfrage-shots.mjs",
     "icons": "node scripts/generate-icons.mjs",
+    "praesentation": "node scripts/praesentation.mjs",
     "paket:vorschau": "node scripts/paket-vorschau.mjs",
     "vorschau": "astro build && node scripts/vorschau-einzeln.mjs"
   },

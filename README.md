@@ -28,6 +28,10 @@ Unterseiten in **einer** Datei, mit eingebetteten Schriften, Stilen und Skripten
 Browser öffnen. Jede Seite wird darin als frisches Dokument in einen Rahmen geladen, „Zurück“ führt an die vorherige
 Stelle. Manche Handy-Apps zeigen HTML-Dateien nur als Text an; zum Testen auf dem Handy die Seite auf einen Server legen.
 
+**Zum Zuschicken ohne Code:** `npm run build && npm run praesentation` erzeugt in `vorschau/praesentation/` ein PDF
+mit Bildern der wichtigsten Seiten (Rechner und Handy) und zwei Videos vom Durchklicken (Rechner, Handy). Alles trägt
+den Hinweis „Entwurf“; es gibt keine Datei, mit der sich die Webseite betreiben ließe.
+
 **Vorschau im Internet (auch fürs Handy):** `npm run build && npm run paket:vorschau` erzeugt `vorschau/webseite/` und
 `vorschau/TPM-Bau-Webseite.zip`: den fertigen Build, für Suchmaschinen gesperrt (`robots.txt`, `noindex` in jeder
 Seite, `X-Robots-Tag`), mit `.htaccess` (Apache/LiteSpeed, z. B. Hostinger) und `_headers` (Netlify, Cloudflare Pages).
